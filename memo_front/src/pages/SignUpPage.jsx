@@ -30,13 +30,12 @@ const BannerImg = styled.div`
   border-radius: 0.3vw;
 `;
 
-const LoginForm = styled.form`
+const SignupForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 1vw;
   width: 50%;
-
 `;
 
 const InputContainer = styled.div`
@@ -47,7 +46,7 @@ const InputContainer = styled.div`
 const LogoTitle = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   margin-bottom: 2vw;
 `;
 
@@ -59,51 +58,12 @@ const Input = styled.input`
   border-radius: 0.3vw;
 `;
 
-//소셜로그인
-const SocialLoginButton = styled.button`
-  width: 50%;
-  height: 3vw;
-  padding: 0.5vw;
-  background-color: #fff;
-  border: 0.15vw solid ${(props) => props.bgColor};
-  border-radius: 0.3vw;
-  cursor: pointer;
-  margin-top: 1vw;
-  font-weight: bold;
-`;
-
-const OrDivider = styled.div`
-  margin: 1vw;
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  color: #838383;
-  div {
-    flex: 1;
-    height: 0.2vw;
-    background-color: #ccc;
-  }
-`;
-
 const Label = styled.label`
   font-weight: bold;
   font-size: 0.8rem;
 `;
 
-const SignupContainer = styled.div`
-  display: flex;
-  gap: 1vw;
-  opacity: 0.5;
-  font-size: 1rem;
-`;
-
-const SignupLink = styled(Link)`
-  text-decoration: underline;
-  color: #000000;
-  margin-top: 0.8vw;
-`;
-
-const LoginButton = styled.button`
+const SignupButton = styled.button`
   width: 100%;
   padding: 1vw;
   background-color: #000000;
@@ -114,10 +74,10 @@ const LoginButton = styled.button`
   margin-top: 1vw;
 `;
 
-
-const LoginPage = () => {
+const SignupPage = () => {
   const [showPass, setShowPass] = useState(false);
   const [userid, setUserId] = useState("");
+  const [usernickname, setUserNickname] = useState("");
   const [userpassword, setUserPassword] = useState("");
 
   const toggleShowPassword = () => {
@@ -134,20 +94,18 @@ const LoginPage = () => {
         <LogoTitle>
           <img src={Logo} alt="Logo" />
         </LogoTitle>
-        <SocialLoginButton bgColor="#FFEB00">
-          카카오로 시작하기
-        </SocialLoginButton>
-        <SocialLoginButton bgColor="#03C75A">
-          네이버로 시작하기
-        </SocialLoginButton>
 
-        <OrDivider>
-          <div></div>
-          또는
-          <div></div>
-        </OrDivider>
+        <SignupForm onSubmit={handleLogin}>
+          <InputContainer>
+            <Label htmlFor="username">닉네임(NickName)</Label>
+            <Input
+              type="text"
+              placeholder="사용할 이름을 작성해주세요."
+              value={usernickname}
+              onChange={(e) => setUserId(e.target.value)}
+            />
+          </InputContainer>
 
-        <LoginForm onSubmit={handleLogin}>
           <InputContainer>
             <Label htmlFor="username">이메일(ID)</Label>
             <Input
@@ -168,13 +126,8 @@ const LoginPage = () => {
             />
           </InputContainer>
 
-          <LoginButton type="submit">LOGIN</LoginButton>
-
-          <SignupContainer>
-            <p>아직 회원이 아니신가요?</p>
-            <SignupLink to="/signup">회원가입하기</SignupLink>
-          </SignupContainer>
-        </LoginForm>
+          <SignupButton type="submit">LOGIN</SignupButton>
+        </SignupForm>
       </LeftSection>
 
       <RightSection>
@@ -186,4 +139,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

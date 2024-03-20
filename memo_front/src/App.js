@@ -4,17 +4,18 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header"
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   return (
     <Router>
       <div className="App">
         {/* 헤더 컴포넌트를 추가합니다. */}
-        <Header />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
+        <Routes>
+          <Route path="/" element={<><Header /><HomePage /></>} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+        </Routes>
       </div>
     </Router>
   );
