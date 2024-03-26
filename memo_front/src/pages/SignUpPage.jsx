@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../assets/images/logo.png";
 import Banner from "../assets/images/Banner.png";
-import { useAuth } from "../context/AuthContext"; // AuthContext import 추가
 
 const Container = styled.div`
   display: flex;
@@ -80,14 +79,39 @@ const SignupPage = () => {
   const [userid, setUserId] = useState("");
   const [usernickname, setUserNickname] = useState("");
   const [userpassword, setUserPassword] = useState("");
-  const { signup } = useAuth(); // useAuth hook에서 signup 함수 가져오기
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수 가져오기
 
   const toggleShowPassword = () => {
     setShowPass(!showPass);
   };
 
-  // 로그인 버튼 클릭 시 호출되는 함수
+  // 회원가입 함수
+  const signup = async (userData) => {
+    try {
+      console.log("회원가입 시도 중...");
+      // 서버에 회원가입 정보를 전송하고 응답을 기다림
+      const response = await fetch("http://localhost:3000/member/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      if (response.ok) {
+        console.log("회원가입 성공!");
+        const userData = await response.json();
+        const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
+        // 회원가입 후 추가 작업 수행
+        // 예: 로그인 처리 등
+      } else {
+        console.error("회원가입 실패:", response.statusText);
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  };
+
+  // 회원가입 버튼 클릭 시 호출되는 함수
   const handleSignup = async (e) => {
     e.preventDefault(); // 폼의 기본 동작 방지
     try {
@@ -100,6 +124,7 @@ const SignupPage = () => {
       // 회원가입 실패 시 추가 작업 수행
     }
   };
+
 
   return (
     <Container>
