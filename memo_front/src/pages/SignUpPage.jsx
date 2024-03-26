@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../assets/images/logo.png";
 import Banner from "../assets/images/Banner.png";
@@ -79,14 +79,52 @@ const SignupPage = () => {
   const [userid, setUserId] = useState("");
   const [usernickname, setUserNickname] = useState("");
   const [userpassword, setUserPassword] = useState("");
+  const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수 가져오기
 
   const toggleShowPassword = () => {
     setShowPass(!showPass);
   };
 
-  const handleLogin = async () => {
-    // 로그인 처리 로직 추가
+  // 회원가입 함수
+  const signup = async (userData) => {
+    try {
+      console.log("회원가입 시도 중...");
+      // 서버에 회원가입 정보를 전송하고 응답을 기다림
+      const response = await fetch("http://localhost:3000/member/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      if (response.ok) {
+        console.log("회원가입 성공!");
+        const userData = await response.json();
+        const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
+        // 회원가입 후 추가 작업 수행
+        // 예: 로그인 처리 등
+      } else {
+        console.error("회원가입 실패:", response.statusText);
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
   };
+
+  // 회원가입 버튼 클릭 시 호출되는 함수
+  const handleSignup = async (e) => {
+    e.preventDefault(); // 폼의 기본 동작 방지
+    try {
+      // 회원가입 함수 호출
+      await signup({ userid, userpassword, usernickname });
+      // 회원가입 성공 시 추가 작업 수행
+      navigate("/"); // 회원가입 후 홈페이지로 이동
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      // 회원가입 실패 시 추가 작업 수행
+    }
+  };
+
 
   return (
     <Container>
@@ -95,19 +133,19 @@ const SignupPage = () => {
           <img src={Logo} alt="Logo" />
         </LogoTitle>
 
-        <SignupForm onSubmit={handleLogin}>
+        <SignupForm onSubmit={handleSignup}>
           <InputContainer>
-            <Label htmlFor="username">닉네임(NickName)</Label>
+            <Label htmlFor="usernickname">닉네임(NickName)</Label>
             <Input
               type="text"
               placeholder="사용할 이름을 작성해주세요."
               value={usernickname}
-              onChange={(e) => setUserId(e.target.value)}
+              onChange={(e) => setUserNickname(e.target.value)}
             />
           </InputContainer>
 
           <InputContainer>
-            <Label htmlFor="username">이메일(ID)</Label>
+            <Label htmlFor="userid">이메일(ID)</Label>
             <Input
               type="text"
               placeholder="test@naver.com"
@@ -117,7 +155,7 @@ const SignupPage = () => {
           </InputContainer>
 
           <InputContainer>
-            <Label htmlFor="password">비밀번호(PW)</Label>
+            <Label htmlFor="userpassword">비밀번호(PW)</Label>
             <Input
               type={showPass ? "text" : "password"}
               placeholder="비밀번호를 입력해주세요."
@@ -126,7 +164,7 @@ const SignupPage = () => {
             />
           </InputContainer>
 
-          <SignupButton type="submit">LOGIN</SignupButton>
+          <SignupButton type="submit">회원가입</SignupButton>
         </SignupForm>
       </LeftSection>
 
