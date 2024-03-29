@@ -1,12 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom"; // useNavigate를 import합니다.
+import { toast } from 'react-toastify';
 import axios from "axios"; // axios를 import합니다.
+
+// 공통 URL 정의
+const BASE_URL = "http://localhost:8080";
+
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(""); // 토큰 상태 추가
+  // const [token, setToken] = useState(""); // 토큰 상태 추가
   const navigate = useNavigate(); // useNavigate를 통해 navigate 함수를 가져옵니다.
+
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 정보 및 토큰 확인
     const loggedIn = localStorage.getItem("isLoggedIn");
@@ -15,10 +21,12 @@ export const AuthProvider = ({ children }) => {
     if (loggedIn && userInfo && storedToken) {
       setIsLoggedIn(true);
       setUser(userInfo);
-      setToken(storedToken); // 저장된 토큰 상태로 설정
+      // setToken(storedToken); // 저장된 토큰 상태로 설정
       console.log("로컬 스토리지에서 로그인 정보 및 토큰을 가져왔습니다.");
     }
   }, []);
+  
+
   // -----------------------------------------------------------------------------
   // - Name : getTokenFromLocalStorage
   // - Desc : 로컬 스토리지에서 토큰을 가져오는 함수
@@ -29,40 +37,48 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
-// - Name : signup
-// - Desc : 사용자를 회원가입하는 함수
-// - Input
-//   1) userData : 사용자 데이터
-// -----------------------------------------------------------------------------
-const signup = async (userData) => {
-  try {
-    console.log("회원가입 시도 중...");
-    // 서버에 회원가입 정보를 전송하고 응답을 기다림
-    const response = await fetch("http://localhost:3000/member/save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    if (response.ok) {
-      console.log("회원가입 성공!");
-      const userData = await response.json();
-      const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
-      // 회원가입 후 추가 작업 수행
-      // 예: 로그인 처리 등
-    } else {
-      console.error("회원가입 실패:", response.statusText);
+  // - Name : signup
+  // - Desc : 사용자를 회원가입하는 함수
+  // - Input
+  //   1) userid : 사용자 이메일
+  //   2) userpassword : 사용자 비밀번호
+  //   3) usernickname : 사용자 닉네임
+  // -----------------------------------------------------------------------------
+  const signup = async (userid, userpassword, usernickname) => {
+    try {
+      console.log("회원가입 시도 중...");
+      console.log("  -user 정보- " + "\n { 사용자이메일: " + userid + "\n   비밀번호: " + userpassword + "\n   닉네임:" + usernickname + " }");
+      console.log("보낼 서버 주소 : " + `${BASE_URL}/member/save`);
+      // 서버에 회원가입 정보를 전송하고 응답을 기다림
+      const response = await fetch(`${BASE_URL}/member/save`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userid,
+          userpassword,
+          usernickname
+        }),
+      });
+      if (response.ok) {
+        console.log("회원가입 성공!");
+        toast.success("회원가입 성공!");
+        navigate("/");
+        // const userData = await response.json();
+        // const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
+        // 회원가입 후 추가 작업 수행
+        // 예: 로그인 처리 등
+      } else {
+        console.error("회원가입 실패:", response.statusText);
+        // 회원가입 실패 시 토스트 메시지 표시
+        toast.error("회원가입에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error("회원가입에 실패했습니다. 다시 시도해주세요.");
     }
-  } catch (error) {
-    console.error("에러 발생:", error);
-  }
-};
-
-
-
-
-
+  };
 
   // -----------------------------------------------------------------------------
   // - Name : login
@@ -75,8 +91,11 @@ const signup = async (userData) => {
   const login = async (username, password) => {
     try {
       console.log("로그인 시도 중...");
+      console.log("  -user 정보- " + "\n { 사용자이메일: " + username + "\n   비밀번호: " + password + " }");
+      console.log("보낼 서버 주소 : " + `${BASE_URL}/login`);
+
       // 서버에 로그인 정보를 전송하고 응답을 기다림
-      const response = await fetch("https://www.career-festival.com:443/login", {
+      const response = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,10 +107,11 @@ const signup = async (userData) => {
       });
       if (response.ok) {
         console.log("로그인 성공!");
-        const userData = await response.json();
+        toast.success("로그인 성공!");
+        navigate("/");
         const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
         // 사용자 정보를 추가로 가져오는 API 호출
-        const userInfoResponse = await fetch("https://www.career-festival.com:443/", {
+        const userInfoResponse = await fetch( BASE_URL , {
           method: "GET",
           headers: {
             Authorization: jwtToken,
@@ -99,9 +119,6 @@ const signup = async (userData) => {
         });
         if (userInfoResponse.ok) {
           const userInfo = await userInfoResponse.json();
-          console.log("userInfo: " + userInfo);
-          console.log("메인페이지 추천정보 반환값:");
-          console.log(" " + JSON.stringify(userInfo));
           // 로컬 스토리지에 사용자 정보 저장
           localStorage.setItem("isLoggedIn", "true");
           localStorage.setItem("user", JSON.stringify(userInfo));
@@ -109,9 +126,7 @@ const signup = async (userData) => {
 
           setIsLoggedIn(true);
           setUser(userInfo);
-          fetchMypageInfo();
 
-          console.log("🎶fetchMypageInfo를 로그인에서 호출함");
           console.log("로그인 정보 및 토큰이 로컬 스토리지에 저장되었습니다.");
         } else {
           console.error(
@@ -121,11 +136,15 @@ const signup = async (userData) => {
         }
       } else {
         console.error("로그인 실패:", response.statusText);
+        // 로그인 실패 시 토스트 메시지 표시
+        toast.error("로그인에 실패했습니다. 다시 시도해주세요.");
       }
     } catch (error) {
       console.error("에러 발생:", error);
+      toast.error("로그인 중 에러가 발생했습니다.");
     }
   };
+
   // -----------------------------------------------------------------------------
   // - Name : logout
   // - Desc : 사용자를 로그아웃하는 함수
@@ -137,330 +156,7 @@ const signup = async (userData) => {
     setUser(null);
     console.log("로그인 정보 및 인증 정보가 로컬 스토리지에서 삭제되었습니다.");
   };
-  // -----------------------------------------------------------------------------
-  // - Name : saveAdditionalInfo
-  // - Desc : 서버에 참가자(Participant) 부가정보를 저장하는 함수
-  // - Input
-  //   1) userData : 사용자 데이터
-  // -----------------------------------------------------------------------------
-  const saveAdditionalInfo = async (userData) => {
-    try {
-      console.log("부가정보 저장 함수 호출됨 ...");
 
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      const response = await fetch("https://www.career-festival.com:443/participant", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify(userData),
-      });
-      if (response.ok) {
-        console.log("부가정보 저장 완료:", response.data);
-        // 저장이 성공하면 홈 페이지로 이동합니다.
-        navigate("/");
-      } else {
-        console.error("부가정보 저장 실패:", response.statusText);
-      }
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };
-
-  // -----------------------------------------------------------------------------
-  // - Name : saveAdditionalOOInfo
-  // - Desc : 서버에 주최자(Organizer) 부가정보를 저장하는 함수
-  // - Input
-  //   1) userData : 사용자 데이터
-  // -----------------------------------------------------------------------------
-  const saveAdditionalOOInfo = async (userData) => {
-    try {
-      console.log("부가정보 저장 함수 호출됨 ...");
-
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      const response = await fetch("https://www.career-festival.com:443/organizer", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify(userData),
-      });
-      if (response.ok) {
-        console.log("부가정보 저장 완료:", response.data);
-        // 저장이 성공하면 홈 페이지로 이동합니다.
-        navigate("/");
-      } else {
-        console.error("부가정보 저장 실패:", response.statusText);
-      }
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };
-  // -----------------------------------------------------------------------------
-  // - Name : registerEventStep12
-  // - Desc : 주최자 등록하기 1 + 2 단계 함수
-  // - Input
-  //   1) formData : 주최자 등록 폼 데이터
-  // -----------------------------------------------------------------------------
-  const registerEventStep12 = (formData) => {
-    try {
-      console.log("주최자 등록 함수가 호출되었습니다.");
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      // API 엔드포인트 설정
-      const url = `https://www.career-festival.com:443/event/organizer`;
-      console.log("URL:" + url);
-      // Axios를 사용하여 데이터 전송
-      axios
-        .post(url, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `${token}`,
-          },
-        })
-        .then((response) => {
-          console.log("주최자 등록 완료:", response.data);
-          // 다음 단계로 이동하거나 필요에 따라 다른 작업 수행
-          navigate("/register/Level3");
-        })
-        .catch((error) => {
-          console.error("주최자 등록 실패:", error.message);
-        });
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };
-
-
-  //
-  // 마이 페이지
-  //
-  // AuthProvider 컴포넌트 내에 새로운 함수 추가
-  const fetchMypageInfo = async () => {
-    try {
-      console.log("사용자 정보 가져오는중...");
-      console.log("fetchMypageInfo 실행됨");
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      // 서버에 GET 요청 보내기
-      const response = await axios.get("https://www.career-festival.com:443/mypage", {
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
-      console.log("서버 응답:", response); // 수정된 부분: 응답 전체 객체 출력
-      if (response.status === 200) {
-        
-        const { userInfo } = response.data; // userInfo 객체 추출
-        // userInfo 객체를 로컬 스토리지에 저장
-        localStorage.setItem("mypageData", JSON.stringify(userInfo));
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        console.log("마이페이지 정보:", userInfo);
-        // 가져온 정보를 상태에 설정하거나 필요한 작업 수행
-      } else {
-        console.error("마이페이지 정보 가져오기 실패:", response.statusText);
-      }
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };
-  
-  //
-  // 마이페이지 수정하기
-  //
-  // AuthProvider 컴포넌트 내에 새로운 함수 추가
-  const updateMypageInfo = async (updatedInfo) => {
-    try {
-      console.log("마이페이지 정보를 업데이트하는 중...");
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      // 서버에 PATCH 요청 보내기
-      const response = await axios.patch(
-        "https://www.career-festival.com:443/mypage/update",
-        updatedInfo,
-        {
-          headers: {
-            Authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("서버 응답:", response); // 응답 전체 객체 출력
-      if (response.status === 200) {
-        console.log("마이페이지 정보 업데이트 성공!");
-        // 업데이트가 성공하면 필요한 작업 수행
-        // 예: 페이지 리로드 또는 다른 작업 수행
-      } else {
-        console.error("마이페이지 정보 업데이트 실패:", response.statusText);
-      }
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };
-
-  // AuthProvider 컴포넌트 내에 새로운 함수 추가
-  const registerEvent = async (addData) => {
-    try {
-      console.log("행사 등록 요청 중...");
-
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-
-      // 서버에 POST 요청 보내기
-      const response = await axios.post(
-        "https://www.career-festival.com:443/event/register/",
-        addData,
-        {
-          headers: {
-            Authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("서버 응답:", response); // 응답 전체 객체 출력
-
-      if (response.status === 200) {
-        console.log("행사 등록 성공!");
-        alert("행사 등록 완료");
-        navigate("/");
-      } else {
-        console.error("행사 등록 실패:", response.statusText);
-      }
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };
-
-  //
-  // 메인페이지
-  //
-  // AuthProvider 컴포넌트 내에 새로운 함수 추가
-  /*const fetchMainpageInfo = async () => {
-    try {
-      console.log("메인페이지 정보를 가져오는 중...");
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-
-      // 서버에 GET 요청 보내기
-      const response = await axios.get("https://www.career-festival.com:443", {
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
-      console.log("서버 응답:", response); // 수정된 부분: 응답 전체 객체 출력
-
-      if (response.status === 200) {
-        const { userInfo } = response.data; // userInfo 객체 추출
-
-        // userInfo 객체를 로컬 스토리지에 저장
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-        console.log("메인페이지 정보:", userInfo);
-        // 가져온 정보를 상태에 설정하거나 필요한 작업 수행
-      } else {
-        console.error("메인페이지 정보 가져오기 실패:", response.statusText);
-      }
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };*/
-
-  //
-  // 행사 목록페이지
-  //
-  // AuthProvider 컴포넌트 내에 새로운 함수 추가
-  const fetchfestivalListpageInfo = async () => {
-    try {
-      console.log("🎶메인페이지 정보를 가져오는 중...");
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      const response = await axios.get("https://www.career-festival.com:443/festival-list", {
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
-
-      console.log("서버 응답:", response);
-
-      if (response.status === 200) {
-        const { userInfo } = response.data;
-
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        console.log("🎶🎶🎶메인페이지 정보:", userInfo);
-        // 가져온 정보를 상태에 설정하거나 필요한 작업 수행
-      } else {
-        console.error("🎶메인페이지 정보 가져오기 실패:", response.statusText);
-      }
-    } catch (error) {
-      console.error("에러 발생:", error);
-    }
-  };
-
-  //
-  // 디테일 페이지
-  //
-  // AuthProvider 컴포넌트 내에 새로운 함수 추가
-  const fetchEventDetailData = async () => {
-    try {
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      const eventId = window.location.pathname.split("/").pop();
-
-      const response = await axios.get(
-        `https://www.career-festival.com:443/event/${eventId}`,
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
-
-      console.log("서버 응답:", response);
-
-      if (response.status === 200) {
-        const { userInfo } = response.data;
-
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        console.log("메인페이지 정보:", userInfo);
-      } else {
-        console.error("메인페이지 정보 가져오기 실패:", response.statusText);
-      }
-
-      return response.data;
-    } catch (error) {
-      console.error("이벤트 정보를 가져오지 못했습니다", error);
-      throw error;
-    }
-  };
-
-  const fetchEventOrganizerData = async () => {
-    try {
-      // 토큰 가져오기
-      const token = getTokenFromLocalStorage();
-      const eventId = window.location.pathname.split("/").pop();
-
-      const response = await axios.get(
-        `https://www.career-festival.com:443/event/${eventId}`,
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
-
-      console.log("서버 응답:", response);
-
-      return response.data;
-    } catch (error) {
-      console.error("이벤트 정보를 가져오지 못했습니다", error);
-      throw error;
-    }
-  };
 
   return (
     <AuthContext.Provider
@@ -468,18 +164,9 @@ const signup = async (userData) => {
         isLoggedIn,
         user,
         getTokenFromLocalStorage,
+        signup,
         login,
         logout,
-        saveAdditionalInfo,
-        saveAdditionalOOInfo,
-        registerEventStep12,
-        fetchMypageInfo,
-        updateMypageInfo,
-        registerEvent,
-        //fetchMainpageInfo,
-        fetchfestivalListpageInfo,
-        fetchEventDetailData,
-        fetchEventOrganizerData,
       }}
     >
       {children}
