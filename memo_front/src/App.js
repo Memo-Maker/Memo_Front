@@ -1,6 +1,8 @@
 //import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify"; // react-toastify에서 ToastContainer를 import합니다.
+import "react-toastify/dist/ReactToastify.css"; // react-toastify의 CSS 파일을 import합니다.
 import Header from "./components/header/Header";
 import Footer from "./components/footer/footer";
 import HomePage from "./pages/HomePage";
@@ -14,6 +16,7 @@ function App() {
     <Router>
       <AuthProvider>
       <div className="App">
+      <ToastContainer autoClose={1000} /> {/* 토스트 컨테이너 설정 */}
         {/* 헤더 컴포넌트를 추가합니다. */}
         <Routes>
           <Route path="/" element={<><Header /><HomePage /><Footer/></>} />

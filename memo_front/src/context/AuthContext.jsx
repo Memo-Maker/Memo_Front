@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom"; // useNavigate를 import합니다.
+import { toast } from 'react-toastify';
 import axios from "axios"; // axios를 import합니다.
 
 // 공통 URL 정의
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       console.log("로컬 스토리지에서 로그인 정보 및 토큰을 가져왔습니다.");
     }
   }, []);
-
+  
 
   // -----------------------------------------------------------------------------
   // - Name : getTokenFromLocalStorage
@@ -62,6 +63,7 @@ export const AuthProvider = ({ children }) => {
       });
       if (response.ok) {
         console.log("회원가입 성공!");
+        toast.success("회원가입 성공!");
         navigate("/");
         // const userData = await response.json();
         // const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
@@ -69,9 +71,12 @@ export const AuthProvider = ({ children }) => {
         // 예: 로그인 처리 등
       } else {
         console.error("회원가입 실패:", response.statusText);
+        // 회원가입 실패 시 토스트 메시지 표시
+        toast.error("회원가입에 실패했습니다. 다시 시도해주세요.");
       }
     } catch (error) {
       console.error("에러 발생:", error);
+      toast.error("회원가입에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -102,6 +107,8 @@ export const AuthProvider = ({ children }) => {
       });
       if (response.ok) {
         console.log("로그인 성공!");
+        toast.success("로그인 성공!");
+        navigate("/");
         const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
         // 사용자 정보를 추가로 가져오는 API 호출
         const userInfoResponse = await fetch( BASE_URL , {
@@ -129,9 +136,12 @@ export const AuthProvider = ({ children }) => {
         }
       } else {
         console.error("로그인 실패:", response.statusText);
+        // 로그인 실패 시 토스트 메시지 표시
+        toast.error("로그인에 실패했습니다. 다시 시도해주세요.");
       }
     } catch (error) {
       console.error("에러 발생:", error);
+      toast.error("로그인 중 에러가 발생했습니다.");
     }
   };
 
