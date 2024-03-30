@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom"; // Link import 추가
 import Logo from "../assets/images/logo.png";
 import Banner from "../assets/images/Banner.png";
 import { useAuth } from "../context/AuthContext"; // AuthContext import 추가
@@ -74,6 +75,10 @@ const SignupButton = styled.button`
   margin-top: 1vw;
 `;
 
+const LogoLink = styled(Link)`
+  cursor: pointer;
+`;
+
 const SignupPage = () => {
   const [showPass, setShowPass] = useState(false);
   const [userid, setUserId] = useState("");
@@ -87,7 +92,6 @@ const SignupPage = () => {
     setShowPass(!showPass);
   };
 
-
   // 회원가입 버튼 클릭 시 호출되는 함수
   const handleSignup = async (event) => {
     event.preventDefault(); // 폼의 기본 제출 동작 막기
@@ -95,48 +99,48 @@ const SignupPage = () => {
     signup(userid, userpassword, usernickname);
   };
 
-
   return (
     <Container>
       <LeftSection>
         <LogoTitle>
-          <img src={Logo} alt="Logo" />
+          <LogoLink to="/">
+            <img src={Logo} alt="Logo" />
+          </LogoLink>
         </LogoTitle>
 
         <SignupForm onSubmit={handleSignup}>
-          
-        <InputContainer>
-          <Label htmlFor="usernickname">닉네임(NickName)</Label>
-          <Input
-            type="text"
-            id="usernickname" // 고유한 id 추가
-            placeholder="사용할 이름을 작성해주세요."
-            value={usernickname}
-            onChange={(e) => setUserNickname(e.target.value)}
-          />
-        </InputContainer>
+          <InputContainer>
+            <Label htmlFor="usernickname">닉네임(NickName)</Label>
+            <Input
+              type="text"
+              id="usernickname" // 고유한 id 추가
+              placeholder="사용할 이름을 작성해주세요."
+              value={usernickname}
+              onChange={(e) => setUserNickname(e.target.value)}
+            />
+          </InputContainer>
 
-        <InputContainer>
-          <Label htmlFor="userid">이메일(ID)</Label>
-          <Input
-            type="text"
-            id="userid" // 고유한 id 추가
-            placeholder="test@naver.com"
-            value={userid}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-        </InputContainer>
+          <InputContainer>
+            <Label htmlFor="userid">이메일(ID)</Label>
+            <Input
+              type="text"
+              id="userid" // 고유한 id 추가
+              placeholder="test@naver.com"
+              value={userid}
+              onChange={(e) => setUserId(e.target.value)}
+            />
+          </InputContainer>
 
-        <InputContainer>
-          <Label htmlFor="userpassword">비밀번호(PW)</Label>
-          <Input
-            type={showPass ? "text" : "password"}
-            id="userpassword" // 고유한 id 추가
-            placeholder="비밀번호를 입력해주세요."
-            value={userpassword}
-            onChange={(e) => setUserPassword(e.target.value)}
-          />
-        </InputContainer>
+          <InputContainer>
+            <Label htmlFor="userpassword">비밀번호(PW)</Label>
+            <Input
+              type={showPass ? "text" : "password"}
+              id="userpassword" // 고유한 id 추가
+              placeholder="비밀번호를 입력해주세요."
+              value={userpassword}
+              onChange={(e) => setUserPassword(e.target.value)}
+            />
+          </InputContainer>
 
           <SignupButton type="submit">회원가입</SignupButton>
         </SignupForm>

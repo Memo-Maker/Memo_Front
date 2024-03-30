@@ -16,7 +16,7 @@ function App() {
     <Router>
       <AuthProvider>
       <div className="App">
-      <ToastContainer autoClose={1000} /> {/* 토스트 컨테이너 설정 */}
+      <ToastContainer autoClose={2000} /> {/* 토스트 컨테이너 설정 */}
         {/* 헤더 컴포넌트를 추가합니다. */}
         <Routes>
           <Route path="/" element={<><Header /><HomePage /><Footer/></>} />

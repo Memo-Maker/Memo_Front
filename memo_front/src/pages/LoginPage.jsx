@@ -37,7 +37,6 @@ const LoginForm = styled.form`
   align-items: center;
   margin-top: 1vw;
   width: 50%;
-
 `;
 
 const InputContainer = styled.div`
@@ -48,7 +47,7 @@ const InputContainer = styled.div`
 const LogoTitle = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   margin-bottom: 2vw;
 `;
 
@@ -115,6 +114,9 @@ const LoginButton = styled.button`
   margin-top: 1vw;
 `;
 
+const LogoLink = styled(Link)`
+  cursor: pointer;
+`;
 
 const LoginPage = () => {
   const [showPass, setShowPass] = useState(false);
@@ -123,7 +125,6 @@ const LoginPage = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
   // useAuth 훅을 사용하여 AuthContext에서 login 함수 가져옴
   const { login } = useAuth();
-
 
   const toggleShowPassword = () => {
     setShowPass(!showPass);
@@ -139,7 +140,9 @@ const LoginPage = () => {
     <Container>
       <LeftSection>
         <LogoTitle>
-          <img src={Logo} alt="Logo" />
+          <LogoLink to="/">
+            <img src={Logo} alt="Logo" />
+          </LogoLink>
         </LogoTitle>
         <SocialLoginButton bgColor="#FFEB00">
           카카오로 시작하기
@@ -155,28 +158,27 @@ const LoginPage = () => {
         </OrDivider>
 
         <LoginForm onSubmit={handleLogin}>
-        <InputContainer>
-          <Label htmlFor="userid">이메일(ID)</Label>
-          <Input
-            type="text"
-            id="userid" // 고유한 id 추가
-            placeholder="memo@naver.com"
-            value={userid}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-        </InputContainer>
+          <InputContainer>
+            <Label htmlFor="userid">이메일(ID)</Label>
+            <Input
+              type="text"
+              id="userid" // 고유한 id 추가
+              placeholder="memo@naver.com"
+              value={userid}
+              onChange={(e) => setUserId(e.target.value)}
+            />
+          </InputContainer>
 
-        <InputContainer>
-          <Label htmlFor="password">비밀번호(PW)</Label>
-          <Input
-            type={showPass ? "text" : "password"}
-            id="password" // 고유한 id 추가
-            placeholder="비밀번호를 입력해주세요."
-            value={userpassword}
-            onChange={(e) => setUserPassword(e.target.value)}
-          />
-        </InputContainer>
-
+          <InputContainer>
+            <Label htmlFor="password">비밀번호(PW)</Label>
+            <Input
+              type={showPass ? "text" : "password"}
+              id="password" // 고유한 id 추가
+              placeholder="비밀번호를 입력해주세요."
+              value={userpassword}
+              onChange={(e) => setUserPassword(e.target.value)}
+            />
+          </InputContainer>
 
           <LoginButton type="submit">LOGIN</LoginButton>
 
