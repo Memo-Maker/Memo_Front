@@ -92,10 +92,10 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("로그인 시도 중...");
       console.log("  -user 정보- " + "\n { 사용자이메일: " + username + "\n   비밀번호: " + password + " }");
-      console.log("보낼 서버 주소 : " + `${BASE_URL}/login`);
+      console.log("보낼 서버 주소 : " + `${BASE_URL}/member/login`);
 
       // 서버에 로그인 정보를 전송하고 응답을 기다림
-      const response = await fetch(`${BASE_URL}/login`, {
+      const response = await fetch(`${BASE_URL}/member/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
