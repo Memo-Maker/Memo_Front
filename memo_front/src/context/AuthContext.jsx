@@ -44,10 +44,10 @@ export const AuthProvider = ({ children }) => {
   //   2) userpassword : 사용자 비밀번호
   //   3) usernickname : 사용자 닉네임
   // -----------------------------------------------------------------------------
-  const signup = async (userid, userpassword, usernickname) => {
+  const signup = async (memberEmail, memberPassword, memberName) => {
     try {
       console.log("회원가입 시도 중...");
-      console.log("  -user 정보- " + "\n { 사용자이메일: " + userid + "\n   비밀번호: " + userpassword + "\n   닉네임:" + usernickname + " }");
+      console.log("  -user 정보- " + "\n { 사용자이메일: " + memberEmail + "\n   비밀번호: " + memberPassword + "\n   닉네임:" + memberName + " }");
       console.log("보낼 서버 주소 : " + `${BASE_URL}/member/save`);
       // 서버에 회원가입 정보를 전송하고 응답을 기다림
       const response = await fetch(`${BASE_URL}/member/save`, {
@@ -56,17 +56,16 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userid,
-          userpassword,
-          usernickname
+          memberEmail,
+          memberPassword,
+          memberName
         }),
       });
       if (response.ok) {
         console.log("회원가입 성공!");
         toast.success("회원가입 성공!");
         navigate("/");
-        // const userData = await response.json();
-        // const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
+        
         // 회원가입 후 추가 작업 수행
         // 예: 로그인 처리 등
       } else {
@@ -84,14 +83,14 @@ export const AuthProvider = ({ children }) => {
   // - Name : login
   // - Desc : 사용자를 로그인하는 함수
   // - Input
-  //   1) username : 사용자 이름
-  //   2) password : 사용자 비밀번호
+  //   1) memberEmail : 사용자 이름
+  //   2) memberPassword : 사용자 비밀번호
   // - Output
   // -----------------------------------------------------------------------------
-  const login = async (username, password) => {
+  const login = async (memberEmail, memberPassword) => {
     try {
       console.log("로그인 시도 중...");
-      console.log("  -user 정보- " + "\n { 사용자이메일: " + username + "\n   비밀번호: " + password + " }");
+      console.log("  -user 정보- " + "\n { 사용자이메일: " + memberEmail + "\n   비밀번호: " + memberPassword + " }");
       console.log("보낼 서버 주소 : " + `${BASE_URL}/member/login`);
 
       // 서버에 로그인 정보를 전송하고 응답을 기다림
@@ -101,8 +100,8 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username,
-          password,
+          memberEmail,
+          memberPassword
         }),
       });
       if (response.ok) {
@@ -110,30 +109,33 @@ export const AuthProvider = ({ children }) => {
         toast.success("로그인 성공!");
         navigate("/");
         const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
+        localStorage.setItem("token", jwtToken); // 토큰 저장
+        console.log("[ token ]\n" + jwtToken);
+        
         // 사용자 정보를 추가로 가져오는 API 호출
-        const userInfoResponse = await fetch( BASE_URL , {
-          method: "GET",
-          headers: {
-            Authorization: jwtToken,
-          },
-        });
-        if (userInfoResponse.ok) {
-          const userInfo = await userInfoResponse.json();
-          // 로컬 스토리지에 사용자 정보 저장
-          localStorage.setItem("isLoggedIn", "true");
-          localStorage.setItem("user", JSON.stringify(userInfo));
-          localStorage.setItem("token", jwtToken); // 토큰 저장
+        // const userInfoResponse = await fetch( BASE_URL , {
+        //   method: "GET",
+        //   headers: {
+        //     Authorization: jwtToken,
+        //   },
+        // });
+        // if (userInfoResponse.ok) {
+        //   const userInfo = await userInfoResponse.json();
+        //   // 로컬 스토리지에 사용자 정보 저장
+        //   localStorage.setItem("isLoggedIn", "true");
+        //   localStorage.setItem("user", JSON.stringify(userInfo));
+        //   localStorage.setItem("token", jwtToken); // 토큰 저장
 
-          setIsLoggedIn(true);
-          setUser(userInfo);
+        //   setIsLoggedIn(true);
+        //   setUser(userInfo);
 
-          console.log("로그인 정보 및 토큰이 로컬 스토리지에 저장되었습니다.");
-        } else {
-          console.error(
-            "사용자 정보 가져오기 실패:",
-            userInfoResponse.statusText
-          );
-        }
+        //   console.log("로그인 정보 및 토큰이 로컬 스토리지에 저장되었습니다.");
+        // } else {
+        //   console.error(
+        //     "사용자 정보 가져오기 실패:",
+        //     userInfoResponse.statusText
+        //   );
+        // }
       } else {
         console.error("로그인 실패:", response.statusText);
         // 로그인 실패 시 토스트 메시지 표시
