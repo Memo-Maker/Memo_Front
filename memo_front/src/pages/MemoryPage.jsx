@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import YouTube from "react-youtube";
+import TestEditorForm from "../components/texteditor/TestEditorForm";
 
 
 const Layout = styled.div`
@@ -33,12 +34,6 @@ const GptBox = styled.div`
   background-color: #f0f0f0;
 `;
 
-const MainBox = styled.div`
-  width: 40vw;
-  height: 100%;
-  margin-right: 3vw;
-  background-color: #f0f0f0;
-`;
 
 const MemoryPage = () => {
   const [videoId, setVideoId] = useState(null);
@@ -66,7 +61,7 @@ const MemoryPage = () => {
         <YouTubeBox>{videoId && <YouTube videoId={videoId} />}</YouTubeBox>
         <GptBox></GptBox>
       </Container>
-      <MainBox></MainBox>
+      <TestEditorForm></TestEditorForm>
     </Layout>
   );
 };
