@@ -1,43 +1,71 @@
-//메모리 페이지
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import YouTube from "react-youtube";
+
 
 const Layout = styled.div`
   display: flex;
- justify-content: space-evenly;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 76.5vh;
+  margin-bottom: 1vw;
 `;
 
-const BoxContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 40vw;
+  height: 100%;
 `;
 
-const Box = styled.div`
-  width: 300px;
-  height: ${({ isLarge }) => (isLarge ? "300px" : "150px")};
-  border-radius: 8px;
-  border: 1px solid #dcdcdc;
-  margin-bottom: ${({ isLarge }) => (isLarge ? "0" : "20px")};
-  position: relative;
+const YouTubeBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 33vw;
+  height: 100%;
+`;
+
+const GptBox = styled.div`
+  width: 33vw;
+  height: 30vw;
   background-color: #f0f0f0;
 `;
 
-const MainBox = styled(Box)`
-  width: 600px;
-  height: 600px;
-  margin-left: 20px;
+const MainBox = styled.div`
+  width: 40vw;
+  height: 100%;
+  margin-right: 3vw;
   background-color: #f0f0f0;
 `;
 
 const MemoryPage = () => {
+  const [videoId, setVideoId] = useState(null);
+
+  useEffect(() => {
+    // 로컬스토리지에서 videoUrl 읽어오기
+    const storedVideoUrl = localStorage.getItem("videoUrl");
+    if (storedVideoUrl) {
+      const videoId = extractVideoId(storedVideoUrl);
+      setVideoId(videoId);
+    }
+  }, []);
+
+  // YouTube 영상의 고유 ID를 추출하는 함수
+  const extractVideoId = (url) => {
+    const regExp =
+      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[1] ? match[1] : null;
+  };
+
   return (
     <Layout>
-      <BoxContainer>
-        <Box />
-        <Box isLarge />
-      </BoxContainer>
+      <Container>
+        <YouTubeBox>{videoId && <YouTube videoId={videoId} />}</YouTubeBox>
+        <GptBox></GptBox>
+      </Container>
       <MainBox></MainBox>
     </Layout>
   );
