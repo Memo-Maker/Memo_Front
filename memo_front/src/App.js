@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify"; // react-toastify에서 ToastContainer를 import합니다.
 import "react-toastify/dist/ReactToastify.css"; // react-toastify의 CSS 파일을 import합니다.
 import Header from "./components/header/Header";
+import Header2 from "./components/header/Header2";
 import Footer from "./components/footer/footer";
 import HomePage from "./pages/HomePage";
 import MemoryPage from "./pages/MemoryPage";
@@ -20,7 +21,7 @@ function App() {
         {/* 헤더 컴포넌트를 추가합니다. */}
         <Routes>
           <Route path="/" element={<><Header /><HomePage /><Footer/></>} />
-          <Route path="/memory" element={<><Header /><MemoryPage /><Footer/></>} />
+          <Route path="/memory" element={<><Header2 /><MemoryPage /><Footer/></>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
         </Routes>

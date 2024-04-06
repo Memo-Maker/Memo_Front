@@ -5,10 +5,10 @@ const FooterContainer = styled.footer`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 50px;
+  padding: 0.3vw 5vw;
   background-color: #f8f9fa;
   color: #6c757d;
-  font-size: 0.9em;
+  font-size: 0.9rem;
 `;
 
 const LeftSection = styled.div``;
