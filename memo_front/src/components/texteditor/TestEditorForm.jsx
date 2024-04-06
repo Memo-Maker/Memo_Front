@@ -7,7 +7,7 @@ import { stateToHTML } from "draft-js-export-html";
 
 const MyBlock = styled.div`
   .wrapper-class {
-    width: 50%;
+    width: 90%;
     margin: 0 auto;
     margin-bottom: 4rem;
   }
