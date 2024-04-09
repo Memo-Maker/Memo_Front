@@ -8,10 +8,10 @@ import { stateToHTML } from "draft-js-export-html";
 const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
+  border: 0.1vw solid #ccc;
   border-radius: 0.5vw;
-  padding: 1vw;
-  width: 50%;
+  padding: 0.5vw;
+  width: 40%;
 `;
 
 // 상태 표시줄
@@ -21,22 +21,27 @@ const StatusBar = styled.div`
   align-items: flex-end;
   font-size: 14px;
   color: #666;
-  border-top: 1px solid #ccc; /* 가로 선 추가 */
+  border-top: 0.1vw solid #ccc; /* 가로 선 추가 */
   padding-top: 0.5vw; /* 가로 선 위쪽 패딩 추가 */
 `;
 
 const MyBlock = styled.div` 
   .wrapper-class {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
-    margin-bottom: 4rem;
   }
   .editor {
-    height: 500px;
-    border: 1px solid #f1f1f1;
-    padding: 5px;
-    border-radius: 2px;
+    height: 30vw;
+    border: 0.1vw solid #f1f1f1;
+    padding: 0.5vw;
   }
+`;
+
+const Button = styled.button`
+  background-color: #4b4c4c;
+  color: #fff;
+  padding: 0.7vw 1.3vw;
+  border-radius:0.2vw;
 `;
 
 const TestEditorForm = () => {
@@ -98,7 +103,7 @@ const TestEditorForm = () => {
             <div style={{ marginRight: "1vw"}}>
               글자 수: {editorState.getCurrentContent().getPlainText("").length}
             </div>
-            <button onClick={saveContent}>저장하기</button>
+            <Button onClick={saveContent}>저장하기</Button>
           </StatusBar>
         </MyBlock>
       </EditorContainer>

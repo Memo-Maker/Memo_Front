@@ -3,15 +3,14 @@ import styled from "styled-components";
 import YouTube from "react-youtube";
 import TestEditorForm from "../components/texteditor/TestEditorForm";
 import Summary from "../components/memory/Summary";
+import ChatIcon from "../assets/images/chat.png"; // 이미지 import
 
 const Layout = styled.div`
   display: flex;
-  height:90%;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 2vw;
-  background-color: #dddddd;
 `;
 
 const Container = styled.div`
@@ -22,22 +21,54 @@ const Container = styled.div`
   height: 100%;
 `;
 
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명한 검은 배경 */
+  z-index: 999; /* 다른 요소들보다 위에 표시 */
+  display: ${(props) => (props.visible ? "flex" : "none")};
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalContent = styled.div`
+  background-color: #fff;
+  padding: 2vw;
+  border-radius: 0.5vw;
+`;
+
 const Button = styled.button`
-  background-color: #007bff;
+  background-color: #fff;
   color: white;
   border: none;
-  border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  padding: 1vw;
+
+  /* 이미지를 버튼 안에 넣기 */
+  background-image: url(${ChatIcon});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 1vw;
+  height: 1vw;
+
+  position: fixed; /* 위치를 고정시킴 */
+  bottom: 2vw; /* 하단 여백 설정 */
+  left: 3vw; /* 좌측 여백 설정 */
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #838383;
   }
 `;
 
 const MemoryPage = () => {
   const [videoId, setVideoId] = useState(null);
   const [playerSize, setPlayerSize] = useState({ width: 560, height: 315 });
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     // 로컬스토리지에서 videoUrl 읽어오기
@@ -46,6 +77,10 @@ const MemoryPage = () => {
       const videoId = extractVideoId(storedVideoUrl);
       setVideoId(videoId);
     }
+
+    // 초기 사이즈 설정
+    handleResize();
+
     // 윈도우 리사이즈 이벤트 핸들러 등록
     window.addEventListener("resize", handleResize);
 
@@ -72,10 +107,15 @@ const MemoryPage = () => {
     });
   };
 
+  // 모달 창을 열고 닫는 함수
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   // 버튼 클릭 시 동작을 정의하는 함수
   const handleButtonClick = () => {
-    // 버튼이 클릭되었을 때 할 일을 여기에 추가하세요.
-    console.log("버튼이 클릭되었습니다.");
+    // 버튼이 클릭되었을 때 모달 창을 토글합니다.
+    toggleModal();
   };
 
   return (
@@ -97,10 +137,13 @@ const MemoryPage = () => {
         )}
         <Summary />
       </Container>
-
-      <Button onClick={handleButtonClick}>?</Button>
-
       <TestEditorForm />
+      <Button onClick={handleButtonClick}></Button>
+
+      {/* 모달 창 */}
+      <ModalBackground visible={isModalVisible} onClick={toggleModal}>
+        <ModalContent>모달 내용이 여기에 들어갑니다.</ModalContent>
+      </ModalBackground>
     </Layout>
   );
 };

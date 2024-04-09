@@ -40,7 +40,7 @@ import styled from "styled-components";
 import Pencil from "../../assets/images/pencil.png";
 
 const SummaryBox = styled.div`
-  padding: 2vw;
+  padding: 1vw;
   background-color: #f0f0f0;
 `;
 
