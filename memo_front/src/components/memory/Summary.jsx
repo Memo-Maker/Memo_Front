@@ -39,25 +39,25 @@ import React from "react";
 import styled from "styled-components";
 import Pencil from "../../assets/images/pencil.png";
 
-const GptBox = styled.div`
+const SummaryBox = styled.div`
   padding: 2vw;
   background-color: #f0f0f0;
 `;
 
 const Text = styled.div`
-  margin-top: 1vw; 
+  margin-top: 1vw;
   position: relative;
 `;
 
 const PencilImage = styled.img`
   width: 2vw;
   height: auto;
-  position: absolute;
+  position: relative;
 `;
 
 const Summary = () => {
   return (
-    <GptBox>
+    <SummaryBox>
       <Text>
         <PencilImage src={Pencil} alt="Pencil" /> 재산의 불법 점유로 인한 소송
         및 소유권 분쟁으로 인한 소송이 발생하였습니다.
@@ -74,7 +74,7 @@ const Summary = () => {
         <PencilImage src={Pencil} alt="Pencil" /> 보상금 청구의 합법성에 대한
         법원 결정이 이 문제에 대한 급진적 해결을 제시할 것으로 예상됩니다.
       </Text>
-    </GptBox>
+    </SummaryBox>
   );
 };
 
