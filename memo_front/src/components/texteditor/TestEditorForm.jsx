@@ -5,7 +5,27 @@ import styled from "styled-components";
 import { EditorState, convertFromHTML, ContentState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 
-const MyBlock = styled.div`
+const EditorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 0.5vw;
+  padding: 1vw;
+  width: 50%;
+`;
+
+// 상태 표시줄
+const StatusBar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  font-size: 14px;
+  color: #666;
+  border-top: 1px solid #ccc; /* 가로 선 추가 */
+  padding-top: 0.5vw; /* 가로 선 위쪽 패딩 추가 */
+`;
+
+const MyBlock = styled.div` 
   .wrapper-class {
     width: 90%;
     margin: 0 auto;
@@ -20,12 +40,9 @@ const MyBlock = styled.div`
 `;
 
 const TestEditorForm = () => {
-  // useState로 상태관리하기 초기값은 EditorState.createEmpty()
-  // EditorState의 비어있는 ContentState 기본 구성으로 새 개체를 반환 => 이렇게 안하면 상태 값을 나중에 변경할 수 없음.
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   useEffect(() => {
-    // 페이지가 로드될 때 로컬 스토리지에서 텍스트 데이터를 불러와 텍스트 에디터에 표시
     const savedContent = localStorage.getItem("editorContent");
     if (savedContent) {
       const blocksFromHTML = convertFromHTML(savedContent);
@@ -35,10 +52,9 @@ const TestEditorForm = () => {
       );
       setEditorState(EditorState.createWithContent(state));
     }
-  }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 실행되도록 설정
+  }, []);
 
   const onEditorStateChange = (editorState) => {
-    // editorState에 값 설정
     setEditorState(editorState);
   };
 
@@ -48,38 +64,44 @@ const TestEditorForm = () => {
     localStorage.setItem("editorContent", htmlContent);
     console.log(htmlContent);
   };
-  
+
+  // 타자를 칠 때마다 글자 수 업데이트
+  const handleTextChange = (editorState) => {
+    setEditorState(editorState);
+    const plainText = editorState.getCurrentContent().getPlainText("");
+    console.log("글자 수:", plainText.length);
+  };
+
   return (
     <>
-      <MyBlock>
-        <Editor
-          // 에디터와 툴바 모두에 적용되는 클래스
-          wrapperClassName="wrapper-class"
-          // 에디터 주변에 적용된 클래스
-          editorClassName="editor"
-          // 툴바 주위에 적용된 클래스
-          toolbarClassName="toolbar-class"
-          // 툴바 설정
-          toolbar={{
-            // inDropdown: 해당 항목과 관련된 항목을 드롭다운으로 나타낼것인지
-            inline: { inDropdown: true },
-            list: { inDropdown: true },
-            textAlign: { inDropdown: true },
-            link: { inDropdown: true },
-            history: { inDropdown: false }
-          }}
-          placeholder="내용을 작성해주세요."
-          // 한국어 설정
-          localization={{
-            locale: "ko"
-          }}
-          // 초기값 설정
-          editorState={editorState}
-          // 에디터의 값이 변경될 때마다 onEditorStateChange 호출
-          onEditorStateChange={onEditorStateChange}
-        />
-        <button onClick={saveContent}>저장</button>
-      </MyBlock>
+      <EditorContainer>
+        <MyBlock>
+          <Editor
+            wrapperClassName="wrapper-class"
+            editorClassName="editor"
+            toolbarClassName="toolbar-class"
+            toolbar={{
+              inline: { inDropdown: true },
+              list: { inDropdown: true },
+              textAlign: { inDropdown: true },
+              link: { inDropdown: true },
+              history: { inDropdown: false },
+            }}
+            placeholder="필기하고 싶은 내용을 정리해주세요."
+            localization={{
+              locale: "ko",
+            }}
+            editorState={editorState}
+            onEditorStateChange={handleTextChange} // 타자를 칠 때마다 호출될 핸들러 변경
+          />
+          <StatusBar>
+            <div style={{ marginRight: "1vw"}}>
+              글자 수: {editorState.getCurrentContent().getPlainText("").length}
+            </div>
+            <button onClick={saveContent}>저장하기</button>
+          </StatusBar>
+        </MyBlock>
+      </EditorContainer>
     </>
   );
 };
