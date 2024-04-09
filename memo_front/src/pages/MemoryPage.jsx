@@ -142,7 +142,7 @@ const MemoryPage = () => {
 
       {/* 모달 창 */}
       <ModalBackground visible={isModalVisible} onClick={toggleModal}>
-        <ModalContent>모달 내용이 여기에 들어갑니다.</ModalContent>
+        <ModalContent>모달 내용이 여기 들어갑니다.</ModalContent>
       </ModalBackground>
     </Layout>
   );
