@@ -160,16 +160,18 @@ export const AuthProvider = ({ children }) => {
   };
 
 
-  const saveContentToLocalStorage = (htmlContent)=>{
+  const saveContentToLocal = (htmlContent)=>{
   localStorage.setItem("editorContent", htmlContent)
   console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.")
 };
+
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn,
         user,
         getTokenFromLocalStorage,
+        saveContentToLocal,
         signup,
         login,
         logout,
