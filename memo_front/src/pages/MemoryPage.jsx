@@ -7,8 +7,11 @@ import ChatIcon from "../assets/images/chat.png"; // 이미지 import
 
 const Layout = styled.div`
   display: flex;
+  width : 100%;
+  height : 100%;
   flex-direction: row;
   align-items: center;
+  background-color : #582fff;
   justify-content: center;
   gap: 2vw;
 `;
@@ -53,12 +56,13 @@ const Button = styled.button`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 1vw;
-  height: 1vw;
+  width: 3vw;
+  height: 3vw;
 
-  position: fixed; /* 위치를 고정시킴 */
-  bottom: 2vw; /* 하단 여백 설정 */
-  left: 3vw; /* 좌측 여백 설정 */
+  position: relative; /* 위치를 고정시킴 */
+  top: -1vh;
+  left: -4vw; /* 왼쪽에서 -4vw 지점에 위치 */
+  transform: translateY(-50%); /* 세로 중앙 정렬 */
 
   &:hover {
     background-color: #838383;
@@ -136,9 +140,10 @@ const MemoryPage = () => {
           />
         )}
         <Summary />
+        <Button onClick={handleButtonClick}></Button>
       </Container>
       <TestEditorForm />
-      <Button onClick={handleButtonClick}></Button>
+      
 
       {/* 모달 창 */}
       <ModalBackground visible={isModalVisible} onClick={toggleModal}>

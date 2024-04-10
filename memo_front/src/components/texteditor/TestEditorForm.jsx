@@ -4,6 +4,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import styled from "styled-components";
 import { EditorState, convertFromHTML, ContentState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
+import { useAuth } from "../../context/AuthContext"
 
 const EditorContainer = styled.div`
   display: flex;
@@ -40,12 +41,14 @@ const MyBlock = styled.div`
 const Button = styled.button`
   background-color: #4b4c4c;
   color: #fff;
+  cursor: pointer;
   padding: 0.7vw 1.3vw;
   border-radius:0.2vw;
 `;
 
 const TestEditorForm = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const {saveContentToLocal} = useAuth();
 
   useEffect(() => {
     const savedContent = localStorage.getItem("editorContent");
@@ -63,11 +66,12 @@ const TestEditorForm = () => {
     setEditorState(editorState);
   };
 
-  const saveContent = () => {
+  const handleSaveContent = () => {
     const contentState = editorState.getCurrentContent();
     const htmlContent = stateToHTML(contentState);
-    localStorage.setItem("editorContent", htmlContent);
+    saveContentToLocal(htmlContent);
     console.log(htmlContent);
+    
   };
 
   // 타자를 칠 때마다 글자 수 업데이트
@@ -103,7 +107,7 @@ const TestEditorForm = () => {
             <div style={{ marginRight: "1vw"}}>
               글자 수: {editorState.getCurrentContent().getPlainText("").length}
             </div>
-            <Button onClick={saveContent}>저장하기</Button>
+            <Button onClick={handleSaveContent}>저장하기</Button>
           </StatusBar>
         </MyBlock>
       </EditorContainer>
