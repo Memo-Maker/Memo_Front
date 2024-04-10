@@ -164,11 +164,12 @@ const handleUpload = () => {
           {isLoading ? "Loading.." : isCompleted ? "시작하기" : "Load Video"}
         </Button>
       </Detail>
-      <ProgressBar show={showProgressBar}>
+      {/* 나중에 다시 주석 해제하기 */}
+      {/* <ProgressBar show={showProgressBar}>
         <ProgressFill progress={progress} />
         <WriteIcon className="fas fa-pencil-alt" isFull={isCompleted} />
         <ProgressText>{progress}%</ProgressText>
-      </ProgressBar>
+      </ProgressBar> */}
     </Container>
   );
 };
