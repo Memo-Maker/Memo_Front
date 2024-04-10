@@ -5,6 +5,9 @@ import Logo from "../assets/images/logo.png";
 import Banner from "../assets/images/Banner.png";
 import { useAuth } from "../context/AuthContext"; // AuthContext import 추가
 
+const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
+const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -124,10 +127,19 @@ const LoginPage = () => {
   const [userpassword, setUserPassword] = useState("");
   const navigate = useNavigate(); // useNavigate 훅 사용
   // useAuth 훅을 사용하여 AuthContext에서 login 함수 가져옴
-  const { login } = useAuth();
+  const { login, kakaoLogin } = useAuth();
 
   const toggleShowPassword = () => {
     setShowPass(!showPass);
+  };
+
+  // 카카오 로그인 버튼 클릭 시 호출되는 함수
+  const handleKakaoLogin = async (event) => {
+    event.preventDefault(); // 폼의 기본 제출 동작 막기
+    // 카카오 로그인 링크 생성
+    const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    // 로그인 링크로 이동
+    window.location.href = link;
   };
 
   // 로그인 버튼 클릭 시 호출되는 함수
@@ -144,7 +156,8 @@ const LoginPage = () => {
             <img src={Logo} alt="Logo" />
           </LogoLink>
         </LogoTitle>
-        <SocialLoginButton bgColor="#FFEB00">
+        {/* 카카오 로그인 버튼*/}
+        <SocialLoginButton bgColor="#FFEB00" onClick={handleKakaoLogin}> 
           카카오로 시작하기
         </SocialLoginButton>
         <SocialLoginButton bgColor="#03C75A">

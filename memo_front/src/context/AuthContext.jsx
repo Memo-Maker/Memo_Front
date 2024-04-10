@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom"; // useNavigate를 import합니다.
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import axios from "axios"; // axios를 import합니다.
 
 // 공통 URL 정의
 const BASE_URL = "http://localhost:8080";
+// 카카오 REST API 키와 리다이렉트 URI 설정
+
 
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
@@ -25,7 +27,6 @@ export const AuthProvider = ({ children }) => {
       console.log("로컬 스토리지에서 로그인 정보 및 토큰을 가져왔습니다.");
     }
   }, []);
-  
 
   // -----------------------------------------------------------------------------
   // - Name : getTokenFromLocalStorage
@@ -47,25 +48,34 @@ export const AuthProvider = ({ children }) => {
   const signup = async (memberEmail, memberPassword, memberName) => {
     try {
       console.log("회원가입 시도 중...");
-      console.log("  -user 정보- " + "\n { 사용자이메일: " + memberEmail + "\n   비밀번호: " + memberPassword + "\n   닉네임:" + memberName + " }");
+      console.log(
+        "  -user 정보- " +
+          "\n { 사용자이메일: " +
+          memberEmail +
+          "\n   비밀번호: " +
+          memberPassword +
+          "\n   닉네임:" +
+          memberName +
+          " }"
+      );
       console.log("보낼 서버 주소 : " + `${BASE_URL}/member/save`);
       // 서버에 회원가입 정보를 전송하고 응답을 기다림
       const response = await fetch(`${BASE_URL}/member/save`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           memberEmail,
           memberPassword,
           memberName
-        }),
+        })
       });
       if (response.ok) {
         console.log("회원가입 성공!");
         toast.success("회원가입 성공!");
         navigate("/");
-        
+
         // 회원가입 후 추가 작업 수행
         // 예: 로그인 처리 등
       } else {
@@ -90,19 +100,26 @@ export const AuthProvider = ({ children }) => {
   const login = async (memberEmail, memberPassword) => {
     try {
       console.log("로그인 시도 중...");
-      console.log("  -user 정보- " + "\n { 사용자이메일: " + memberEmail + "\n   비밀번호: " + memberPassword + " }");
+      console.log(
+        "  -user 정보- " +
+          "\n { 사용자이메일: " +
+          memberEmail +
+          "\n   비밀번호: " +
+          memberPassword +
+          " }"
+      );
       console.log("보낼 서버 주소 : " + `${BASE_URL}/member/login`);
 
       // 서버에 로그인 정보를 전송하고 응답을 기다림
       const response = await fetch(`${BASE_URL}/member/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           memberEmail,
           memberPassword
-        }),
+        })
       });
       if (response.ok) {
         console.log("로그인 성공!");
@@ -111,7 +128,7 @@ export const AuthProvider = ({ children }) => {
         const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
         localStorage.setItem("token", jwtToken); // 토큰 저장
         console.log("[ token ]\n" + jwtToken);
-        
+
         // 사용자 정보를 추가로 가져오는 API 호출
         // const userInfoResponse = await fetch( BASE_URL , {
         //   method: "GET",
@@ -159,11 +176,43 @@ export const AuthProvider = ({ children }) => {
     console.log("로그인 정보 및 인증 정보가 로컬 스토리지에서 삭제되었습니다.");
   };
 
+  // -----------------------------------------------------------------------------
+  // - Name : saveContentToLocal
+  // - Desc : 메모를 html로 로컬스토리지에 저장함
+  // -----------------------------------------------------------------------------
+  const saveContentToLocal = (htmlContent) => {
+    localStorage.setItem("editorContent", htmlContent);
+    console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.");
+  };
 
-  const saveContentToLocal = (htmlContent)=>{
-  localStorage.setItem("editorContent", htmlContent)
-  console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.")
+  // -----------------------------------------------------------------------------
+// - Name : sendAuthorizationCode
+// - Desc : 백엔드로 인가코드를 전송하는 함수
+// - Input
+//   1) code: 카카오 로그인 후 받은 인가코드
+// - Output
+// -----------------------------------------------------------------------------
+const sendAuthorizationCode = async (code) => {
+  try {
+    console.log("인가코드를 백엔드로 전송하는 중...");
+    console.log("[ 인가코드 ]\n", code);
+
+    // 인가코드를 URL의 쿼리 파라미터로 포함하여 백엔드로 전송
+    const response = await axios.post(`${BASE_URL}/login/oauth2/code/kakao?code=${code}`);
+    
+    if (response.status === 200) {
+      console.log("인가코드 전송 성공!");
+      // 성공 시 추가 작업 수행
+    } else {
+      console.error("인가코드 전송 실패:", response.statusText);
+      // 실패 시 에러 처리
+    }
+  } catch (error) {
+    console.error("에러 발생:", error);
+    // 에러 발생 시 에러 처리
+  }
 };
+
 
   return (
     <AuthContext.Provider
@@ -175,6 +224,7 @@ export const AuthProvider = ({ children }) => {
         signup,
         login,
         logout,
+        sendAuthorizationCode,
       }}
     >
       {children}
