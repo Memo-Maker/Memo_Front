@@ -58,9 +58,9 @@ export const AuthProvider = ({ children }) => {
           memberName +
           " }"
       );
-      console.log("보낼 서버 주소 : " + `${BASE_URL}/member/save`);
+      console.log("보낼 서버 주소 : " + `${BASE_URL}/api/v1/auth/sign-up`);
       // 서버에 회원가입 정보를 전송하고 응답을 기다림
-      const response = await fetch(`${BASE_URL}/member/save`, {
+      const response = await fetch(`${BASE_URL}/api/v1/auth/sign-up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -102,16 +102,16 @@ export const AuthProvider = ({ children }) => {
       console.log("로그인 시도 중...");
       console.log(
         "  -user 정보- " +
-          "\n { 사용자이메일: " +
-          memberEmail +
-          "\n   비밀번호: " +
-          memberPassword +
-          " }"
+        "\n { 사용자이메일: " +
+        memberEmail +
+        "\n   비밀번호: " +
+        memberPassword +
+        " }"
       );
-      console.log("보낼 서버 주소 : " + `${BASE_URL}/member/login`);
-
+      console.log("보낼 서버 주소 : " + `${BASE_URL}/api/v1/auth/sign-in`);
+  
       // 서버에 로그인 정보를 전송하고 응답을 기다림
-      const response = await fetch(`${BASE_URL}/member/login`, {
+      const response = await fetch(`${BASE_URL}/api/v1/auth/sign-in`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -121,38 +121,18 @@ export const AuthProvider = ({ children }) => {
           memberPassword
         })
       });
+  
       if (response.ok) {
         console.log("로그인 성공!");
         toast.success("로그인 성공!");
         navigate("/");
-        const jwtToken = response.headers.get("Authorization"); // 토큰 헤더에서 추출
+        
+        // 헤더에서 토큰 추출
+        const responseData = await response.json();
+        const jwtToken = responseData.token;
+  
         localStorage.setItem("token", jwtToken); // 토큰 저장
         console.log("[ token ]\n" + jwtToken);
-
-        // 사용자 정보를 추가로 가져오는 API 호출
-        // const userInfoResponse = await fetch( BASE_URL , {
-        //   method: "GET",
-        //   headers: {
-        //     Authorization: jwtToken,
-        //   },
-        // });
-        // if (userInfoResponse.ok) {
-        //   const userInfo = await userInfoResponse.json();
-        //   // 로컬 스토리지에 사용자 정보 저장
-        //   localStorage.setItem("isLoggedIn", "true");
-        //   localStorage.setItem("user", JSON.stringify(userInfo));
-        //   localStorage.setItem("token", jwtToken); // 토큰 저장
-
-        //   setIsLoggedIn(true);
-        //   setUser(userInfo);
-
-        //   console.log("로그인 정보 및 토큰이 로컬 스토리지에 저장되었습니다.");
-        // } else {
-        //   console.error(
-        //     "사용자 정보 가져오기 실패:",
-        //     userInfoResponse.statusText
-        //   );
-        // }
       } else {
         console.error("로그인 실패:", response.statusText);
         // 로그인 실패 시 토스트 메시지 표시
@@ -163,6 +143,7 @@ export const AuthProvider = ({ children }) => {
       toast.error("로그인 중 에러가 발생했습니다.");
     }
   };
+  
 
   // -----------------------------------------------------------------------------
   // - Name : logout
