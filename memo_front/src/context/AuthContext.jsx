@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setUser(userInfo);
       // setToken(storedToken); // 저장된 토큰 상태로 설정
-      console.log("로컬 스토리지에서 로그인 정보 및 토큰을 가져왔습니다.");
+      console.log("로컬 스토리지에서 로그인 여부 및 토큰을 가져왔습니다.");
     }
   }, []);
 
@@ -132,6 +132,10 @@ export const AuthProvider = ({ children }) => {
         const jwtToken = responseData.token;
   
         localStorage.setItem("token", jwtToken); // 토큰 저장
+        localStorage.setItem("isLoggedIn", true);
+        setIsLoggedIn(true);
+        setUser(responseData.user);
+        console.log("토큰이 로컬 스토리지에 저장되었습니다.");
         console.log("[ token ]\n" + jwtToken);
       } else {
         console.error("로그인 실패:", response.statusText);
