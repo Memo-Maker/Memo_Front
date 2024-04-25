@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Search from "../../assets/images/search.png";
 import Profile from "../../assets/images/profile.png";
-import MyModal from "../modal/MyInfomation"; // 모달 컴포넌트를 import합니다.
+import ProfileModal from "../modal/ProfileModal"
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -68,18 +68,23 @@ const Button = styled.button`
 `;
 
 function Header() {
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달이 열려있는지 여부를 저장하는 상태(state)
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 상태(state)
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림/닫힘 상태 추가
+
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 여부를 확인하여 상태를 설정합니다.
-    const loggedIn = localStorage.getItem("isLoggedIn");
-    setIsLoggedIn(loggedIn === "true"); // "true" 문자열을 boolean 값으로 변환하여 설정합니다.
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    setIsLoggedIn(isLoggedIn === "true"); // "true" 문자열을 boolean 값으로 변환하여 설정합니다.
   }, []);
 
-  // 모달을 열기 위한 함수
+  // 모달 열기 핸들러 함수
   const openModal = () => {
     setIsModalOpen(true);
+  };
+
+  // 모달 닫기 핸들러 함수
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -98,11 +103,13 @@ function Header() {
         </SearchTitle>
         {/* isLoggedIn 상태에 따라 프로필 이미지 또는 로그인 버튼을 렌더링합니다. */}
         {isLoggedIn ? (
-          <ProfileTitle>
-            {/* 프로필 이미지를 클릭하면 openModal 함수를 호출하여 모달창을 엽니다. */}
-            <ProfileImage src={Profile} alt="Profile" onClick={openModal} />
-          </ProfileTitle>
-        ) : (
+        <ProfileTitle>
+          {/* 프로필 이미지를 클릭하면 모달창을 열도록 설정 */}
+          <ProfileImage src={Profile} alt="Profile" onClick={openModal} />
+          {/* 모달 열림 상태에 따라 모달을 렌더링 */}
+          {isModalOpen && <ProfileModal closeModal={closeModal} />}
+        </ProfileTitle>
+      ) : (
           <ProfileTitle>
             <Link to="/login">
               <Button>로그인하기</Button>
@@ -110,8 +117,6 @@ function Header() {
           </ProfileTitle>
         )}
       </Right>
-      {/* 모달창을 렌더링합니다. 모달이 열려있으면 MyModal 컴포넌트를 렌더링합니다. */}
-      {isModalOpen && <MyModal closeModal={() => setIsModalOpen(false)} />}
     </HeaderContainer>
   );
 }
