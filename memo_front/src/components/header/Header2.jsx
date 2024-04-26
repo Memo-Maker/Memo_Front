@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
@@ -21,7 +21,6 @@ const Right = styled.div`
   display: flex;
   gap: 3vw;
 `;
-
 
 const HamburgerButton = styled.button`
   background-color: transparent;
@@ -61,11 +60,17 @@ const Button = styled.button`
 
 const LogoImage = styled.img`
   width: 60%;
-  height: auto; 
+  height: auto;
 `;
 
 function Header2() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 상태(state)
+
+  useEffect(() => {
+    // 페이지 로드 시 로컬 스토리지에서 로그인 여부를 확인하여 상태를 설정합니다.
+    const loggedIn = localStorage.getItem("isLoggedIn");
+    setIsLoggedIn(loggedIn === "true"); // "true" 문자열을 boolean 값으로 변환하여 설정합니다.
+  }, []);
 
   return (
     <HeaderContainer>

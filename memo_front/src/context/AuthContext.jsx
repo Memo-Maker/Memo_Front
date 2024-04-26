@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setUser(userInfo);
       // setToken(storedToken); // 저장된 토큰 상태로 설정
-      console.log("로컬 스토리지에서 로그인 정보 및 토큰을 가져왔습니다.");
+      console.log("로컬 스토리지에서 로그인 여부 및 토큰을 가져왔습니다.");
     }
   }, []);
 
@@ -74,6 +74,8 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         console.log("회원가입 성공!");
         toast.success("회원가입 성공!");
+        login(memberEmail, memberPassword);
+
         navigate("/");
 
         // 회원가입 후 추가 작업 수행
@@ -125,14 +127,21 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         console.log("로그인 성공!");
         toast.success("로그인 성공!");
-        navigate("/");
+        
         
         // 헤더에서 토큰 추출
         const responseData = await response.json();
         const jwtToken = responseData.token;
   
         localStorage.setItem("token", jwtToken); // 토큰 저장
+        localStorage.setItem("isLoggedIn", true);
+        setIsLoggedIn(true);
+        setUser(responseData.user);
+        console.log("토큰이 로컬 스토리지에 저장되었습니다.");
         console.log("[ token ]\n" + jwtToken);
+
+        navigate("/");
+        // window.location.reload();
       } else {
         console.error("로그인 실패:", response.statusText);
         // 로그인 실패 시 토스트 메시지 표시
@@ -151,10 +160,15 @@ export const AuthProvider = ({ children }) => {
   // -----------------------------------------------------------------------------
   const logout = () => {
     // 로그아웃 시 로컬 스토리지에서 로그인 정보 및 인증 정보 삭제
-    localStorage.clear();
+    // localStorage.clear();
+    localStorage.setItem("isLoggedIn", false);
     setIsLoggedIn(false);
     setUser(null);
     console.log("로그인 정보 및 인증 정보가 로컬 스토리지에서 삭제되었습니다.");
+    window.location.reload();
+
+    navigate("/");
+    
   };
 
   // -----------------------------------------------------------------------------

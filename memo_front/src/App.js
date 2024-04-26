@@ -32,7 +32,7 @@ function App() {
     <Router>
       <AuthProvider>
         <div className="App" style={{ height: `${windowHeight}px` }}>
-          <ToastContainer autoClose={2000} />
+          <ToastContainer autoClose={1000} />
           <Routes>
             <Route path="/" element={<><Header /><HomePage /><Footer/></>} />
             <Route path="/memory" element={<><Header2 /><MemoryPage /></>} />
