@@ -5,16 +5,24 @@ import Pencil from "../../assets/images/pencil.png";
 const SummaryBox = styled.div`
   padding: 1vw;
   background-color: #f0f0f0;
+  max-height: 30vh;
+  overflow-y: auto;
 `;
 
-const Text = styled.div`
-  margin-top: 1vw;
-  position: relative;
+const TextContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top:0.7vw;
 `;
 
 const PencilImage = styled.img`
-  width: 2vw;
+  width: 1.5vw;
   height: auto;
+  margin-right: 0.5vw; 
+`;
+
+const Text = styled.div`
+  flex: 1;
   position: relative;
 `;
 
@@ -29,9 +37,10 @@ const Summary = () => {
     if (!sentences || sentences.length === 0) return null;
 
     return sentences.map((sentence, index) => (
-      <Text key={index}>
-        <PencilImage src={Pencil} alt="Pencil" /> {sentence.trim()+"."}
-      </Text>
+      <TextContainer key={index}>
+        <PencilImage src={Pencil} alt="Pencil" />
+        <Text>{sentence.trim() + "."}</Text>
+      </TextContainer>
     ));
   };
 
