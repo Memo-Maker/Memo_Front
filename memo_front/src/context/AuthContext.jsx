@@ -221,7 +221,7 @@ const GPTQuery = async (query) => {
     console.log("[ 쿼리 ]\n", query);
 
     // 서버에 쿼리를 전송하고 응답을 기다림
-    const response = await fetch(`http://localhost:8080/api/v1/auth/flask`, {
+    const response = await fetch(`http://taeksin.iptime.org:5002/questionurl`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -237,12 +237,15 @@ const GPTQuery = async (query) => {
     console.log("쿼리 전송 성공!");
     console.log("받은 답변:", data); // 받은 답변을 로그로 출력
     console.log("받은 답변:", data.qAnswer); // 받은 답변을 로그로 출력
+    
+
     return data;
   } catch (error) {
     console.error("에러 발생:", error);
     throw new Error("쿼리 전송 중 에러가 발생했습니다.");
   }
 };
+
 // -----------------------------------------------------------------------------
 // - Name : GPTSummary
 // - Desc : GPT 모델에 summary 요청을 보내는 함수
@@ -272,6 +275,10 @@ const GPTSummary = async (url) => {
     const data = await response.json();
     console.log("summary 요청 전송 성공!");
     console.log("받은 summary:", data); // 받은 summary를 로그로 출력
+    
+    // 받은 summary 데이터를 로컬스토리지에 저장
+    localStorage.setItem("summaryData", JSON.stringify(data.summary));
+    
     return data;
   } catch (error) {
     console.error("에러 발생:", error);

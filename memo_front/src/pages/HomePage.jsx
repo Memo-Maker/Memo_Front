@@ -96,6 +96,8 @@ const HomePage = () => {
     try {
       // GPTSummary 함수 호출하여 요약 생성
       await GPTSummary(videoUrl);
+      console.log("영상 링크:", videoUrl); // 링크 콘솔에 출력
+      localStorage.setItem("videoUrl", videoUrl); // 로컬스토리지에 videoUrl 저장
       setIsCompleted(true);
     } catch (error) {
       console.error("GPTSummary 호출 중 에러 발생:", error);
