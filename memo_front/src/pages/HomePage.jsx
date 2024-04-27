@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Container = styled.div`
   display: flex;
@@ -88,32 +89,46 @@ const HomePage = () => {
   const [progress, setProgress] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showProgressBar, setShowProgressBar] = useState(false);
+  const { GPTSummary } = useAuth();
 
-const handleUpload = () => {
-  setIsLoading(true);
-  setShowProgressBar(true);
-  let uploadProgress = 0;
-  const interval = setInterval(() => {
-    uploadProgress += 10;
-    setProgress(uploadProgress);
-    if (uploadProgress >= 100) {
-      clearInterval(interval);
-      setIsLoading(false);
+  const handleUpload = async () => {
+    setIsLoading(true);
+    try {
+      // GPTSummary 함수 호출하여 요약 생성
+      await GPTSummary(videoUrl);
       setIsCompleted(true);
-      console.log("영상 링크:", videoUrl); // 링크 콘솔에 출력
-      localStorage.setItem("videoUrl", videoUrl); // 로컬스토리지에 videoUrl 저장
-      navigate("/memory");
+    } catch (error) {
+      console.error("GPTSummary 호출 중 에러 발생:", error);
+      // 에러 처리
     }
-    // handleLoadVideo 함수 호출
-    handleLoadVideo();
-  }, 100);
-};
+    setIsLoading(false);
+  };
+
+  // const handleUpload = () => {
+  //   setIsLoading(true);
+  //   setShowProgressBar(true);
+  //   let uploadProgress = 0;
+  //   const interval = setInterval(() => {
+  //     uploadProgress += 10;
+  //     setProgress(uploadProgress);
+  //     if (uploadProgress >= 100) {
+  //       clearInterval(interval);
+  //       setIsLoading(false);
+  //       setIsCompleted(true);
+  //       console.log("영상 링크:", videoUrl); // 링크 콘솔에 출력
+  //       localStorage.setItem("videoUrl", videoUrl); // 로컬스토리지에 videoUrl 저장
+  //       navigate("/memory");
+  //     }
+  //     // handleLoadVideo 함수 호출
+  //     handleLoadVideo();
+  //   }, 100);
+  // };
 
   const getTitleText = () => {
     if (isLoading) {
-      return "영상을 올리고 있어요...";
+      return "영상을 요약하고 있어요...";
     } else if (isCompleted) {
-      return "영상이 옮겨졌어요! 이제 필기하러 가볼까요?";
+      return "요약을 완료했어요! 이제 필기하러 가볼까요?";
     } else {
       return "정리할 영상의 링크를 걸어주세요!";
     }
@@ -125,6 +140,10 @@ const handleUpload = () => {
     } else {
       return "정리하고 싶은 YouTube 영상의 링크를 붙여넣어주세요.";
     }
+  };
+
+  const handleStart = () => {
+    navigate("/memory");
   };
 
   const [videoUrl, setVideoUrl] = useState("");
@@ -160,9 +179,18 @@ const handleUpload = () => {
           onChange={handleChange}
           placeholder="https://www.youtube.com/"
         />
-        <Button onClick={handleUpload} disabled={isLoading || isCompleted}>
-          {isLoading ? "Loading.." : isCompleted ? "시작하기" : "Load Video"}
-        </Button>
+        {isCompleted ? (
+          <Button primary onClick={handleStart}>
+            시작하기
+          </Button>
+        ) : (
+          <Button
+            onClick={isLoading ? () => {} : handleUpload}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading.." : "Load Video"}
+          </Button>
+        )}
       </Detail>
       {/* 나중에 다시 주석 해제하기 */}
       {/* <ProgressBar show={showProgressBar}>

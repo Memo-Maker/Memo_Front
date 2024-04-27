@@ -208,6 +208,77 @@ const sendAuthorizationCode = async (code) => {
   }
 };
 
+// -----------------------------------------------------------------------------
+// - Name : GPTQuery
+// - Desc : GPT 모델에 쿼리를 보내는 함수
+// - Input
+//   1) query: GPT 모델에 전달할 쿼리
+// - Output
+// -----------------------------------------------------------------------------
+const GPTQuery = async (query) => {
+  try {
+    console.log("GPT 모델에 쿼리를 전송하는 중...");
+    console.log("[ 쿼리 ]\n", query);
+
+    // 서버에 쿼리를 전송하고 응답을 기다림
+    const response = await fetch(`http://localhost:8080/api/v1/auth/flask`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ question: query })
+    });
+    
+    if (!response.ok) {
+      throw new Error('서버에서 오류를 반환했습니다.');
+    }
+
+    const data = await response.json();
+    console.log("쿼리 전송 성공!");
+    console.log("받은 답변:", data); // 받은 답변을 로그로 출력
+    console.log("받은 답변:", data.qAnswer); // 받은 답변을 로그로 출력
+    return data;
+  } catch (error) {
+    console.error("에러 발생:", error);
+    throw new Error("쿼리 전송 중 에러가 발생했습니다.");
+  }
+};
+// -----------------------------------------------------------------------------
+// - Name : GPTSummary
+// - Desc : GPT 모델에 summary 요청을 보내는 함수
+// - Input
+//   1) url: summary를 생성할 대상 URL
+// - Output
+//   - 서버에서 받은 summary 데이터
+// -----------------------------------------------------------------------------
+const GPTSummary = async (url) => {
+  try {
+    console.log("GPT 모델에 summary 요청을 전송하는 중...");
+    console.log("[ 대상 URL ]\n", url);
+
+    // 서버에 요청을 보내고 응답을 기다림
+    const response = await fetch(`http://taeksin.iptime.org:5002/summaryurl`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url: url })
+    });
+    
+    if (!response.ok) {
+      throw new Error('서버에서 오류를 반환했습니다.');
+    }
+
+    const data = await response.json();
+    console.log("summary 요청 전송 성공!");
+    console.log("받은 summary:", data); // 받은 summary를 로그로 출력
+    return data;
+  } catch (error) {
+    console.error("에러 발생:", error);
+    throw new Error("summary 요청 중 에러가 발생했습니다.");
+  }
+};
+
 
   return (
     <AuthContext.Provider
@@ -220,6 +291,8 @@ const sendAuthorizationCode = async (code) => {
         login,
         logout,
         sendAuthorizationCode,
+        GPTQuery,
+        GPTSummary,
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
+import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth를 import합니다.
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -116,6 +117,7 @@ const Modal = ({ visible, onClose }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
+  const { GPTQuery } = useAuth(); // AuthContext에서 GPTQuery를 가져옵니다.
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -129,21 +131,26 @@ const Modal = ({ visible, onClose }) => {
     setMessage(e.target.value);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim() !== "") {
       const newUserMessage = { type: "user", content: message };
       setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-
-      // 봇의 응답
-      const botResponse = "안녕하세요?";
-      setTimeout(() => {
-        const newBotMessage = { type: "bot", content: botResponse };
-        setMessages((prevMessages) => [...prevMessages, newBotMessage]);
-      }, 1000);
-
+  
+      // GPTQuery 함수를 호출하여 쿼리 전송
+      try {
+        const response = await GPTQuery(message);
+        // 서버로부터 받은 답변을 화면에 표시
+        const newBotMessage = { type: "bot", content: response.qAnswer }; // 받은 답변의 내용을 사용하여 새로운 봇 메시지 생성
+        setMessages((prevMessages) => [...prevMessages, newBotMessage]); // 답변을 메시지 목록에 추가
+      } catch (error) {
+        console.error("GPTQuery 호출 중 에러 발생:", error);
+        // 에러 처리
+      }
+  
       setMessage("");
     }
   };
+  
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
