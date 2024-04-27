@@ -1,3 +1,11 @@
+/* Flex 컨테이너 설정을 사용하여 전체 높이를 활용 */
 .App {
-   background-color: #14cc33;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Footer가 항상 아래에 붙도록 */
+.footer {
+  flex-shrink: 0;
 }

@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage";
 import MemoryPage from "./pages/MemoryPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import MyPage from "./pages/MyPage";
 import { AuthProvider } from "./context/AuthContext";
 import LoginHandler from "./components/login/LoginHandler"; // 로그인 핸들러 컴포넌트 import
 
@@ -38,6 +39,7 @@ function App() {
             <Route path="/memory" element={<><Header2 /><MemoryPage /></>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+             <Route path="/mypage" element={<><Header /><MyPage /><Footer/></>} />
             {/* /auth 경로에 대한 라우트 추가 */}
             <Route path="/auth" element={<LoginHandler />} />
           </Routes>
