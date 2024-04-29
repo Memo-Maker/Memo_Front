@@ -135,6 +135,7 @@ export const AuthProvider = ({ children }) => {
   
         localStorage.setItem("token", jwtToken); // 토큰 저장
         localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("userId", memberEmail); // 토큰 저장
         setIsLoggedIn(true);
         setUser(responseData.user);
         console.log("토큰이 로컬 스토리지에 저장되었습니다.");
@@ -160,10 +161,10 @@ export const AuthProvider = ({ children }) => {
   // -----------------------------------------------------------------------------
   const logout = () => {
     // 로그아웃 시 로컬 스토리지에서 로그인 정보 및 인증 정보 삭제
-    // localStorage.clear();
+    localStorage.clear();
     localStorage.setItem("isLoggedIn", false);
     setIsLoggedIn(false);
-    setUser(null);
+    // setUser(null);
     console.log("로그인 정보 및 인증 정보가 로컬 스토리지에서 삭제되었습니다.");
     window.location.reload();
 
@@ -217,16 +218,23 @@ const sendAuthorizationCode = async (code) => {
 // -----------------------------------------------------------------------------
 const GPTQuery = async (query) => {
   try {
+    // 로컬스토리지에서 userId 값을 가져옴
+    const userId = localStorage.getItem("userId");
+
     console.log("GPT 모델에 쿼리를 전송하는 중...");
     console.log("[ 쿼리 ]\n", query);
+    console.log("[ userId ]\n", userId);
 
-    // 서버에 쿼리를 전송하고 응답을 기다림
+    // 서버에 쿼리와 userId를 함께 전송하고 응답을 기다림
     const response = await fetch(`http://taeksin.iptime.org:5002/questionurl`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ question: query })
+      body: JSON.stringify({ 
+        question: query,
+        userId: userId // userId 값을 함께 전송
+      })
     });
     
     if (!response.ok) {
@@ -237,7 +245,6 @@ const GPTQuery = async (query) => {
     console.log("쿼리 전송 성공!");
     console.log("받은 답변:", data); // 받은 답변을 로그로 출력
     console.log("받은 답변:", data.qAnswer); // 받은 답변을 로그로 출력
-    
 
     return data;
   } catch (error) {
@@ -245,6 +252,7 @@ const GPTQuery = async (query) => {
     throw new Error("쿼리 전송 중 에러가 발생했습니다.");
   }
 };
+
 
 // -----------------------------------------------------------------------------
 // - Name : GPTSummary
@@ -256,8 +264,11 @@ const GPTQuery = async (query) => {
 // -----------------------------------------------------------------------------
 const GPTSummary = async (url) => {
   try {
+    // 로컬스토리지에서 userId 값을 가져옴
+    const userId = localStorage.getItem("userId");
     console.log("GPT 모델에 summary 요청을 전송하는 중...");
     console.log("[ 대상 URL ]\n", url);
+    console.log("[ userId ]\n", userId);
 
     // 서버에 요청을 보내고 응답을 기다림
     const response = await fetch(`http://taeksin.iptime.org:5002/summaryurl`, {
@@ -265,7 +276,10 @@ const GPTSummary = async (url) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ url: url })
+      body: JSON.stringify({ 
+        url: url,
+        userId: userId // userId 값을 함께 전송 
+      })
     });
     
     if (!response.ok) {
