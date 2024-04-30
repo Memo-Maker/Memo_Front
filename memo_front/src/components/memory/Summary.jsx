@@ -7,6 +7,7 @@ const SummaryBox = styled.div`
   background-color: #f0f0f0;
   max-height: 30vh;
   overflow-y: auto;
+  margin-top:1vw;
 `;
 
 const TextContainer = styled.div`
