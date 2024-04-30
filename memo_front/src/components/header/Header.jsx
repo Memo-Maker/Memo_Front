@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Search from "../../assets/images/search.png";
 import Profile from "../../assets/images/profile.png";
-import ProfileModal from "../modal/ProfileModal";
+import ProfileModal from "../modal/ProfileModal"
+import SearchModal from "../modal/SearchModal";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -35,9 +36,10 @@ const HamburgerButton = styled.button`
   font-size: 2vw;
 `;
 
-const SearchTitle = styled.div`
+const SearchButton = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const ProfileTitle = styled.div`
@@ -76,7 +78,8 @@ const UserProfileDropdown = styled(ProfileModal)`
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림/닫힘 상태 추가
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // 모달 열림/닫힘 상태 추가
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false); // SearchModal을 열기 위한 상태 추가
 
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 여부를 확인하여 상태를 설정합니다.
@@ -84,14 +87,24 @@ function Header() {
     setIsLoggedIn(isLoggedIn === "true"); // "true" 문자열을 boolean 값으로 변환하여 설정합니다.
   }, []);
 
-  // 모달 열기 핸들러 함수
-  const openModal = () => {
-    setIsModalOpen(true);
+  // 프로필 모달 열기 핸들러 함수
+  const openProfileModal = () => {
+    setIsProfileModalOpen(true);
   };
 
-  // 모달 닫기 핸들러 함수
-  const closeModal = () => {
-    setIsModalOpen(false);
+  // 프로필 모달 닫기 핸들러 함수
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+  };
+
+  // 검색 모달 열기 핸들러 함수
+  const openSearchModal = () => {
+    setIsSearchModalOpen(true);
+  };
+
+  // 검색 모달 닫기 핸들러 함수
+  const closeSearchModal = () => {
+    setIsSearchModalOpen(false);
   };
 
   return (
@@ -105,16 +118,26 @@ function Header() {
         </Link>
       </Left>
       <Right>
-        <SearchTitle>
+        <SearchButton onClick={openSearchModal}>
+          {" "}
+          {/* SearchButton 클릭 시 검색 모달 열도록 설정 */}
           <img src={Search} alt="Search" />
-        </SearchTitle>
+        </SearchButton>
+
+        {/* 프로필이미지버튼 or 로그인하기버튼 */}
         {/* isLoggedIn 상태에 따라 프로필 이미지 또는 로그인 버튼을 렌더링합니다. */}
         {isLoggedIn ? (
           <ProfileTitle>
             {/* 프로필 이미지를 클릭하면 모달창을 열도록 설정 */}
-            <ProfileImage src={Profile} alt="Profile" onClick={openModal} />
+            <ProfileImage
+              src={Profile}
+              alt="Profile"
+              onClick={openProfileModal}
+            />
             {/* 모달 열림 상태에 따라 모달을 렌더링 */}
-            {isModalOpen && <UserProfileDropdown closeModal={closeModal} />}
+            {isProfileModalOpen && (
+              <UserProfileDropdown closeModal={closeProfileModal} />
+            )}
           </ProfileTitle>
         ) : (
           <ProfileTitle>
@@ -124,6 +147,9 @@ function Header() {
           </ProfileTitle>
         )}
       </Right>
+
+      {/* 검색 모달 */}
+      {isSearchModalOpen && <SearchModal closeModal={closeSearchModal} />}
     </HeaderContainer>
   );
 }
