@@ -2,6 +2,25 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
+const LoadingIcon = styled(FontAwesomeIcon).attrs({
+  icon: faSpinner,
+  size: "4x",
+  color: "#333"
+})``;
+
+const TitleContainer = styled.div`
+  // display: flex;
+  // align-items: center;
+`;
+
+const LoadingText = styled.span`
+  margin-left: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -126,9 +145,27 @@ const HomePage = () => {
   //   }, 100);
   // };
 
+  const getTitleContent = () => {
+    if (isLoading) {
+      return (
+        <>
+          <LoadingIcon spin />
+          <LoadingText>Loading...</LoadingText>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Title>{getTitleText()}</Title>
+          <Subheading>{getSubheadingText()}</Subheading>
+        </>
+      );
+    }
+  };
+
   const getTitleText = () => {
     if (isLoading) {
-      return "영상을 요약하고 있어요...";
+      return ("영상을 요약하고 있어요...");
     } else if (isCompleted) {
       return "요약을 완료했어요! 이제 필기하러 가볼까요?";
     } else {
@@ -172,8 +209,9 @@ const HomePage = () => {
 
   return (
     <Container>
-      <Title>{getTitleText()}</Title>
-      <Subheading>{getSubheadingText()}</Subheading>
+      {getTitleContent()}
+      {/* <Title>{getTitleText()}</Title>
+      <Subheading>{getSubheadingText()}</Subheading> */}
       <Detail>
         <Input
           type="text"
