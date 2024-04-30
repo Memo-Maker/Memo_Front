@@ -1,12 +1,10 @@
-// Header.jsx
-
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Search from "../../assets/images/search.png";
 import Profile from "../../assets/images/profile.png";
-import ProfileModal from "../modal/ProfileModal"
+import ProfileModal from "../modal/ProfileModal";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -45,6 +43,7 @@ const SearchTitle = styled.div`
 const ProfileTitle = styled.div`
   display: flex;
   align-items: center;
+  position: relative; /* 상대적인 위치 설정 */
 `;
 
 const ProfileImage = styled.img`
@@ -66,6 +65,14 @@ const Button = styled.button`
     background-color: #555;
   }
 `;
+
+const UserProfileDropdown = styled(ProfileModal)`
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -103,13 +110,13 @@ function Header() {
         </SearchTitle>
         {/* isLoggedIn 상태에 따라 프로필 이미지 또는 로그인 버튼을 렌더링합니다. */}
         {isLoggedIn ? (
-        <ProfileTitle>
-          {/* 프로필 이미지를 클릭하면 모달창을 열도록 설정 */}
-          <ProfileImage src={Profile} alt="Profile" onClick={openModal} />
-          {/* 모달 열림 상태에 따라 모달을 렌더링 */}
-          {isModalOpen && <ProfileModal closeModal={closeModal} />}
-        </ProfileTitle>
-      ) : (
+          <ProfileTitle>
+            {/* 프로필 이미지를 클릭하면 모달창을 열도록 설정 */}
+            <ProfileImage src={Profile} alt="Profile" onClick={openModal} />
+            {/* 모달 열림 상태에 따라 모달을 렌더링 */}
+            {isModalOpen && <UserProfileDropdown closeModal={closeModal} />}
+          </ProfileTitle>
+        ) : (
           <ProfileTitle>
             <Link to="/login">
               <Button>로그인하기</Button>
