@@ -1,5 +1,3 @@
-// Header.jsx
-
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -47,6 +45,7 @@ const SearchButton = styled.div`
 const ProfileTitle = styled.div`
   display: flex;
   align-items: center;
+  position: relative; /* 상대적인 위치 설정 */
 `;
 
 const ProfileImage = styled.img`
@@ -68,6 +67,14 @@ const Button = styled.button`
     background-color: #555;
   }
 `;
+
+const UserProfileDropdown = styled(ProfileModal)`
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -111,34 +118,38 @@ function Header() {
         </Link>
       </Left>
       <Right>
-      <SearchButton onClick={openSearchModal}> {/* SearchButton 클릭 시 검색 모달 열도록 설정 */}
+        <SearchButton onClick={openSearchModal}>
+          {" "}
+          {/* SearchButton 클릭 시 검색 모달 열도록 설정 */}
           <img src={Search} alt="Search" />
-      </SearchButton>
+        </SearchButton>
 
         {/* 프로필이미지버튼 or 로그인하기버튼 */}
         {/* isLoggedIn 상태에 따라 프로필 이미지 또는 로그인 버튼을 렌더링합니다. */}
         {isLoggedIn ? (
-        <ProfileTitle>
-          {/* 프로필 이미지를 클릭하면 모달창을 열도록 설정 */}
-          <ProfileImage src={Profile} alt="Profile" onClick={openProfileModal} />
-          {/* 프로필 모달 열림 상태에 따라 모달을 렌더링 */}
-          {isProfileModalOpen && <ProfileModal closeModal={closeProfileModal} />}
-        </ProfileTitle>
-      ) : (
+          <ProfileTitle>
+            {/* 프로필 이미지를 클릭하면 모달창을 열도록 설정 */}
+            <ProfileImage
+              src={Profile}
+              alt="Profile"
+              onClick={openProfileModal}
+            />
+            {/* 모달 열림 상태에 따라 모달을 렌더링 */}
+            {isProfileModalOpen && (
+              <UserProfileDropdown closeModal={closeProfileModal} />
+            )}
+          </ProfileTitle>
+        ) : (
           <ProfileTitle>
             <Link to="/login">
               <Button>로그인하기</Button>
             </Link>
           </ProfileTitle>
         )}
-        
-
-
       </Right>
 
       {/* 검색 모달 */}
       {isSearchModalOpen && <SearchModal closeModal={closeSearchModal} />}
-
     </HeaderContainer>
   );
 }
