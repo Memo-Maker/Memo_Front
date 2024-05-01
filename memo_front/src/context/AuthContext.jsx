@@ -5,6 +5,7 @@ import axios from "axios"; // axios를 import합니다.
 
 // 공통 URL 정의
 const BASE_URL = "http://localhost:8080";
+const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
 // 카카오 REST API 키와 리다이렉트 URI 설정
 
 
@@ -220,20 +221,23 @@ const GPTQuery = async (query) => {
   try {
     // 로컬스토리지에서 userId 값을 가져옴
     const userId = localStorage.getItem("userId");
+    const videoUrl = localStorage.getItem("videoUrl");
 
     console.log("GPT 모델에 쿼리를 전송하는 중...");
-    console.log("[ 쿼리 ]\n", query);
-    console.log("[ userId ]\n", userId);
+    console.log("[ 쿼리 ] : ", query);
+    console.log("[ userId ] : ", userId);
+    console.log("[ videoUrl ] : ", videoUrl);
 
     // 서버에 쿼리와 userId를 함께 전송하고 응답을 기다림
-    const response = await fetch(`http://taeksin.iptime.org:5002/questionurl`, {
+    const response = await fetch(`${FLASK_BASE_URL}/questionurl`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ 
         question: query,
-        userId: userId // userId 값을 함께 전송
+        userId: userId, // userId 값을 함께 전송
+        videoUrl : videoUrl
       })
     });
     
@@ -271,7 +275,7 @@ const GPTSummary = async (url) => {
     console.log("[ userId ]\n", userId);
 
     // 서버에 요청을 보내고 응답을 기다림
-    const response = await fetch(`http://taeksin.iptime.org:5002/summaryurl`, {
+    const response = await fetch(`${FLASK_BASE_URL}/summaryurl`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

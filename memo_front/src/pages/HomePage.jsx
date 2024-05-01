@@ -4,17 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import checkImg from "../assets/images/check3.png"
+
+const CheckImage = styled.img`
+  width: 4.5%;
+  height: 7.5%;
+`;
 
 const LoadingIcon = styled(FontAwesomeIcon).attrs({
   icon: faSpinner,
   size: "4x",
   color: "#333"
 })``;
-
-const TitleContainer = styled.div`
-  // display: flex;
-  // align-items: center;
-`;
 
 const LoadingText = styled.span`
   margin-left: 1rem;
@@ -156,6 +157,7 @@ const HomePage = () => {
     } else {
       return (
         <>
+          {isCompleted && <CheckImage src={checkImg} alt="Check" />}
           <Title>{getTitleText()}</Title>
           <Subheading>{getSubheadingText()}</Subheading>
         </>

@@ -17,7 +17,7 @@ const ModalBackdrop = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background-color: white;
+  background-color: #ffffff;
   width: 30%;
   padding: 2rem;
   border-radius: 0.5rem;
@@ -26,13 +26,15 @@ const ModalContent = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
+  background-color: #ffffff;
   flex-direction: column; /* 결과를 세로로 표시하기 위해 컨테이너 방향 변경 */
 `;
 
 const SearchFunction = styled.div`
+  width:100%;
   display: flex;
   align-items: center;
-  flex-direction: column; /* 결과를 세로로 표시하기 위해 컨테이너 방향 변경 */
+  background-color:#ffffff;
 `;
 
 const SearchInput = styled.input`
@@ -44,9 +46,11 @@ const SearchInput = styled.input`
 `;
 
 const SearchButton = styled.img`
+  cursor: pointer;
   width: 30px;
   height: 30px;
-  cursor: pointer;
+  margin-bottom:3%;
+  margin-left:5%;
 `;
 
 const SearchResult = styled.div`
@@ -69,6 +73,7 @@ const SearchModal = ({ closeModal }) => {
     <ModalBackdrop onClick={closeModal}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <SearchContainer>
+          <SearchFunction>
           <SearchInput
             type="text"
             placeholder="검색어를 입력하세요"
@@ -80,6 +85,8 @@ const SearchModal = ({ closeModal }) => {
             alt="Search"
             onClick={handleSearch}
           />
+          </SearchFunction>
+          
           <SearchResult>
             {searchResult.map(item => (
               <div key={item.id}>
