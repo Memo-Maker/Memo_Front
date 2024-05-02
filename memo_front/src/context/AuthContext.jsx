@@ -5,7 +5,8 @@ import axios from "axios"; // axios를 import합니다.
 
 // 공통 URL 정의
 const BASE_URL = "http://localhost:8080";
-const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
+const FLASK_BASE_URL = "http://localhost:5000";
+// const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
 // 카카오 REST API 키와 리다이렉트 URI 설정
 
 
