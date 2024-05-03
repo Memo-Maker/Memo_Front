@@ -4,6 +4,8 @@ import Profile from "../../assets/images/profile.png";
 import SettingsIconImg from "../../assets/images/SettingsIcon.png";
 import HistoryIconImg from "../../assets/images/history.png";
 import LogoutIconImg from "../../assets/images/logout.png";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext"; // AuthContext import 추가
 
 const Overlay = styled.div`
   position: fixed;
@@ -84,6 +86,8 @@ const IconImg = styled.img`
 `;
 
 const UserProfileDropdown = ({ closeModal }) => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const handleClickOutside = (e) => {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -101,7 +105,7 @@ const UserProfileDropdown = ({ closeModal }) => {
         <Email>test@naver.com</Email>
         <Options>
           <Option>
-            <OptionItem onClick={() => console.log("기록보기")}>
+            <OptionItem onClick={() => { closeModal(); navigate("/mypage"); }}>
               내 기록보기
             </OptionItem>
             <IconImg src={HistoryIconImg} alt="History" />
@@ -113,7 +117,7 @@ const UserProfileDropdown = ({ closeModal }) => {
             <IconImg src={SettingsIconImg} alt="Settings" />
           </Option>
           <Option>
-            <OptionItem onClick={() => console.log("로그아웃")}>
+            <OptionItem onClick={() => {logout(); console.log("로그아웃")}}>
               로그아웃
             </OptionItem>
             <IconImg src={LogoutIconImg} alt="Logout" />
