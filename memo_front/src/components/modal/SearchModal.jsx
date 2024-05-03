@@ -53,8 +53,23 @@ const SearchButton = styled.img`
   margin-left:5%;
 `;
 
-const SearchResult = styled.div`
+const SearchResultSection = styled.div`
+  width: 100%;
+  background-color: #4a4a4a;
   margin-top: 1rem; /* 검색 결과와의 간격을 추가 */
+  overflow-y: auto; /* 세로 스크롤을 허용 */
+  max-height: 30rem; /* 최대 높이 지정 */
+`;
+
+const SearchResult = styled.div`
+  display: flex;
+  background-color: #ffffff;
+  margin-top: 0.5%; /* 검색 결과와의 간격을 추가 */
+  /* justify-content: space-between; */
+`;
+
+const SearchResultContent = styled.div`
+  background-color: #ffffff;
 `;
 
 const SearchModal = ({ closeModal }) => {
@@ -69,6 +84,12 @@ const SearchModal = ({ closeModal }) => {
     setSearchResult(result);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <ModalBackdrop onClick={closeModal}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -79,6 +100,7 @@ const SearchModal = ({ closeModal }) => {
             placeholder="검색어를 입력하세요"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown} // 엔터 키 입력 시 handleSearch 실행
           />
           <SearchButton
             src={SearchImage}
@@ -87,15 +109,17 @@ const SearchModal = ({ closeModal }) => {
           />
           </SearchFunction>
           
-          <SearchResult>
+          <SearchResultSection>
             {searchResult.map(item => (
-              <div key={item.id}>
-                <img src={item.image} alt="검색 결과 이미지" />
-                <h3>{item.title}</h3>
-                <p>{item.content}</p>
-              </div>
+              <SearchResult key={item.id}>
+                <img src={item.image} alt="검색 결과 이미지" style={{ width: "100px", "margin-right": "5%" , borderRadius: "1rem", boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.3)" }}/>
+                <SearchResultContent>
+                  <h3>{item.title}</h3>
+                  <p>{item.content}</p>
+                </SearchResultContent>
+              </SearchResult>
             ))}
-          </SearchResult>
+          </SearchResultSection>
         </SearchContainer>
       </ModalContent>
     </ModalBackdrop>
