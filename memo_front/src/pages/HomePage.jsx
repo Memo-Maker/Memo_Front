@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import checkImg from "../assets/images/check3.png"
+import videoDummy from "../assets/dummyDatas/videoDummy.json"; // videoDummy 데이터 import
 
 const CheckImage = styled.img`
   width: 4.5%;
@@ -103,6 +104,19 @@ const WriteIcon = styled.i`
   display: ${({ isFull }) => (isFull ? "block" : "none")};
 `;
 
+const RankingContainer = styled.div`
+  margin-top: 2rem;
+  display: flex; /* 아이템을 수평으로 배치하기 위해 flex 사용 */
+  flex-direction: row; /* 아이템을 가로 방향으로 배치 */
+  flex-wrap: wrap; /* 아이템이 화면에 맞지 않을 경우 여러 줄로 나누기 */
+  gap: 1rem; /* 아이템 사이의 간격 */
+`;
+
+const RankingItem = styled.div`
+  font-size: 1.2rem;
+`;
+
+
 const HomePage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -145,6 +159,19 @@ const HomePage = () => {
   //     handleLoadVideo();
   //   }, 100);
   // };
+
+  // 초기화 작업 및 useEffect 설정
+  useEffect(() => {
+    handleLoadRanking();
+  }, []);
+
+  // grade에 따라 영상 순위 정렬하는 함수
+  const handleLoadRanking = () => {
+    const sortedVideos = Object.keys(videoDummy).sort(
+      (a, b) => videoDummy[a].grade - videoDummy[b].grade
+    );
+    setRanking(sortedVideos);
+  };
 
   const getTitleContent = () => {
     if (isLoading) {
@@ -189,6 +216,7 @@ const HomePage = () => {
 
   const [videoUrl, setVideoUrl] = useState("");
   const [videoId, setVideoId] = useState(null);
+  const [ranking, setRanking] = useState([]);
 
   // 유튜브 영상의 고유 ID 추출
   const extractVideoId = (url) => {
@@ -240,6 +268,28 @@ const HomePage = () => {
         <WriteIcon className="fas fa-pencil-alt" isFull={isCompleted} />
         <ProgressText>{progress}%</ProgressText>
       </ProgressBar> */}
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <h2>사람들이 많이 본 영상</h2>
+      <RankingContainer>
+        
+        {ranking.map((videoKey, index) => (
+          <RankingItem key={videoKey}>
+
+            <img
+              src={videoDummy[videoKey].thumbnail_url}
+              alt={videoDummy[videoKey].title}
+              width="100"
+              height="100"
+            />
+            {videoDummy[videoKey].title}
+          </RankingItem>
+        ))}
+      </RankingContainer>
+
     </Container>
   );
 };

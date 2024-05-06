@@ -1,0 +1,23 @@
+{
+  "강동원은_오빠야_아저씨야": {
+    "title": "강동원은 오빠야 아저씨야?",
+    "url": "https://www.youtube.com/watch?v=OQDTcyXuSjQ",
+    "thumbnail_url": "https://i.ytimg.com/vi/OQDTcyXuSjQ/hq720.jpg",
+    "video_duration": 282,
+    "grade":1
+  },
+  "Freeview_MVC_패턴_딱_1분_만에_이해하기": {
+    "title": "[Freeview] MVC 패턴 딱 1분 만에 이해하기",
+    "url": "https://www.youtube.com/watch?v=waceR6L9nVM&t=4s",
+    "thumbnail_url": "https://i.ytimg.com/vi/waceR6L9nVM/hq720.jpg",
+    "video_duration": 73,
+    "grade":2
+  },
+  "날먹요리날먹요리": {
+    "title": "날먹요리+날먹요리=?",
+    "url": "https://www.youtube.com/watch?v=D0JprCh7RDM",
+    "thumbnail_url": "https://i.ytimg.com/vi/D0JprCh7RDM/hq720.jpg",
+    "video_duration": 95,
+    "grade":3
+  }
+}
