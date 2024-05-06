@@ -109,12 +109,14 @@ const RankingContainer = styled.div`
   display: flex; /* 아이템을 수평으로 배치하기 위해 flex 사용 */
   flex-direction: row; /* 아이템을 가로 방향으로 배치 */
   flex-wrap: wrap; /* 아이템이 화면에 맞지 않을 경우 여러 줄로 나누기 */
+  justify-content: space-between; /* 아이템 사이의 간격을 최대한으로 확보하고 좌우 여백을 균등하게 배분 */
   gap: 1rem; /* 아이템 사이의 간격 */
 `;
 
 const RankingItem = styled.div`
   font-size: 1.2rem;
 `;
+
 
 
 const HomePage = () => {
