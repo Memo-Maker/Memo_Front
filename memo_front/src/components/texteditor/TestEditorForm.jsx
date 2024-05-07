@@ -48,7 +48,7 @@ const Button = styled.button`
 
 const TestEditorForm = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const {saveContentToLocal} = useAuth();
+  const {saveContentToLocal, saveMarkdownToServer} = useAuth();
 
   useEffect(() => {
     const savedContent = localStorage.getItem("editorContent");
@@ -70,6 +70,7 @@ const TestEditorForm = () => {
     const contentState = editorState.getCurrentContent();
     const htmlContent = stateToHTML(contentState);
     saveContentToLocal(htmlContent);
+    saveMarkdownToServer(htmlContent)
     console.log(htmlContent);
     
   };
