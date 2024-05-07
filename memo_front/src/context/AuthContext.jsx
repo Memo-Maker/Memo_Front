@@ -38,6 +38,24 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     return token;
   };
+  
+  // -----------------------------------------------------------------------------
+  // - Name : getEmailFromLocalStorage
+  // - Desc : 로컬 스토리지에서 email을 가져오는 함수
+  // -----------------------------------------------------------------------------
+  const getEmailFromLocalStorage = () => {
+    const userEmail = localStorage.getItem("userId");
+    return userEmail;
+  };
+  
+  // -----------------------------------------------------------------------------
+  // - Name : getVideoFromLOcaltorage
+  // - Desc : 로컬 스토리지에서 email을 가져오는 함수
+  // -----------------------------------------------------------------------------
+  const getVideoFromLocalStorage = () => {
+    const videoUrl = localStorage.getItem("videoUrl");
+    return videoUrl;
+  };
 
   // -----------------------------------------------------------------------------
   // - Name : signup
@@ -184,6 +202,48 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
+// - Name : saveMarkdownToServer
+// - Desc : 마크다운을 서버에 저장하는 함수
+// - Input
+//   1) markdownContent: 저장할 마크다운 내용
+// - Output
+// -----------------------------------------------------------------------------
+const saveMarkdownToServer = async (markdownContent) => {
+  try {
+    console.log("마크다운을 서버에 저장하는 중...");
+    console.log("[ 저장할 마크다운 내용 ]\n", markdownContent);
+    const userEmail = getEmailFromLocalStorage(); // 로컬 스토리지에서 이메일 가져오기
+    const videoUrl = getVideoFromLocalStorage(); // 로컬 스토리지에서 비디오 URL 가져오기
+
+    // 서버에 POST 요청 보내기
+    const response = await fetch(`${BASE_URL}/api/v1/video/document-save`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        memberEmail: userEmail,
+        videoUrl: videoUrl,
+        document: markdownContent
+      })
+    });
+
+    if (response.ok) {
+      console.log("마크다운 저장 성공!");
+      // 저장 성공 시 추가 작업 수행
+    } else {
+      console.error("마크다운 저장 실패:", response.statusText);
+      // 저장 실패 시 에러 처리
+    }
+  } catch (error) {
+    console.error("에러 발생:", error);
+    // 에러 발생 시 에러 처리
+  }
+};
+
+
+
+  // -----------------------------------------------------------------------------
 // - Name : sendAuthorizationCode
 // - Desc : 백엔드로 인가코드를 전송하는 함수
 // - Input
@@ -312,6 +372,7 @@ const GPTSummary = async (url) => {
         isLoggedIn,
         user,
         getTokenFromLocalStorage,
+        getEmailFromLocalStorage,
         saveContentToLocal,
         signup,
         login,
@@ -319,6 +380,8 @@ const GPTSummary = async (url) => {
         sendAuthorizationCode,
         GPTQuery,
         GPTSummary,
+        saveMarkdownToServer,
+
       }}
     >
       {children}
