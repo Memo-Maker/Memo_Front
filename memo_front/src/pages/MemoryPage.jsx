@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import YouTube from "react-youtube";
-import TestEditorForm from "../components/texteditor/TestEditorForm";
+import TextEditorForm from "../components/texteditor/TextEditorForm";
 import Summary from "../components/memory/Summary";
 import ChatIcon from "../assets/images/chat.png";
 import Modal from "../components/memory/Chatgpt"; 
@@ -113,7 +113,7 @@ const MemoryPage = () => {
         <Summary />
         <Button onClick={handleButtonClick}></Button>
       </Container>
-      <TestEditorForm />
+      <TextEditorForm />
 
       <Modal visible={isModalVisible} onClose={toggleModal}>
         모달 내용이 여기 들어갑니다.
