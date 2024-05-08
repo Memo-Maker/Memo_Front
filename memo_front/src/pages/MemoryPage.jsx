@@ -12,7 +12,7 @@ const Layout = styled.div`
   height: 100%;
   flex-direction: row;
   align-items: center;
-  background-color: #582fff;
+  background-color: #ffffff;
   justify-content: center;
   gap: 2vw;
 `;
