@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { EditorState, convertFromHTML, ContentState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import { useAuth } from "../../context/AuthContext"
+import SaveModal from "../modal/SaveModal"; // SaveModal을 불러옵니다.
 
 const EditorContainer = styled.div`
   display: flex;
@@ -46,9 +47,10 @@ const Button = styled.button`
   border-radius:0.2vw;
 `;
 
-const TestEditorForm = () => {
+const TextEditorForm = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const {saveContentToLocal, saveMarkdownToServer} = useAuth();
+  const [showModal, setShowModal] = useState(false); // 모달 상태 추가
 
   useEffect(() => {
     const savedContent = localStorage.getItem("editorContent");
@@ -72,7 +74,7 @@ const TestEditorForm = () => {
     saveContentToLocal(htmlContent);
     saveMarkdownToServer(htmlContent)
     console.log(htmlContent);
-    
+    setShowModal(true); // 모달 열기
   };
 
   // 타자를 칠 때마다 글자 수 업데이트
@@ -80,6 +82,11 @@ const TestEditorForm = () => {
     setEditorState(editorState);
     const plainText = editorState.getCurrentContent().getPlainText("");
     console.log("글자 수:", plainText.length);
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -112,8 +119,9 @@ const TestEditorForm = () => {
           </StatusBar>
         </MyBlock>
       </EditorContainer>
+      {showModal && <SaveModal closeModal={closeModal} />} {/* 모달 렌더링 */}
     </>
   );
 };
 
-export default TestEditorForm;
+export default TextEditorForm;

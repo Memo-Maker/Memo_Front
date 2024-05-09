@@ -256,10 +256,8 @@ const HomePage = () => {
       </Head>
       <body style={{ marginTop: "1rem" }}>
         <RankingContainer>
-          <RankingItem>
-            ▶ 실시간 사용자가 많이 본 영상이예요..<br></br>
-            <br></br>
-          </RankingItem>
+        https://www.youtube.com/watch?v=uAmv-8NUGGc
+          <RankingItem>▶ 실시간 사용자가 많이 본 영상이예요..</RankingItem>
           <RankVideo ranking={ranking} videoDummy={videoDummy} />
         </RankingContainer>
       </body>

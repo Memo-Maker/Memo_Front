@@ -9,7 +9,6 @@ const FLASK_BASE_URL = "http://localhost:5000";
 // const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
 // 카카오 REST API 키와 리다이렉트 URI 설정
 
-
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     return token;
   };
-  
+
   // -----------------------------------------------------------------------------
   // - Name : getEmailFromLocalStorage
   // - Desc : 로컬 스토리지에서 email을 가져오는 함수
@@ -47,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     const userEmail = localStorage.getItem("userId");
     return userEmail;
   };
-  
+
   // -----------------------------------------------------------------------------
   // - Name : getVideoFromLOcaltorage
   // - Desc : 로컬 스토리지에서 email을 가져오는 함수
@@ -124,14 +123,14 @@ export const AuthProvider = ({ children }) => {
       console.log("로그인 시도 중...");
       console.log(
         "  -user 정보- " +
-        "\n { 사용자이메일: " +
-        memberEmail +
-        "\n   비밀번호: " +
-        memberPassword +
-        " }"
+          "\n { 사용자이메일: " +
+          memberEmail +
+          "\n   비밀번호: " +
+          memberPassword +
+          " }"
       );
       console.log("보낼 서버 주소 : " + `${BASE_URL}/api/v1/auth/sign-in`);
-  
+
       // 서버에 로그인 정보를 전송하고 응답을 기다림
       const response = await fetch(`${BASE_URL}/api/v1/auth/sign-in`, {
         method: "POST",
@@ -143,16 +142,15 @@ export const AuthProvider = ({ children }) => {
           memberPassword
         })
       });
-  
+
       if (response.ok) {
         console.log("로그인 성공!");
         toast.success("로그인 성공!");
-        
-        
+
         // 헤더에서 토큰 추출
         const responseData = await response.json();
         const jwtToken = responseData.token;
-  
+
         localStorage.setItem("token", jwtToken); // 토큰 저장
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userId", memberEmail); // 토큰 저장
@@ -173,7 +171,6 @@ export const AuthProvider = ({ children }) => {
       toast.error("로그인 중 에러가 발생했습니다.");
     }
   };
-  
 
   // -----------------------------------------------------------------------------
   // - Name : logout
@@ -189,7 +186,6 @@ export const AuthProvider = ({ children }) => {
     window.location.reload();
 
     navigate("/");
-    
   };
 
   // -----------------------------------------------------------------------------
@@ -202,169 +198,190 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
-// - Name : saveMarkdownToServer
-// - Desc : 마크다운을 서버에 저장하는 함수
-// - Input
-//   1) markdownContent: 저장할 마크다운 내용
-// - Output
-// -----------------------------------------------------------------------------
-const saveMarkdownToServer = async (markdownContent) => {
-  try {
-    console.log("마크다운을 서버에 저장하는 중...");
-    console.log("[ 저장할 마크다운 내용 ]\n", markdownContent);
-    const userEmail = getEmailFromLocalStorage(); // 로컬 스토리지에서 이메일 가져오기
-    const videoUrl = getVideoFromLocalStorage(); // 로컬 스토리지에서 비디오 URL 가져오기
+  // - Name : saveCategoryToLocal
+  // - Desc : 메모를 html로 로컬스토리지에 저장함
+  // -----------------------------------------------------------------------------
+  const saveCategoryToLocal = (categoryName) => {
+    console.log(categoryName + "을 저장해보겠습니다");
 
-    // 서버에 POST 요청 보내기
-    const response = await fetch(`${BASE_URL}/api/v1/video/document-save`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        memberEmail: userEmail,
-        videoUrl: videoUrl,
-        document: markdownContent
-      })
-    });
-
-    if (response.ok) {
-      console.log("마크다운 저장 성공!");
-      // 저장 성공 시 추가 작업 수행
-    } else {
-      console.error("마크다운 저장 실패:", response.statusText);
-      // 저장 실패 시 에러 처리
+    // 기존에 저장된 카테고리 리스트를 가져옴
+    const existingCategories = localStorage.getItem("categoryList");
+    
+    // 기존에 저장된 카테고리가 없다면 새로운 카테고리로 설정
+    if (!existingCategories) {
+      localStorage.setItem("categoryList", categoryName);
+      console.log(categoryName + "이 저장되었습니다.");
+      return;
     }
-  } catch (error) {
-    console.error("에러 발생:", error);
-    // 에러 발생 시 에러 처리
-  }
-};
 
-
+    // 기존에 저장된 카테고리와 새로운 카테고리를 합침
+    const updatedCategories = existingCategories + ", " + categoryName;
+    localStorage.setItem("categoryList", updatedCategories);
+    console.log(categoryName + "이 저장되었습니다.");
+  };
 
   // -----------------------------------------------------------------------------
-// - Name : sendAuthorizationCode
-// - Desc : 백엔드로 인가코드를 전송하는 함수
-// - Input
-//   1) code: 카카오 로그인 후 받은 인가코드
-// - Output
-// -----------------------------------------------------------------------------
-const sendAuthorizationCode = async (code) => {
-  try {
-    console.log("인가코드를 백엔드로 전송하는 중...");
-    console.log("[ 인가코드 ]\n", code);
+  // - Name : saveMarkdownToServer
+  // - Desc : 마크다운을 서버에 저장하는 함수
+  // - Input
+  //   1) markdownContent: 저장할 마크다운 내용
+  // - Output
+  // -----------------------------------------------------------------------------
+  const saveMarkdownToServer = async (markdownContent) => {
+    try {
+      console.log("마크다운을 서버에 저장하는 중...");
+      console.log("[ 저장할 마크다운 내용 ]\n", markdownContent);
+      const userEmail = getEmailFromLocalStorage(); // 로컬 스토리지에서 이메일 가져오기
+      const videoUrl = getVideoFromLocalStorage(); // 로컬 스토리지에서 비디오 URL 가져오기
 
-    // 인가코드를 URL의 쿼리 파라미터로 포함하여 백엔드로 전송
-    const response = await axios.post(`${BASE_URL}/login/oauth2/code/kakao?code=${code}`);
-    
-    if (response.status === 200) {
-      console.log("인가코드 전송 성공!");
-      // 성공 시 추가 작업 수행
-    } else {
-      console.error("인가코드 전송 실패:", response.statusText);
-      // 실패 시 에러 처리
+      // 서버에 POST 요청 보내기
+      const response = await fetch(`${BASE_URL}/api/v1/video/document-save`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          memberEmail: userEmail,
+          videoUrl: videoUrl,
+          document: markdownContent
+        })
+      });
+
+      if (response.ok) {
+        console.log("마크다운 저장 성공!");
+        // 저장 성공 시 추가 작업 수행
+      } else {
+        console.error("마크다운 저장 실패:", response.statusText);
+        // 저장 실패 시 에러 처리
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      // 에러 발생 시 에러 처리
     }
-  } catch (error) {
-    console.error("에러 발생:", error);
-    // 에러 발생 시 에러 처리
-  }
-};
+  };
 
-// -----------------------------------------------------------------------------
-// - Name : GPTQuery
-// - Desc : GPT 모델에 쿼리를 보내는 함수
-// - Input
-//   1) query: GPT 모델에 전달할 쿼리
-// - Output
-// -----------------------------------------------------------------------------
-const GPTQuery = async (query) => {
-  try {
-    // 로컬스토리지에서 userId 값을 가져옴
-    const userId = localStorage.getItem("userId");
-    const videoUrl = localStorage.getItem("videoUrl");
+  // -----------------------------------------------------------------------------
+  // - Name : sendAuthorizationCode
+  // - Desc : 백엔드로 인가코드를 전송하는 함수
+  // - Input
+  //   1) code: 카카오 로그인 후 받은 인가코드
+  // - Output
+  // -----------------------------------------------------------------------------
+  const sendAuthorizationCode = async (code) => {
+    try {
+      console.log("인가코드를 백엔드로 전송하는 중...");
+      console.log("[ 인가코드 ]\n", code);
 
-    console.log("GPT 모델에 쿼리를 전송하는 중...");
-    console.log("[ 쿼리 ] : ", query);
-    console.log("[ userId ] : ", userId);
-    console.log("[ videoUrl ] : ", videoUrl);
+      // 인가코드를 URL의 쿼리 파라미터로 포함하여 백엔드로 전송
+      const response = await axios.post(
+        `${BASE_URL}/login/oauth2/code/kakao?code=${code}`
+      );
 
-    // 서버에 쿼리와 userId를 함께 전송하고 응답을 기다림
-    const response = await fetch(`${FLASK_BASE_URL}/questionurl`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        question: query,
-        userId: userId, // userId 값을 함께 전송
-        videoUrl : videoUrl
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error('서버에서 오류를 반환했습니다.');
+      if (response.status === 200) {
+        console.log("인가코드 전송 성공!");
+        // 성공 시 추가 작업 수행
+      } else {
+        console.error("인가코드 전송 실패:", response.statusText);
+        // 실패 시 에러 처리
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      // 에러 발생 시 에러 처리
     }
+  };
 
-    const data = await response.json();
-    console.log("쿼리 전송 성공!");
-    console.log("받은 답변:", data); // 받은 답변을 로그로 출력
-    console.log("받은 답변:", data.qAnswer); // 받은 답변을 로그로 출력
+  // -----------------------------------------------------------------------------
+  // - Name : GPTQuery
+  // - Desc : GPT 모델에 쿼리를 보내는 함수
+  // - Input
+  //   1) query: GPT 모델에 전달할 쿼리
+  // - Output
+  // -----------------------------------------------------------------------------
+  const GPTQuery = async (query) => {
+    try {
+      // 로컬스토리지에서 userId 값을 가져옴
+      const userId = localStorage.getItem("userId");
+      const videoUrl = localStorage.getItem("videoUrl");
 
-    return data;
-  } catch (error) {
-    console.error("에러 발생:", error);
-    throw new Error("쿼리 전송 중 에러가 발생했습니다.");
-  }
-};
+      console.log("GPT 모델에 쿼리를 전송하는 중...");
+      console.log("[ 쿼리 ] : ", query);
+      console.log("[ userId ] : ", userId);
+      console.log("[ videoUrl ] : ", videoUrl);
 
+      // 서버에 쿼리와 userId를 함께 전송하고 응답을 기다림
+      const response = await fetch(`${FLASK_BASE_URL}/questionurl`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          question: query,
+          userId: userId, // userId 값을 함께 전송
+          videoUrl: videoUrl
+        })
+      });
 
-// -----------------------------------------------------------------------------
-// - Name : GPTSummary
-// - Desc : GPT 모델에 summary 요청을 보내는 함수
-// - Input
-//   1) url: summary를 생성할 대상 URL
-// - Output
-//   - 서버에서 받은 summary 데이터
-// -----------------------------------------------------------------------------
-const GPTSummary = async (url) => {
-  try {
-    // 로컬스토리지에서 userId 값을 가져옴
-    const userId = localStorage.getItem("userId");
-    console.log("GPT 모델에 summary 요청을 전송하는 중...");
-    console.log("[ 대상 URL ]\n", url);
-    console.log("[ userId ]\n", userId);
+      if (!response.ok) {
+        throw new Error("서버에서 오류를 반환했습니다.");
+      }
 
-    // 서버에 요청을 보내고 응답을 기다림
-    const response = await fetch(`${FLASK_BASE_URL}/summaryurl`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        url: url,
-        userId: userId // userId 값을 함께 전송 
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error('서버에서 오류를 반환했습니다.');
+      const data = await response.json();
+      console.log("쿼리 전송 성공!");
+      console.log("받은 답변:", data); // 받은 답변을 로그로 출력
+      console.log("받은 답변:", data.qAnswer); // 받은 답변을 로그로 출력
+
+      return data;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      throw new Error("쿼리 전송 중 에러가 발생했습니다.");
     }
+  };
 
-    const data = await response.json();
-    console.log("summary 요청 전송 성공!");
-    console.log("받은 summary:", data); // 받은 summary를 로그로 출력
-    
-    // 받은 summary 데이터를 로컬스토리지에 저장
-    localStorage.setItem("summaryData", JSON.stringify(data.summary));
-    
-    return data;
-  } catch (error) {
-    console.error("에러 발생:", error);
-    throw new Error("summary 요청 중 에러가 발생했습니다.");
-  }
-};
+  // -----------------------------------------------------------------------------
+  // - Name : GPTSummary
+  // - Desc : GPT 모델에 summary 요청을 보내는 함수
+  // - Input
+  //   1) url: summary를 생성할 대상 URL
+  // - Output
+  //   - 서버에서 받은 summary 데이터
+  // -----------------------------------------------------------------------------
+  const GPTSummary = async (url) => {
+    try {
+      // 로컬스토리지에서 userId 값을 가져옴
+      const userId = localStorage.getItem("userId");
+      console.log("GPT 모델에 summary 요청을 전송하는 중...");
+      console.log("[ 대상 URL ]\n", url);
+      console.log("[ userId ]\n", userId);
 
+      // 서버에 요청을 보내고 응답을 기다림
+      const response = await fetch(`${FLASK_BASE_URL}/summaryurl`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          url: url,
+          userId: userId // userId 값을 함께 전송
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("서버에서 오류를 반환했습니다.");
+      }
+
+      const data = await response.json();
+      console.log("summary 요청 전송 성공!");
+      console.log("받은 summary:", data); // 받은 summary를 로그로 출력
+
+      // 받은 summary 데이터를 로컬스토리지에 저장
+      localStorage.setItem("summaryData", JSON.stringify(data.summary));
+
+      return data;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      throw new Error("summary 요청 중 에러가 발생했습니다.");
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -381,7 +398,7 @@ const GPTSummary = async (url) => {
         GPTQuery,
         GPTSummary,
         saveMarkdownToServer,
-
+        saveCategoryToLocal
       }}
     >
       {children}
