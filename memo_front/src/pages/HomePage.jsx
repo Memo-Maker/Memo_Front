@@ -19,10 +19,13 @@ const LoadingIcon = styled(FontAwesomeIcon).attrs({
   color: "#333",
 })``;
 
-const LoadingText = styled.span`
-  margin-left: 1rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+const LoadingText = styled.div`
+  text-align: center; /* 텍스트 가운데 정렬 */
+`;
+
+const RedText = styled.span`
+  color: red; /* 빨간색 */
+  font-weight: bold; /* 두껍게 */
 `;
 
 const Container = styled.div`
@@ -35,11 +38,13 @@ const Container = styled.div`
 const Title = styled.h1`
   color: #000000;
   font-weight: bold;
+  font-size: 2.5rem;
 `;
 
 const Subheading = styled.h5`
   color: #333;
   margin-top: -1vw;
+  font-size: 1.5rem;
 `;
 
 const Detail = styled.div`
@@ -54,6 +59,7 @@ const Input = styled.input`
   border: none;
   border-radius: 0.4vw;
   background-color: #bababa;
+  font-size: 1rem;
   color: white;
   ::placeholder {
     color: white;
@@ -65,7 +71,7 @@ const InputContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  padding: 0.7vw 1vw 0.7vw 1vw;
+  padding: 0.7vw 1.5vw 0.7vw 1.5vw;
   border-radius: 1vw;
 `;
 
@@ -77,14 +83,18 @@ const YoutubeIconImg = styled.img`
   border-radius: 50%;
   cursor: pointer;
   outline: none;
+  margin-right: 1vw;
 `;
 
 const Button = styled.button`
-  padding: 1vw 2vw;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 0.7vw 1.2vw;
   background-color: #000;
   color: white;
   border: none;
   border-radius: 0.4vw;
+  margin-left:1vw;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
   &:hover {
@@ -95,7 +105,7 @@ const Head = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 8vw; 
+  margin-top: 7vw; 
 `;
 
 
@@ -141,7 +151,15 @@ const HomePage = () => {
       return (
         <>
           <LoadingIcon spin />
-          <LoadingText>Loading...</LoadingText>
+          <LoadingText>
+            Loading...
+            <br />
+            잠깐! 새로고침은 안돼요!
+            <br />
+            <RedText>
+              새로고침 시 영상변환이 초기화되니 유의해주세요.{" "}
+            </RedText>{" "}
+          </LoadingText>
         </>
       );
     } else {
@@ -214,7 +232,7 @@ const HomePage = () => {
             />
             {isCompleted ? (
               <Button primary onClick={handleStart}>
-                시작하기
+                Start MEMO
               </Button>
             ) : (
               <Button
