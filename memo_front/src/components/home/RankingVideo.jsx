@@ -62,10 +62,30 @@ const RankingVideo = () => {
       rankingData.push(data);
     }
   }
+
+  const handleButtonClick = (videoUrl) => {
+    // 클립보드에 videoUrl 복사
+    navigator.clipboard.writeText(videoUrl)
+      .then(() => {
+        // 클립보드에 복사되었을 때의 처리
+        alert(`YouTube URL이 클립보드에 복사되었습니다😁\n아래의 입력창에 붙여넣어주세요❗❗`);
+      })
+      .catch((error) => {
+        // 복사 실패 시 처리
+        console.error('클립보드에 복사 실패:', error);
+        alert('클립보드에 복사하는 중 오류가 발생했습니다.');
+      });
+  };
+  
+  
+
   return (
     <RankingContainer>
       {rankingData.map((data, index) => (
-        <StyledButton key={index}>
+        <StyledButton
+          key={index}
+          onClick={() => handleButtonClick(data.videoUrl)}
+        >
           <ButtonImage src={data.thumbnailUrl} alt={data.videoTitle} />
           <ButtonContent>{data.videoTitle}</ButtonContent>
         </StyledButton>

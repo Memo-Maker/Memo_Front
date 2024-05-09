@@ -125,7 +125,7 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const { GPTSummary, homePageData } = useAuth();
+  const { GPTSummary, homePageDataGET } = useAuth();
 
   const handleUpload = async () => {
     setIsLoading(true);
@@ -143,7 +143,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    homePageData(); // 홈페이지 데이터 호출
+    homePageDataGET(); // 홈페이지 데이터 호출
   }, []);
 
   const getTitleContent = () => {

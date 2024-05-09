@@ -12,18 +12,16 @@ const FLASK_BASE_URL = "http://localhost:5000";
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
   // const [token, setToken] = useState(""); // 토큰 상태 추가
   const navigate = useNavigate(); // useNavigate를 통해 navigate 함수를 가져옵니다.
 
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 정보 및 토큰 확인
     const loggedIn = localStorage.getItem("isLoggedIn");
-    const userInfo = JSON.parse(localStorage.getItem("user"));
     const storedToken = localStorage.getItem("token");
-    if (loggedIn && userInfo && storedToken) {
+    // if (loggedIn && storedToken) {
+    if (loggedIn) {
       setIsLoggedIn(true);
-      setUser(userInfo);
       // setToken(storedToken); // 저장된 토큰 상태로 설정
       console.log("로컬 스토리지에서 로그인 여부 및 토큰을 가져왔습니다.");
     }
@@ -64,7 +62,6 @@ export const AuthProvider = ({ children }) => {
     const rankingData = localStorage.getItem("rankingData");
     return rankingData;
   };
-
 
   // -----------------------------------------------------------------------------
   // - Name : saveContentToLocal
@@ -174,7 +171,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userId", memberEmail); // 토큰 저장
         setIsLoggedIn(true);
-        setUser(responseData.user);
         console.log("토큰이 로컬 스토리지에 저장되었습니다.");
         console.log("[ token ]\n" + jwtToken);
 
@@ -208,10 +204,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
-  // - Name : homePageData
+  // - Name : homePageDataGET
   // - Desc : 백엔드의 / 주소로 GET 요청을 보내는 함수
   // -----------------------------------------------------------------------------
-  const homePageData = async () => {
+  const homePageDataGET = async () => {
     try {
       console.log("백엔드로 GET 요청을 보내는 중...");
 
@@ -237,6 +233,13 @@ export const AuthProvider = ({ children }) => {
           saveVideoToLocalstorage("ranking3", data[2]);
         }
 
+        // 만약 isLoggedIn 상태가 true이면 getMyData 함수 호출
+        if (isLoggedIn) {
+          console.log("🔴로그인 되어있음");
+          await getMyData(getEmailFromLocalStorage()); // 필요한 인자를 전달해야 할 경우에는 인자를 넣어주세요
+        }
+        else{console.log("🔴로그인 xxxxx");}
+
         // 받은 데이터 반환
         return data;
       } else {
@@ -246,6 +249,43 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("에러 발생:", error);
       // 에러가 발생한 경우 에러 처리
+    }
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name : getMyData
+  // - Desc : 백엔드에 POST 요청을 보내어 사용자 데이터를 가져오는 함수
+  // - Input
+  //   1) data: 전송할 데이터 객체
+  // - Output
+  //   - 서버에서 받은 응답 데이터
+  // -----------------------------------------------------------------------------
+  const getMyData = async (memberEmail) => {
+    try {
+      console.log("🔴사용자 데이터를 가져오는 중...");
+      console.log("🔴[ 보낼 데이터 ]\n", memberEmail);
+
+      // 서버에 POST 요청 보내고 응답을 기다림
+      const response = await fetch(`${BASE_URL}/send-to-home`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(memberEmail)
+      });
+
+      if (!response.ok) {
+        throw new Error("서버에서 오류를 반환했습니다.");
+      }
+
+      const responseData = await response.json();
+      console.log("🔴사용자 데이터 가져오기 성공!");
+      console.log("🔴[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
+
+      return responseData;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      throw new Error("사용자 데이터 가져오기 중 에러가 발생했습니다.");
     }
   };
 
@@ -447,7 +487,6 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        user,
         getTokenFromLocalStorage,
         getEmailFromLocalStorage,
         saveContentToLocal,
@@ -459,7 +498,8 @@ export const AuthProvider = ({ children }) => {
         GPTSummary,
         saveMarkdownToServer,
         saveCategoryToLocal,
-        homePageData
+        homePageDataGET,
+        getMyData
       }}
     >
       {children}
