@@ -13,7 +13,7 @@ const SideMenuContainer = styled.div`
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* 사이드바에 그림자 효과 추가 */
   z-index: 999; /* 사이드바가 위에 나타나도록 설정 */
   padding-top: 60px; /* 사이드바 내용의 상단 여백 설정 */
-  transition: left 0.3s ease; /* 오른쪽으로 이동하는 애니메이션 효과 */
+  transition: left 0.3s ease; /* 오2른쪽으로 이동하는 애니메이션 효과 */
 `;
 
 const CloseButton = styled.button`
@@ -44,6 +44,7 @@ const SideMenu = ({ isOpen, onClose }) => {
   return (
     <SideMenuContainer isOpen={isOpen}>
       <CloseButton onClick={onClose}>×</CloseButton>
+      <MenuItem>최근에 본 영상</MenuItem>
       <MenuItem>메뉴 항목 1</MenuItem>
       <MenuItem>메뉴 항목 2</MenuItem>
       <MenuItem>메뉴 항목 3</MenuItem>

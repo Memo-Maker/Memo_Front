@@ -109,11 +109,19 @@ function Header() {
     setIsSearchModalOpen(false);
   };
 
+  //새로고침
+const handleRefresh = () => {
+  window.location.reload();
+};
+
   return (
     <HeaderContainer>
       <Left>
-      <HamburgerButton onClick={() => setIsSideMenuOpen(!isSideMenuOpen)}>☰</HamburgerButton> {/* 사이드메뉴 버튼 클릭 시 사이드메뉴 열림/닫힘 상태를 변경하는 이벤트 추가 */}
-        <Link to="/">
+        <HamburgerButton onClick={() => setIsSideMenuOpen(!isSideMenuOpen)}>
+          ☰
+        </HamburgerButton>{" "}
+        {/* 사이드메뉴 버튼 클릭 시 사이드메뉴 열림/닫힘 상태를 변경하는 이벤트 추가 */}
+        <Link to="/" onClick={handleRefresh}>
           <LogoTitle>
             <img src={Logo} alt="Logo" />
           </LogoTitle>
@@ -149,10 +157,15 @@ function Header() {
           </ProfileTitle>
         )}
       </Right>
-
       {/* 검색 모달 */}
       {isSearchModalOpen && <SearchModal closeModal={closeSearchModal} />}
-      {isSideMenuOpen && <SideMenu isOpen={isSideMenuOpen} onClose={() => setIsSideMenuOpen(false)} />} {/* 사이드메뉴 열림 상태에 따라 사이드메뉴를 렌더링 */}
+      {isSideMenuOpen && (
+        <SideMenu
+          isOpen={isSideMenuOpen}
+          onClose={() => setIsSideMenuOpen(false)}
+        />
+      )}{" "}
+      {/* 사이드메뉴 열림 상태에 따라 사이드메뉴를 렌더링 */}
     </HeaderContainer>
   );
 }
