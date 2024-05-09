@@ -5,7 +5,6 @@ import { useAuth } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import checkImg from "../assets/images/check3.png";
-import videoDummy from "../assets/dummyDatas/videoDummy.json"; // videoDummy 데이터 import
 import YoutubeIcon from "../assets/images/youtubebutton.png";
 import RankVideo from "../components/home/RankingVideo"; 
 
@@ -116,7 +115,7 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const { GPTSummary } = useAuth();
+  const { GPTSummary, homePageData } = useAuth();
 
   const handleUpload = async () => {
     setIsLoading(true);
@@ -134,15 +133,8 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    handleLoadRanking();
+    homePageData(); // 홈페이지 데이터 호출
   }, []);
-
-  const handleLoadRanking = () => {
-    const sortedVideos = Object.keys(videoDummy).sort(
-      (a, b) => videoDummy[a].grade - videoDummy[b].grade
-    );
-    setRanking(sortedVideos);
-  };
 
   const getTitleContent = () => {
     if (isLoading) {
@@ -187,7 +179,6 @@ const HomePage = () => {
 
   const [videoUrl, setVideoUrl] = useState("");
   const [videoId, setVideoId] = useState(null);
-  const [ranking, setRanking] = useState([]);
 
   const extractVideoId = (url) => {
     const regExp =
@@ -240,7 +231,7 @@ const HomePage = () => {
         <RankingContainer>
         https://www.youtube.com/watch?v=uAmv-8NUGGc
           <RankingItem>▶ 실시간 사용자가 많이 본 영상이예요..</RankingItem>
-          <RankVideo ranking={ranking} videoDummy={videoDummy} />
+          <RankVideo/>
         </RankingContainer>
       </body>
     </Container>

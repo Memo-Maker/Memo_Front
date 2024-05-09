@@ -49,11 +49,30 @@ export const AuthProvider = ({ children }) => {
 
   // -----------------------------------------------------------------------------
   // - Name : getVideoFromLOcaltorage
-  // - Desc : 로컬 스토리지에서 email을 가져오는 함수
+  // - Desc : 로컬 스토리지에서 videoUrl을 가져오는 함수
   // -----------------------------------------------------------------------------
   const getVideoFromLocalStorage = () => {
     const videoUrl = localStorage.getItem("videoUrl");
     return videoUrl;
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name : getRankingDataFromLocalStorage
+  // - Desc : 로컬 스토리지에서 rankingData를 가져오는 함수
+  // -----------------------------------------------------------------------------
+  const getRankingDataFromLocalStorage = () => {
+    const rankingData = localStorage.getItem("rankingData");
+    return rankingData;
+  };
+
+
+  // -----------------------------------------------------------------------------
+  // - Name : saveContentToLocal
+  // - Desc : 메모를 html로 로컬스토리지에 저장함
+  // -----------------------------------------------------------------------------
+  const saveContentToLocal = (htmlContent) => {
+    localStorage.setItem("editorContent", htmlContent);
+    console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.");
   };
 
   // -----------------------------------------------------------------------------
@@ -189,12 +208,53 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
-  // - Name : saveContentToLocal
-  // - Desc : 메모를 html로 로컬스토리지에 저장함
+  // - Name : homePageData
+  // - Desc : 백엔드의 / 주소로 GET 요청을 보내는 함수
   // -----------------------------------------------------------------------------
-  const saveContentToLocal = (htmlContent) => {
-    localStorage.setItem("editorContent", htmlContent);
-    console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.");
+  const homePageData = async () => {
+    try {
+      console.log("백엔드로 GET 요청을 보내는 중...");
+
+      // 서버에 GET 요청 보내기
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/video/most-frequent-url`
+      );
+
+      if (response.status === 200) {
+        console.log("데이터를 성공적으로 받았습니다.");
+        // 성공적으로 데이터를 받으면 추가 작업 수행
+        const data = response.data;
+        console.log("받은 데이터:", data);
+        // saveVideoToLocalstorage("rankingData", data)
+        // 받은 데이터를 각각의 영상 정보로 나누어 저장
+        if (data.length >= 1) {
+          saveVideoToLocalstorage("ranking1", data[0]);
+        }
+        if (data.length >= 2) {
+          saveVideoToLocalstorage("ranking2", data[1]);
+        }
+        if (data.length >= 3) {
+          saveVideoToLocalstorage("ranking3", data[2]);
+        }
+
+        // 받은 데이터 반환
+        return data;
+      } else {
+        console.error("데이터를 받아오는데 실패했습니다.");
+        // 데이터를 받아오는데 실패한 경우 에러 처리
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      // 에러가 발생한 경우 에러 처리
+    }
+  };
+
+  // 각 영상 정보를 로컬 스토리지에 저장하는 함수
+  const saveVideoToLocalstorage = (ranking, videoData) => {
+    // localStorage.setItem(`${ranking}_videoTitle`, videoData.videoTitle);
+    // localStorage.setItem(`${ranking}_thumbnailUrl`, videoData.thumbnailUrl);
+    // localStorage.setItem(`${ranking}_videoUrl`, videoData.videoUrl);
+    localStorage.setItem(`${ranking}`, JSON.stringify(videoData));
   };
 
   // -----------------------------------------------------------------------------
@@ -206,7 +266,7 @@ export const AuthProvider = ({ children }) => {
 
     // 기존에 저장된 카테고리 리스트를 가져옴
     const existingCategories = localStorage.getItem("categoryList");
-    
+
     // 기존에 저장된 카테고리가 없다면 새로운 카테고리로 설정
     if (!existingCategories) {
       localStorage.setItem("categoryList", categoryName);
@@ -398,7 +458,8 @@ export const AuthProvider = ({ children }) => {
         GPTQuery,
         GPTSummary,
         saveMarkdownToServer,
-        saveCategoryToLocal
+        saveCategoryToLocal,
+        homePageData
       }}
     >
       {children}
