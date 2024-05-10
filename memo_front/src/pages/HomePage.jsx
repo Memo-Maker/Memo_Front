@@ -125,7 +125,7 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const { GPTSummary, homePageDataGET } = useAuth();
+  const { GPTSummary, homePageDataGET, getMyData } = useAuth();
 
   const handleUpload = async () => {
     setIsLoading(true);
@@ -144,6 +144,14 @@ const HomePage = () => {
 
   useEffect(() => {
     homePageDataGET(); // 홈페이지 데이터 호출
+    // getMyData();
+
+    const loggedIn = localStorage.getItem("isLoggedIn");
+        if (loggedIn) {
+          console.log("🔴로그인 되어있음");
+          getMyData();
+        }
+        else{console.log("🔴로그인 xxxxx");}
   }, []);
 
   const getTitleContent = () => {

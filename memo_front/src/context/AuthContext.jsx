@@ -238,9 +238,10 @@ export const AuthProvider = ({ children }) => {
         const loggedIn = localStorage.getItem("isLoggedIn");
         if (loggedIn) {
           console.log("🔴로그인 되어있음");
-          await getMyData();
+          // await getMyData();
+        } else {
+          console.log("🔴로그인 xxxxx");
         }
-        else{console.log("🔴로그인 xxxxx");}
 
         // 받은 데이터 반환
         return data;
@@ -266,24 +267,68 @@ export const AuthProvider = ({ children }) => {
     const memberEmail = getEmailFromLocalStorage();
 
     try {
-        console.log("🔴getMyData 사용자 데이터를 가져오는 중...");
-        console.log("🔴[ 보낼 데이터 ]\n", memberEmail);
+      console.log("🔴getMyData 사용자 데이터를 가져오는 중...");
+      console.log("🔴[ 보낼 데이터 ]\n", memberEmail);
 
-        // 서버에 POST 요청 보내고 응답을 기다림
-        const response = await axios.post(`${BASE_URL}/send-to-home`, {
-            memberEmail: memberEmail
-        });
+      const response = await fetch(`${BASE_URL}/send-to-home`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ memberEmail: memberEmail })
+      });
 
-        const responseData = response.data;
-        console.log("🔴사용자 데이터 가져오기 성공!");
-        console.log("🔴[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
+      if (!response.ok) {
+        throw new Error("네트워크 응답이 실패했습니다.");
+      }
 
-        return responseData;
+      const responseData = await response.json();
+      console.log("🟢사용자 데이터 가져오기 성공!");
+      console.log("🟢[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
+
+      return responseData;
     } catch (error) {
-        console.error("에러 발생:", error);
-        throw new Error("사용자 데이터 가져오기 중 에러가 발생했습니다.");
+      console.error("에러 발생:", error);
+      // throw new Error("사용자 데이터 가져오기 중 에러가 발생했습니다.");
     }
-};
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name : searchMarkdown
+  // - Desc : 주어진 키워드를 사용하여 마크다운을 검색하는 함수
+  // - Input
+  //   1) keyword: 검색할 키워드
+  // -----------------------------------------------------------------------------
+  const searchMarkdown = async (keyword) => {
+    try {
+      console.log("마크다운을 검색하는 중...");
+      console.log("[ 검색할 키워드 ]", keyword);
+      const memberEmail = getEmailFromLocalStorage();
+      // 서버에 POST 요청을 보내고 응답을 기다림
+      const response = await fetch(`${BASE_URL}/api/v1/video/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+          keyword: keyword,
+          memberEmail:memberEmail
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("네트워크 응답이 실패했습니다.");
+      }
+
+      const searchData = await response.json();
+      console.log("검색 결과:", searchData); // 검색 결과를 로그로 출력
+
+      return searchData;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      throw new Error("마크다운 검색 중 에러가 발생했습니다.");
+    }
+  };
 
   // 각 영상 정보를 로컬 스토리지에 저장하는 함수
   const saveVideoToLocalstorage = (ranking, videoData) => {
@@ -495,7 +540,8 @@ export const AuthProvider = ({ children }) => {
         saveMarkdownToServer,
         saveCategoryToLocal,
         homePageDataGET,
-        getMyData
+        getMyData,
+        searchMarkdown,
       }}
     >
       {children}

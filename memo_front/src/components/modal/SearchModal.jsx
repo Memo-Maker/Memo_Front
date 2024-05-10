@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import SearchImage from "../../assets/images/search.png";
 import dummyData from "../../assets/dummyDatas/searchDummy.json"; // 더미 데이터 불러오기
+import { useAuth } from "../../context/AuthContext";
 
 const ModalBackdrop = styled.div`
   position: fixed;
@@ -31,10 +32,10 @@ const SearchContainer = styled.div`
 `;
 
 const SearchFunction = styled.div`
-  width:100%;
+  width: 100%;
   display: flex;
   align-items: center;
-  background-color:#ffffff;
+  background-color: #ffffff;
 `;
 
 const SearchInput = styled.input`
@@ -49,8 +50,8 @@ const SearchButton = styled.img`
   cursor: pointer;
   width: 30px;
   height: 30px;
-  margin-bottom:3%;
-  margin-left:5%;
+  margin-bottom: 3%;
+  margin-left: 5%;
 `;
 
 const SearchResultSection = styled.div`
@@ -75,13 +76,24 @@ const SearchResultContent = styled.div`
 const SearchModal = ({ closeModal }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const { searchMarkdown } = useAuth();
 
-  const handleSearch = () => {
-    // 검색된 결과를 필터링하여 저장
-    const result = dummyData.filter(item =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setSearchResult(result);
+  // const handleSearch = () => {
+  //   // 검색된 결과를 필터링하여 저장
+  //   const result = dummyData.filter(item =>
+  //     item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
+  //   setSearchResult(result);
+  // };
+
+  const handleSearch = async () => {
+    try {
+      // 검색된 결과를 필터링하여 저장
+      const result = await searchMarkdown(searchQuery);
+      setSearchResult(result);
+    } catch (error) {
+      console.error("검색 중 오류가 발생했습니다:", error);
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -95,30 +107,43 @@ const SearchModal = ({ closeModal }) => {
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <SearchContainer>
           <SearchFunction>
-          <SearchInput
-            type="text"
-            placeholder="검색어를 입력하세요"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown} // 엔터 키 입력 시 handleSearch 실행
-          />
-          <SearchButton
-            src={SearchImage}
-            alt="Search"
-            onClick={handleSearch}
-          />
+            <SearchInput
+              type="text"
+              placeholder="검색어를 입력하세요"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown} // 엔터 키 입력 시 handleSearch 실행
+            />
+            <SearchButton
+              src={SearchImage}
+              alt="Search"
+              onClick={handleSearch}
+            />
           </SearchFunction>
-          
+
           <SearchResultSection>
-            {searchResult.map(item => (
-              <SearchResult key={item.id}>
-                <img src={item.image} alt="검색 결과 이미지" style={{ width: "100px", "margin-right": "5%" , borderRadius: "1rem", boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.3)" }}/>
-                <SearchResultContent>
-                  <h3>{item.title}</h3>
-                  <p>{item.content}</p>
-                </SearchResultContent>
-              </SearchResult>
-            ))}
+            {searchResult.length > 0 ? (
+              searchResult.map((item, index) => (
+                <SearchResult key={index}>
+                  <img
+                    src={item.thumbnailUrl}
+                    alt="검색 결과 이미지"
+                    style={{
+                      width: "100px",
+                      marginRight: "5%",
+                      borderRadius: "1rem",
+                      boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.3)"
+                    }}
+                  />
+                  <SearchResultContent>
+                    <h3>{item.videoTitle}</h3>
+                    <p>{item.summary}</p>
+                  </SearchResultContent>
+                </SearchResult>
+              ))
+            ) : (
+              <></>
+            )}
           </SearchResultSection>
         </SearchContainer>
       </ModalContent>
