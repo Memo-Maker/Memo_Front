@@ -76,21 +76,20 @@ const SearchResultContent = styled.div`
 const SearchModal = ({ closeModal }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [searchError, setSearchError] = useState(false); // 검색 결과가 없을 때의 에러 상태 추가
   const { searchMarkdown } = useAuth();
-
-  // const handleSearch = () => {
-  //   // 검색된 결과를 필터링하여 저장
-  //   const result = dummyData.filter(item =>
-  //     item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  //   );
-  //   setSearchResult(result);
-  // };
 
   const handleSearch = async () => {
     try {
       // 검색된 결과를 필터링하여 저장
       const result = await searchMarkdown(searchQuery);
-      setSearchResult(result);
+      setSearchResult(result); // 검색 결과가 있든 없든 일단 설정
+
+      if (result.length === 0) {
+        setSearchError(true); // 검색 결과가 없는 경우만 에러 상태 설정
+      } else {
+        setSearchError(false); // 검색 결과가 있는 경우에는 에러 상태 초기화
+      }
     } catch (error) {
       console.error("검색 중 오류가 발생했습니다:", error);
     }
@@ -123,8 +122,8 @@ const SearchModal = ({ closeModal }) => {
 
           <SearchResultSection>
             {searchResult.length > 0 ? (
-              searchResult.map((item, index) => (
-                <SearchResult key={index}>
+              searchResult.map(item => (
+                <SearchResult key={item.id}>
                   <img
                     src={item.thumbnailUrl}
                     alt="검색 결과 이미지"
@@ -137,13 +136,13 @@ const SearchModal = ({ closeModal }) => {
                   />
                   <SearchResultContent>
                     <h3>{item.videoTitle}</h3>
-                    <p>{item.summary}</p>
+                    <p>{item.document}</p>
                   </SearchResultContent>
                 </SearchResult>
               ))
-            ) : (
-              <></>
-            )}
+            ) : searchError ? (
+              <p>해당 검색어는 존재하지 않습니다.</p>
+            ) : null}
           </SearchResultSection>
         </SearchContainer>
       </ModalContent>

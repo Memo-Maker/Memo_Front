@@ -323,7 +323,8 @@ export const AuthProvider = ({ children }) => {
       const searchData = await response.json();
       console.log("검색 결과:", searchData); // 검색 결과를 로그로 출력
 
-      return searchData;
+      return searchData.length > 0 ? searchData : null;
+
     } catch (error) {
       console.error("에러 발생:", error);
       throw new Error("마크다운 검색 중 에러가 발생했습니다.");
