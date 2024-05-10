@@ -234,9 +234,11 @@ export const AuthProvider = ({ children }) => {
         }
 
         // 만약 isLoggedIn 상태가 true이면 getMyData 함수 호출
-        if (isLoggedIn) {
+        console.log("isLoggedIn-------" + isLoggedIn);
+        const loggedIn = localStorage.getItem("isLoggedIn");
+        if (loggedIn) {
           console.log("🔴로그인 되어있음");
-          await getMyData(getEmailFromLocalStorage()); // 필요한 인자를 전달해야 할 경우에는 인자를 넣어주세요
+          await getMyData();
         }
         else{console.log("🔴로그인 xxxxx");}
 
@@ -260,34 +262,28 @@ export const AuthProvider = ({ children }) => {
   // - Output
   //   - 서버에서 받은 응답 데이터
   // -----------------------------------------------------------------------------
-  const getMyData = async (memberEmail) => {
+  const getMyData = async () => {
+    const memberEmail = getEmailFromLocalStorage();
+
     try {
-      console.log("🔴사용자 데이터를 가져오는 중...");
-      console.log("🔴[ 보낼 데이터 ]\n", memberEmail);
+        console.log("🔴getMyData 사용자 데이터를 가져오는 중...");
+        console.log("🔴[ 보낼 데이터 ]\n", memberEmail);
 
-      // 서버에 POST 요청 보내고 응답을 기다림
-      const response = await fetch(`${BASE_URL}/send-to-home`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(memberEmail)
-      });
+        // 서버에 POST 요청 보내고 응답을 기다림
+        const response = await axios.post(`${BASE_URL}/send-to-home`, {
+            memberEmail: memberEmail
+        });
 
-      if (!response.ok) {
-        throw new Error("서버에서 오류를 반환했습니다.");
-      }
+        const responseData = response.data;
+        console.log("🔴사용자 데이터 가져오기 성공!");
+        console.log("🔴[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
 
-      const responseData = await response.json();
-      console.log("🔴사용자 데이터 가져오기 성공!");
-      console.log("🔴[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
-
-      return responseData;
+        return responseData;
     } catch (error) {
-      console.error("에러 발생:", error);
-      throw new Error("사용자 데이터 가져오기 중 에러가 발생했습니다.");
+        console.error("에러 발생:", error);
+        throw new Error("사용자 데이터 가져오기 중 에러가 발생했습니다.");
     }
-  };
+};
 
   // 각 영상 정보를 로컬 스토리지에 저장하는 함수
   const saveVideoToLocalstorage = (ranking, videoData) => {
