@@ -340,6 +340,43 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
+  // - Name : saveCategoryToDB
+  // - Desc : 메모를 html로 DB에 저장함
+  // -----------------------------------------------------------------------------
+  const saveCategoryToDB = async (categoryName) => {
+    try {
+      console.log(categoryName + "을 저장해보겠습니다");
+      const memberEmail = getEmailFromLocalStorage();
+      console.log(memberEmail + "에 저장해보겠습니다");
+
+      // 서버에 POST 요청을 보내고 응답을 기다림
+      const response = await fetch(`${BASE_URL}/api/v1/category/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          categoryName:categoryName,
+          memberEmail:memberEmail
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('네트워크 응답이 실패했습니다.');
+      }
+  
+      const responseData = await response;
+      console.log('카테고리가 성공적으로 생성되었습니다:', responseData);
+      // 필요한 작업 수행 (예: 성공 메시지 표시, 상태 업데이트 등)
+  
+    } catch (error) {
+      console.error('카테고리 생성 중 오류가 발생했습니다:', error);
+      // 필요한 작업 수행 (예: 오류 메시지 표시, 상태 업데이트 등)
+    }
+  };
+  
+
+  // -----------------------------------------------------------------------------
   // - Name : saveCategoryToLocal
   // - Desc : 메모를 html로 로컬스토리지에 저장함
   // -----------------------------------------------------------------------------
@@ -539,6 +576,7 @@ export const AuthProvider = ({ children }) => {
         GPTQuery,
         GPTSummary,
         saveMarkdownToServer,
+        saveCategoryToDB,
         saveCategoryToLocal,
         homePageDataGET,
         getMyData,

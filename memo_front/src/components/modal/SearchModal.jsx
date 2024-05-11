@@ -128,7 +128,8 @@ const SearchModal = ({ closeModal }) => {
                     src={item.thumbnailUrl}
                     alt="검색 결과 이미지"
                     style={{
-                      width: "100px",
+                      width: "8vw",
+                      height:"10vh",
                       marginRight: "5%",
                       borderRadius: "1rem",
                       boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.3)"
@@ -136,6 +137,7 @@ const SearchModal = ({ closeModal }) => {
                   />
                   <SearchResultContent>
                     <h3>{item.videoTitle}</h3>
+                    {/* <p>{item.summary}</p> */}
                     <p>{item.document}</p>
                   </SearchResultContent>
                 </SearchResult>
