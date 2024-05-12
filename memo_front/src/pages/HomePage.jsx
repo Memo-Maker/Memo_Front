@@ -9,8 +9,7 @@ import YoutubeIcon from "../assets/images/youtubebutton.png";
 import RankVideo from "../components/home/RankingVideo"; 
 
 const CheckImage = styled.img`
-  width: 4.5%;
-  height: 7.5%;
+  width: 7%;
 `;
 
 const LoadingIcon = styled(FontAwesomeIcon).attrs({
@@ -20,12 +19,17 @@ const LoadingIcon = styled(FontAwesomeIcon).attrs({
 })``;
 
 const LoadingText = styled.div`
-  text-align: center; /* 텍스트 가운데 정렬 */
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2vw;
+  margin-bottom: 2vw;
 `;
 
 const RedText = styled.span`
-  color: red; /* 빨간색 */
-  font-weight: bold; /* 두껍게 */
+  font-size: 1.2rem;
+  color: red;
+  font-weight: bold;
 `;
 
 const Container = styled.div`

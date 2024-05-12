@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import addImg from "../../assets/images/add.png";
 import { useAuth } from "../../context/AuthContext";
+import Floder from "../../assets/images/floder.png";
+import saveFileImage from "../../assets/images/savefile.png";
 
 const ModalBackdrop = styled.div`
   position: fixed;
@@ -14,93 +16,102 @@ const ModalBackdrop = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 98;
+  overflow-y: auto; /* 추가: 세로 스크롤을 추가합니다. */
 `;
 
 const ModalWrapper = styled.div`
   position: fixed;
   width: 40%;
-  height: 40%;
+  //height: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  border-radius: 8px;
+  border-radius: 1vw;
   z-index: 99;
+`;
+const SaveContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1vw;
+`;
+
+const StyledImg = styled.img`
+  width: 7%;
+  margin-right: 0.5vw;
 `;
 
 const SaveText = styled.div`
-  margin-top: 5%;
-  margin-bottom: 5%;
   color: #000000;
-  ${({ modalWidth, modalHeight }) => css`
-    font-size: ${Math.min(modalWidth, modalHeight) * 0.05}px;
-    text-align: center;
-    font-weight: bold;
-  `}
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: bold;
 `;
 
 const CloseButton = styled.span`
-  position: absolute;
-  background-color: #ffa2a2;
-  padding: 2%;
-  top: 10px;
-  right: 10px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1vw 2vw 0 2vw;
+  font-size: 1.3rem;
+  font-weight: bold;
   cursor: pointer;
 `;
 
 const ModalContent = styled.div`
-  width: 100%;
-  height: 80%;
-  background-color: #d9d9d9;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: #f0f0f0;
+  border-radius: 1vw;
 `;
 
 const CategoryList = styled.div`
-  background-color: #000000;
-  color: #ffffff;
-  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 1vw;
+  margin: 1vw 5vw 2vw 5vw;
 `;
 
-const Category = styled.div`
-  background-color: #4883d0;
-  color: #ffffff;
-  border-radius: 2px;
+const Category = styled.button`
+  width: 12vw;
+  display: flex;
+  padding: 0.2vw 1vw;
+  align-items: center;
+  font-size: 1rem;
+  border-radius: 0.5vw;
+  background-color: #838383;
 `;
 
 const ButtonSet = styled.div`
-  height: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  margin-top: auto;
 `;
 
 const TextInput = styled.input`
   width: 55%;
   padding: 10px;
-  margin-left: 4%;
-  margin-bottom: 10px;
+  margin: 0 1vw 1vw 5vw;
   border-radius: 8px;
 `;
 
 const AddButton = styled.button`
-  width: 1%;
-  margin-bottom: 10px;
-  margin-right: 14%;
+  margin: 0 1vw 1vw 1vw;
   border: none;
   background: none;
   cursor: pointer;
 
   img {
-    width: 3vw;
+    width: 2vw;
   }
 `;
 
 const ConfirmButton = styled.button`
-  width: 25%;
-  padding: 10px 20px;
-  margin-right: 4%;
-  margin-bottom: 10px;
-  background-color: #73e279;
-  border-radius: 1vw;
+  width: 8vw;
+  padding: 1vw 1.5vw;
+  margin: 0 5vw 1vw 1vw;
+  border-radius: 2vw;
 `;
 
 const SaveModal = ({ closeModal }) => {
@@ -138,14 +149,20 @@ const SaveModal = ({ closeModal }) => {
     <ModalBackdrop onClick={closeModal}>
       <ModalWrapper className="modal" onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={closeModal}>X</CloseButton>
-        <SaveText modalWidth={modalSize.width} modalHeight={modalSize.height}>
-          폴더에 저장해보세요!
-        </SaveText>
+        <SaveContainer>
+          <StyledImg src={saveFileImage} alt="saveFileImage" />
+          <SaveText modalWidth={modalSize.width} modalHeight={modalSize.height}>
+            어느 폴더에 저장할까요?
+          </SaveText>
+        </SaveContainer>
         <ModalContent>
-        <CategoryList>
+          <CategoryList>
             {/* 카테고리 리스트를 출력 */}
             {categoryList.map((category, index) => (
-              <Category key={index}>{category}</Category>
+              <Category key={index}>
+                <img src={Floder} alt="Folder" style={{ marginRight: "1vw" }} />
+                {category}
+              </Category>
             ))}
           </CategoryList>
           <ButtonSet>
