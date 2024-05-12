@@ -87,7 +87,7 @@ const IconImg = styled.img`
 
 const UserProfileDropdown = ({ closeModal }) => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, getVideoList } = useAuth();
   const handleClickOutside = (e) => {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -105,7 +105,7 @@ const UserProfileDropdown = ({ closeModal }) => {
         <Email>test@naver.com</Email>
         <Options>
           <Option>
-            <OptionItem onClick={() => { closeModal(); navigate("/mypage"); }}>
+            <OptionItem onClick={() => { getVideoList("최근 본 영상"); navigate("/mypage");}}>
               내 기록보기
             </OptionItem>
             <IconImg src={HistoryIconImg} alt="History" />

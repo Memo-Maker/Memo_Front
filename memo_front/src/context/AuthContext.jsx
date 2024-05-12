@@ -41,17 +41,15 @@ export const AuthProvider = ({ children }) => {
   // - Desc : 로컬 스토리지에서 email을 가져오는 함수
   // -----------------------------------------------------------------------------
   const getEmailFromLocalStorage = () => {
-    const userEmail = localStorage.getItem("userId");
-    return userEmail;
+    return localStorage.getItem("userId");
   };
 
   // -----------------------------------------------------------------------------
   // - Name : getVideoFromLOcaltorage
   // - Desc : 로컬 스토리지에서 videoUrl을 가져오는 함수
   // -----------------------------------------------------------------------------
-  const getVideoFromLocalStorage = () => {
-    const videoUrl = localStorage.getItem("videoUrl");
-    return videoUrl;
+  const getVideoUrlFromLocalStorage = () => {
+    return localStorage.getItem("videoUrl");
   };
 
   // -----------------------------------------------------------------------------
@@ -61,15 +59,6 @@ export const AuthProvider = ({ children }) => {
   const getRankingDataFromLocalStorage = () => {
     const rankingData = localStorage.getItem("rankingData");
     return rankingData;
-  };
-
-  // -----------------------------------------------------------------------------
-  // - Name : getVideoUrlFromLocalStorage
-  // - Desc : 로컬 스토리지에서 videoUrl를 가져오는 함수
-  // -----------------------------------------------------------------------------
-  const getVideoUrlFromLocalStorage = () => {
-    const videoUrl = localStorage.getItem("videoUrl");
-    return videoUrl;
   };
 
   // -----------------------------------------------------------------------------
@@ -431,7 +420,7 @@ export const AuthProvider = ({ children }) => {
       console.log("마크다운을 서버에 저장하는 중...");
       console.log("[ 저장할 마크다운 내용 ]\n", markdownContent);
       const userEmail = getEmailFromLocalStorage(); // 로컬 스토리지에서 이메일 가져오기
-      const videoUrl = getVideoFromLocalStorage(); // 로컬 스토리지에서 비디오 URL 가져오기
+      const videoUrl = getVideoUrlFromLocalStorage(); // 로컬 스토리지에서 비디오 URL 가져오기
 
       // 서버에 POST 요청 보내기
       const response = await fetch(`${BASE_URL}/api/v1/video/document-save`, {
