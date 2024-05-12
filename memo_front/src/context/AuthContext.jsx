@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 정보 및 토큰 확인
     const loggedIn = localStorage.getItem("isLoggedIn");
-    const storedToken = localStorage.getItem("token");
+    // const storedToken = localStorage.getItem("token");
     // if (loggedIn && storedToken) {
     if (loggedIn) {
       setIsLoggedIn(true);
@@ -606,7 +606,7 @@ const selectVideo = async () => {
         'Content-Type': 'application/json'
       },
       // body: JSON.stringify({ memberEmail, videoUrl })
-      body: JSON.stringify({ memberEmail, videoUrl:"https://www.youtube.com/watch?v=t6dqKN9ZNMQ" })
+      body: JSON.stringify({ memberEmail, videoUrl })
     });
 
     // 응답이 성공적인지 확인합니다.
@@ -644,19 +644,24 @@ const selectVideo = async () => {
 };
 
 
-
-const getVideoList = async () => {
+// 카테고리의 전체 영상 가져오기
+const getVideoList = async (categoryName) => {
   try {
+    localStorage.setItem('categoryName', categoryName);
+    if(categoryName==="최근 본 영상"){
+      categoryName=null;
+    }
     // 로컬 스토리지에서 멤버 이메일 가져오기
     const memberEmail = getEmailFromLocalStorage();
 
     // POST 요청 보내기
-    const response = await fetch(`${BASE_URL}/api/v1/video/recent-video`, {
+    const response = await fetch(`${BASE_URL}/api/v1/video/category-video`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ memberEmail }), // 멤버 이메일을 바디에 넣어서 보내기
+      // 멤버 이메일과 categoryName을 바디에 넣어서 보내기
+      body: JSON.stringify({ memberEmail, categoryName }), 
     });
 
     // 응답 확인
@@ -666,15 +671,20 @@ const getVideoList = async () => {
 
     // 응답 데이터 파싱
     const responseData = await response.json();
+    console.log("[" + categoryName + "의 데이터를 가져옴]");
+    console.log(responseData);
 
     // 받아온 videoList를 로컬 스토리지에 저장
-    localStorage.setItem("videoList", JSON.stringify(responseData.videoList));
+    localStorage.setItem("videoList", JSON.stringify(responseData));
+    console.log("받아온 videoList를 로컬 스토리지에 저장")
     navigate("/mypage"); // 클릭 시 '/mypage'로 이동
+    window.location.reload();
+
     // videoList 반환
-    return responseData.videoList;
+    return responseData;
   } catch (error) {
     console.error("에러 발생:", error);
-    throw new Error("비디오 목록을 가져오는 중 에러가 발생했습니다.");
+    // throw new Error("비디오 목록을 가져오는 중 에러가 발생했습니다.");
   }
 };
 

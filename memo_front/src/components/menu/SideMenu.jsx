@@ -6,7 +6,8 @@ import { useAuth } from "../../context/AuthContext";
 
 const SideMenuContainer = styled.div`
   position: fixed;
-  bottom: ${({ isOpen }) => (isOpen ? "0" : "-100%")}; /* isOpen 상태에 따라 아래로 내려옴/올라감 */
+  bottom: ${({ isOpen }) =>
+    isOpen ? "0" : "-100%"}; /* isOpen 상태에 따라 아래로 내려옴/올라감 */
   left: 0;
   width: 25%;
   height: 80%;
@@ -16,7 +17,6 @@ const SideMenuContainer = styled.div`
   padding-top: 60px;
   transition: bottom 0.3s ease; /* 아래쪽으로 이동하는 애니메이션 효과 */
 `;
-
 
 const CloseButton = styled.button`
   position: absolute;
@@ -28,7 +28,7 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const StyledMenuItem  = styled.div`
+const StyledMenuItem = styled.div`
   width: 100%;
   border-radius: 10px; /* 둥근 네모 모양의 버튼으로 만들기 위해 border-radius 값을 조정합니다. */
   padding: 20px;
@@ -42,22 +42,23 @@ const StyledMenuItem  = styled.div`
   }
 `;
 
-
 const SideMenu = ({ isOpen, onClose }) => {
-  const categoryList = JSON.parse(localStorage.getItem("categorylist")) || []; // 로컬스토리지에서 카테고리 목록 가져오기
+  const categoryList = JSON.parse(localStorage.getItem("categoryList")) || []; // 로컬스토리지에서 카테고리 목록 가져오기
   const { getVideoList } = useAuth();
 
-  const handleMenuItemClick = () => {
+  const handleMenuItemClick = (category) => {
     onClose(); // 이동 후에 메뉴 닫기
-    console.log("getVideoList 실행");
-    // getVideoList();
+    console.log("getVideoList(" + category + ") 실행 중...");
+    getVideoList(category);
   };
 
   return (
     <SideMenuContainer isOpen={isOpen}>
       <CloseButton onClick={onClose}>×</CloseButton>
       {categoryList.map((category, index) => (
-        <StyledMenuItem StyledMenuItem key={index} onClick={handleMenuItemClick}>{category}</StyledMenuItem> // 각 카테고리에 대한 메뉴 항목 생성
+        <StyledMenuItem key={index} onClick={() => handleMenuItemClick(category)}>
+          {category}
+        </StyledMenuItem> // 각 카테고리에 대한 메뉴 항목 생성
       ))}
     </SideMenuContainer>
   );

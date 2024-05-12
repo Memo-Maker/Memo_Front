@@ -7,6 +7,7 @@ import Profile from "../../assets/images/profile.png";
 import ProfileModal from "../modal/ProfileModal"
 import SearchModal from "../modal/SearchModal";
 import SideMenu from "../menu/SideMenu"; // SideMenu 컴포넌트 추가
+import { useNavigate } from "react-router-dom";
 
 const HeaderContainer = styled.div`
   position: relative; /* HeaderContainer를 relative로 설정하여 하위 요소를 absolute로 배치 */
@@ -82,6 +83,7 @@ function Header() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // 모달 열림/닫힘 상태 추가
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false); // SearchModal을 열기 위한 상태 추가
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false); // 사이드메뉴 열림/닫힘 상태 추가
+  const navigate = useNavigate();
   
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 여부를 확인하여 상태를 설정합니다.
@@ -111,6 +113,7 @@ function Header() {
 
   //새로고침
 const handleRefresh = () => {
+  navigate("/");
   window.location.reload();
 };
 

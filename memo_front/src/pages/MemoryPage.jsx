@@ -57,6 +57,7 @@ const MemoryPage = () => {
 
   useEffect(() => {
     const storedVideoUrl = localStorage.getItem("videoUrl");
+    console.log("storedVideoUrl::" + storedVideoUrl);
     if (storedVideoUrl) {
       const videoId = extractVideoId(storedVideoUrl);
       setVideoId(videoId);
