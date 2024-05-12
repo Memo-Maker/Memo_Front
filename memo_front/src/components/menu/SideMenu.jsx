@@ -26,7 +26,7 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const MenuItem = styled.div`
+const StyledMenuItem  = styled.div`
   border-radius: 10px; /* 둥근 네모 모양의 버튼으로 만들기 위해 border-radius 값을 조정합니다. */
   padding: 20px;
   border: 1px solid transparent; /* 테두리를 추가하여 버튼처럼 보이도록 설정합니다. */
@@ -41,14 +41,14 @@ const MenuItem = styled.div`
 
 
 const SideMenu = ({ isOpen, onClose }) => {
+  const categoryList = JSON.parse(localStorage.getItem("categorylist")) || []; // 로컬스토리지에서 카테고리 목록 가져오기
+
   return (
     <SideMenuContainer isOpen={isOpen}>
       <CloseButton onClick={onClose}>×</CloseButton>
-      <MenuItem>최근에 본 영상</MenuItem>
-      <MenuItem>메뉴 항목 1</MenuItem>
-      <MenuItem>메뉴 항목 2</MenuItem>
-      <MenuItem>메뉴 항목 3</MenuItem>
-      {/* 필요한 만큼 메뉴 항목을 추가할 수 있습니다. */}
+      {categoryList.map((category, index) => (
+        <StyledMenuItem key={index}>{category}</StyledMenuItem> // 각 카테고리에 대한 메뉴 항목 생성
+      ))}
     </SideMenuContainer>
   );
 };
