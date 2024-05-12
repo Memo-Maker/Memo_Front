@@ -50,7 +50,7 @@ const SideMenu = ({ isOpen, onClose }) => {
   const handleMenuItemClick = () => {
     onClose(); // 이동 후에 메뉴 닫기
     console.log("getVideoList 실행");
-    getVideoList();
+    // getVideoList();
   };
 
   return (

@@ -296,7 +296,7 @@ export const AuthProvider = ({ children }) => {
       console.log("🟢[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
 
       // 각 categoryName을 로컬스토리지의 categorylist에 추가
-      localStorage.removeItem("categorylist");
+      localStorage.removeItem("categoryList");
       
       // "최근 본 영상" 카테고리 추가
       responseData.unshift({ categoryName: "최근 본 영상" });
@@ -307,7 +307,7 @@ export const AuthProvider = ({ children }) => {
       );
 
       // 새로운 카테고리 목록을 로컬스토리지에 저장합니다.
-      localStorage.setItem("categorylist", JSON.stringify(newCategoryList));
+      localStorage.setItem("categoryList", JSON.stringify(newCategoryList));
 
       return responseData;
     } catch (error) {
