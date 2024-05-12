@@ -12,18 +12,16 @@ const FLASK_BASE_URL = "http://localhost:5000";
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
   // const [token, setToken] = useState(""); // 토큰 상태 추가
   const navigate = useNavigate(); // useNavigate를 통해 navigate 함수를 가져옵니다.
 
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 정보 및 토큰 확인
     const loggedIn = localStorage.getItem("isLoggedIn");
-    const userInfo = JSON.parse(localStorage.getItem("user"));
     const storedToken = localStorage.getItem("token");
-    if (loggedIn && userInfo && storedToken) {
+    // if (loggedIn && storedToken) {
+    if (loggedIn) {
       setIsLoggedIn(true);
-      setUser(userInfo);
       // setToken(storedToken); // 저장된 토큰 상태로 설정
       console.log("로컬 스토리지에서 로그인 여부 및 토큰을 가져왔습니다.");
     }
@@ -49,11 +47,29 @@ export const AuthProvider = ({ children }) => {
 
   // -----------------------------------------------------------------------------
   // - Name : getVideoFromLOcaltorage
-  // - Desc : 로컬 스토리지에서 email을 가져오는 함수
+  // - Desc : 로컬 스토리지에서 videoUrl을 가져오는 함수
   // -----------------------------------------------------------------------------
   const getVideoFromLocalStorage = () => {
     const videoUrl = localStorage.getItem("videoUrl");
     return videoUrl;
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name : getRankingDataFromLocalStorage
+  // - Desc : 로컬 스토리지에서 rankingData를 가져오는 함수
+  // -----------------------------------------------------------------------------
+  const getRankingDataFromLocalStorage = () => {
+    const rankingData = localStorage.getItem("rankingData");
+    return rankingData;
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name : saveContentToLocal
+  // - Desc : 메모를 html로 로컬스토리지에 저장함
+  // -----------------------------------------------------------------------------
+  const saveContentToLocal = (htmlContent) => {
+    localStorage.setItem("editorContent", htmlContent);
+    console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.");
   };
 
   // -----------------------------------------------------------------------------
@@ -155,7 +171,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userId", memberEmail); // 토큰 저장
         setIsLoggedIn(true);
-        setUser(responseData.user);
         console.log("토큰이 로컬 스토리지에 저장되었습니다.");
         console.log("[ token ]\n" + jwtToken);
 
@@ -189,13 +204,177 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
-  // - Name : saveContentToLocal
-  // - Desc : 메모를 html로 로컬스토리지에 저장함
+  // - Name : homePageDataGET
+  // - Desc : 백엔드의 / 주소로 GET 요청을 보내는 함수
   // -----------------------------------------------------------------------------
-  const saveContentToLocal = (htmlContent) => {
-    localStorage.setItem("editorContent", htmlContent);
-    console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.");
+  const homePageDataGET = async () => {
+    try {
+      console.log("백엔드로 GET 요청을 보내는 중...");
+
+      // 서버에 GET 요청 보내기
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/video/most-frequent-url`
+      );
+
+      if (response.status === 200) {
+        console.log("데이터를 성공적으로 받았습니다.");
+        // 성공적으로 데이터를 받으면 추가 작업 수행
+        const data = response.data;
+        console.log("받은 데이터:", data);
+        // saveVideoToLocalstorage("rankingData", data)
+        // 받은 데이터를 각각의 영상 정보로 나누어 저장
+        if (data.length >= 1) {
+          saveVideoToLocalstorage("ranking1", data[0]);
+        }
+        if (data.length >= 2) {
+          saveVideoToLocalstorage("ranking2", data[1]);
+        }
+        if (data.length >= 3) {
+          saveVideoToLocalstorage("ranking3", data[2]);
+        }
+
+        // 만약 isLoggedIn 상태가 true이면 getMyData 함수 호출
+        console.log("isLoggedIn-------" + isLoggedIn);
+        const loggedIn = localStorage.getItem("isLoggedIn");
+        if (loggedIn) {
+          console.log("🔴로그인 되어있음");
+          // await getMyData();
+        } else {
+          console.log("🔴로그인 xxxxx");
+        }
+
+        // 받은 데이터 반환
+        return data;
+      } else {
+        console.error("데이터를 받아오는데 실패했습니다.");
+        // 데이터를 받아오는데 실패한 경우 에러 처리
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      // 에러가 발생한 경우 에러 처리
+    }
   };
+
+  // -----------------------------------------------------------------------------
+  // - Name : getMyData
+  // - Desc : 백엔드에 POST 요청을 보내어 사용자 데이터를 가져오는 함수
+  // - Input
+  //   1) data: 전송할 데이터 객체
+  // - Output
+  //   - 서버에서 받은 응답 데이터
+  // -----------------------------------------------------------------------------
+  const getMyData = async () => {
+    const memberEmail = getEmailFromLocalStorage();
+
+    try {
+      console.log("🔴getMyData 사용자 데이터를 가져오는 중...");
+      console.log("🔴[ 보낼 데이터 ]\n", memberEmail);
+
+      const response = await fetch(`${BASE_URL}/send-to-home`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ memberEmail: memberEmail })
+      });
+
+      if (!response.ok) {
+        throw new Error("네트워크 응답이 실패했습니다.");
+      }
+
+      const responseData = await response.json();
+      console.log("🟢사용자 데이터 가져오기 성공!");
+      console.log("🟢[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
+
+      return responseData;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      // throw new Error("사용자 데이터 가져오기 중 에러가 발생했습니다.");
+    }
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name : searchMarkdown
+  // - Desc : 주어진 키워드를 사용하여 마크다운을 검색하는 함수
+  // - Input
+  //   1) keyword: 검색할 키워드
+  // -----------------------------------------------------------------------------
+  const searchMarkdown = async (keyword) => {
+    try {
+      console.log("마크다운을 검색하는 중...");
+      console.log("[ 검색할 키워드 ]", keyword);
+      const memberEmail = getEmailFromLocalStorage();
+      // 서버에 POST 요청을 보내고 응답을 기다림
+      const response = await fetch(`${BASE_URL}/api/v1/video/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+          keyword: keyword,
+          memberEmail:memberEmail
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("네트워크 응답이 실패했습니다.");
+      }
+
+      const searchData = await response.json();
+      console.log("검색 결과:", searchData); // 검색 결과를 로그로 출력
+
+      return searchData.length > 0 ? searchData : null;
+
+    } catch (error) {
+      console.error("에러 발생:", error);
+      throw new Error("마크다운 검색 중 에러가 발생했습니다.");
+    }
+  };
+
+  // 각 영상 정보를 로컬 스토리지에 저장하는 함수
+  const saveVideoToLocalstorage = (ranking, videoData) => {
+    // localStorage.setItem(`${ranking}_videoTitle`, videoData.videoTitle);
+    // localStorage.setItem(`${ranking}_thumbnailUrl`, videoData.thumbnailUrl);
+    // localStorage.setItem(`${ranking}_videoUrl`, videoData.videoUrl);
+    localStorage.setItem(`${ranking}`, JSON.stringify(videoData));
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name : saveCategoryToDB
+  // - Desc : 메모를 html로 DB에 저장함
+  // -----------------------------------------------------------------------------
+  const saveCategoryToDB = async (categoryName) => {
+    try {
+      console.log(categoryName + "을 저장해보겠습니다");
+      const memberEmail = getEmailFromLocalStorage();
+      console.log(memberEmail + "에 저장해보겠습니다");
+
+      // 서버에 POST 요청을 보내고 응답을 기다림
+      const response = await fetch(`${BASE_URL}/api/v1/category/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          categoryName:categoryName,
+          memberEmail:memberEmail
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('네트워크 응답이 실패했습니다.');
+      }
+  
+      const responseData = await response;
+      console.log('카테고리가 성공적으로 생성되었습니다:', responseData);
+      // 필요한 작업 수행 (예: 성공 메시지 표시, 상태 업데이트 등)
+  
+    } catch (error) {
+      console.error('카테고리 생성 중 오류가 발생했습니다:', error);
+      // 필요한 작업 수행 (예: 오류 메시지 표시, 상태 업데이트 등)
+    }
+  };
+  
 
   // -----------------------------------------------------------------------------
   // - Name : saveCategoryToLocal
@@ -206,7 +385,7 @@ export const AuthProvider = ({ children }) => {
 
     // 기존에 저장된 카테고리 리스트를 가져옴
     const existingCategories = localStorage.getItem("categoryList");
-    
+
     // 기존에 저장된 카테고리가 없다면 새로운 카테고리로 설정
     if (!existingCategories) {
       localStorage.setItem("categoryList", categoryName);
@@ -387,7 +566,6 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        user,
         getTokenFromLocalStorage,
         getEmailFromLocalStorage,
         saveContentToLocal,
@@ -398,7 +576,11 @@ export const AuthProvider = ({ children }) => {
         GPTQuery,
         GPTSummary,
         saveMarkdownToServer,
-        saveCategoryToLocal
+        saveCategoryToDB,
+        saveCategoryToLocal,
+        homePageDataGET,
+        getMyData,
+        searchMarkdown,
       }}
     >
       {children}

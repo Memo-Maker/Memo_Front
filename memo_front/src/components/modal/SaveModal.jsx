@@ -119,9 +119,10 @@ const SaveModal = ({ closeModal }) => {
   const [modalSize, setModalSize] = useState({ width: 0, height: 0 });
   const [categoryList, setCategoryList] = useState([]);
 
-  const { saveCategoryToLocal } = useAuth();
+  const { saveCategoryToLocal, saveCategoryToDB } = useAuth();
 
   const handleAddContent = () => {
+    saveCategoryToDB(content);
     saveCategoryToLocal(content);
     setContent("");
   };

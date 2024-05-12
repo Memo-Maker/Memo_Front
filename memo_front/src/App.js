@@ -39,7 +39,7 @@ function App() {
             <Route path="/memory" element={<><Header2 /><MemoryPage /></>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-             <Route path="/mypage" element={<><Header /><MyPage /><Footer/></>} />
+            <Route path="/mypage" element={<><Header /><MyPage /><Footer/></>} />
             {/* /auth 경로에 대한 라우트 추가 */}
             <Route path="/auth" element={<LoginHandler />} />
           </Routes>

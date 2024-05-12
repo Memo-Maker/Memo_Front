@@ -1,60 +1,93 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 const RankingContainer = styled.div`
   margin-top: 1vw;
-  display:flex;
-  flex-direction: row; 
+  display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 1rem; 
+  gap: 1rem;
 `;
 
- // 카드를 나타내는 버튼 스타일 컴포넌트
-    const StyledButton = styled.button`
-    background-color: white;
-    border: 0.2vw solid #838383;
-    border-radius: 1vw;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    width: 15vw;
-    height: 10vw;
-    cursor: pointer;
-    transition: background-color 0.3s;
+const StyledButton = styled.button`
+  background-color: white;
+  border: 0.2vw solid #838383;
+  border-radius: 1vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 15vw;
+  height: 10vw;
+  cursor: pointer;
+  transition: background-color 0.3s;
 
-    &:active {
-        background-color: #ccc;
+  &:active {
+    background-color: #ccc;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const ButtonImage = styled.img`
+  height: 70%;
+  object-fit: cover;
+  margin: 0.5vw;
+`;
+
+const ButtonContent = styled.div`
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
+const RankingVideo = () => {
+  useEffect(() => {
+    // 로컬 스토리지에서 각 영상 정보를 가져와서 출력하고 로그를 출력합니다.
+    for (let i = 1; i <= 3; i++) {
+      const rankingData = JSON.parse(localStorage.getItem(`ranking${i}`));
+      if (rankingData) {
+        console.log(`Ranking ${i} Data:`, rankingData);
+      }
     }
+  }, []);
 
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+  // rankingData 변수 정의
+  const rankingData = [];
+  for (let i = 1; i <= 3; i++) {
+    const data = JSON.parse(localStorage.getItem(`ranking${i}`));
+    if (data) {
+      rankingData.push(data);
     }
-    `;
+  }
 
-    const ButtonImage = styled.img`
-    height: 70%;
-    object-fit: cover;
-    margin: 0.5vw;
-    `;
+  const handleButtonClick = (videoUrl) => {
+    // 클립보드에 videoUrl 복사
+    navigator.clipboard.writeText(videoUrl)
+      .then(() => {
+        // 클립보드에 복사되었을 때의 처리
+        alert(`YouTube URL이 클립보드에 복사되었습니다😁\n아래의 입력창에 붙여넣어주세요❗❗`);
+      })
+      .catch((error) => {
+        // 복사 실패 시 처리
+        console.error('클립보드에 복사 실패:', error);
+        alert('클립보드에 복사하는 중 오류가 발생했습니다.');
+      });
+  };
+  
+  
 
-    const ButtonContent = styled.div`
-    text-align: center;
-    font-size: 1rem;
-    font-weight: bold;
-    `;
-
-
-const RankingVideo = ({ ranking, videoDummy }) => {
   return (
     <RankingContainer>
-      {ranking.map((videoKey, index) => (
-        <StyledButton key={videoKey.id}>
-          <ButtonImage
-            src={videoDummy[videoKey].thumbnail_url}
-            alt={videoDummy[videoKey].title}
-          />
-          <ButtonContent> {videoDummy[videoKey].title}</ButtonContent>
+      {rankingData.map((data, index) => (
+        <StyledButton
+          key={index}
+          onClick={() => handleButtonClick(data.videoUrl)}
+        >
+          <ButtonImage src={data.thumbnailUrl} alt={data.videoTitle} />
+          <ButtonContent>{data.videoTitle}</ButtonContent>
         </StyledButton>
       ))}
     </RankingContainer>
