@@ -129,7 +129,6 @@ const Category = styled.button`
   transition: transform 0.3s ease-in-out; /* 애니메이션 효과 추가 */
 `;
 
-
 const ButtonSet = styled.div`
   display: flex;
   justify-content: space-between;
@@ -208,24 +207,24 @@ const SaveModal = ({ closeModal }) => {
     console.log("선택된 카테고리:", category);
   };
 
- const handleCategoryRightClick = () => {
-   if (selectedCategory) {
-     const confirmDelete = window.confirm(
-       `${selectedCategory}을(를) 삭제하시겠습니까?`
-     );
-     if (confirmDelete) {
-       // 로컬 스토리지에서도 해당 카테고리 삭제
-       const updatedCategoryList = categoryList.filter(
-         (category) => category !== selectedCategory
-       );
-       localStorage.setItem("categoryList", updatedCategoryList.join(", "));
+  const handleCategoryRightClick = () => {
+    if (selectedCategory) {
+      const confirmDelete = window.confirm(
+        `${selectedCategory}을(를) 삭제하시겠습니까?`
+      );
+      if (confirmDelete) {
+        // 로컬 스토리지에서도 해당 카테고리 삭제
+        const updatedCategoryList = categoryList.filter(
+          (category) => category !== selectedCategory
+        );
+        localStorage.setItem("categoryList", updatedCategoryList.join(", "));
 
-       setCategoryList(updatedCategoryList);
-       setSelectedCategory(null);
-       console.log(`${selectedCategory} 삭제됨`);
-     }
-   }
- };
+        setCategoryList(updatedCategoryList);
+        setSelectedCategory(null);
+        console.log(`${selectedCategory} 삭제됨`);
+      }
+    }
+  };
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -242,11 +241,12 @@ const SaveModal = ({ closeModal }) => {
       const { offsetWidth, offsetHeight } = modal;
       setModalSize({ width: offsetWidth, height: offsetHeight });
     }
-
+  
     // 모달이 열릴 때마다 로컬 스토리지에서 카테고리 리스트를 가져와 상태에 저장
     const storedCategoryList = localStorage.getItem("categoryList");
     if (storedCategoryList) {
-      setCategoryList(storedCategoryList.split(", "));
+      // 로컬 스토리지에서 가져온 문자열을 JSON.parse 메서드를 사용하여 배열로 파싱합니다.
+      setCategoryList(JSON.parse(storedCategoryList));
     }
   }, []);
 

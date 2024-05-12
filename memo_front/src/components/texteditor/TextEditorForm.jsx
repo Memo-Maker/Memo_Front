@@ -76,7 +76,7 @@ const TextEditorForm = () => {
 
 
   useEffect(() => {
-    const savedContent = localStorage.getItem("editorContent");
+    const savedContent = localStorage.getItem("document");
     if (savedContent) {
       const blocksFromHTML = convertFromHTML(savedContent);
       const state = ContentState.createFromBlockArray(

@@ -140,7 +140,7 @@ const MyPage = () => {
 
   return (
     <>
-    {categoryName} 의 영상
+    {categoryName} 카테고리의 영상
       <GridContainer>
         {currentData.map((video, index) => (
           <StyledButton key={index}>

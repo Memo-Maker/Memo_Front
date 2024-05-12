@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   // - Desc : 메모를 html로 로컬스토리지에 저장함
   // -----------------------------------------------------------------------------
   const saveContentToLocal = (htmlContent) => {
-    localStorage.setItem("editorContent", htmlContent);
+    localStorage.setItem("document", htmlContent);
     console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.");
   };
 
@@ -590,11 +590,10 @@ export const AuthProvider = ({ children }) => {
 // - Output
 //   - 서버에서 받은 응답 데이터
 // -----------------------------------------------------------------------------
-const selectVideo = async () => {
+const selectVideo = async (videoUrl) => {
   // 로컬 스토리지에서 멤버 이메일과 비디오 URL을 가져옵니다.
   const memberEmail = getEmailFromLocalStorage();
-  const videoUrl = getVideoUrlFromLocalStorage();
-
+  const videoUrlA = videoUrl;
   // 요청할 데이터를 콘솔에 출력합니다.
   console.log('전송할 데이터:', { memberEmail, videoUrl });
 
@@ -606,7 +605,10 @@ const selectVideo = async () => {
         'Content-Type': 'application/json'
       },
       // body: JSON.stringify({ memberEmail, videoUrl })
-      body: JSON.stringify({ memberEmail, videoUrl })
+      body: JSON.stringify({ 
+        memberEmail,
+        videoUrl:videoUrlA
+      })
     });
 
     // 응답이 성공적인지 확인합니다.
