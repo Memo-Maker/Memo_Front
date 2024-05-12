@@ -288,7 +288,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        throw new Error("네트워크 응답이 실패했습니다.");
+        toast.error("네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
       }
 
       const responseData = await response.json();
@@ -297,7 +297,7 @@ export const AuthProvider = ({ children }) => {
 
       // 각 categoryName을 로컬스토리지의 categorylist에 추가
       localStorage.removeItem("categoryList");
-      
+
       // "최근 본 영상" 카테고리 추가
       responseData.unshift({ categoryName: "최근 본 영상" });
 
@@ -312,7 +312,7 @@ export const AuthProvider = ({ children }) => {
       return responseData;
     } catch (error) {
       console.error("에러 발생:", error);
-      // throw new Error("사용자 데이터 가져오기 중 에러가 발생했습니다.");
+      toast.error("사용자 데이터 가져오기 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
 
@@ -340,7 +340,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        throw new Error("네트워크 응답이 실패했습니다.");
+        toast.error("네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
       }
 
       const searchData = await response.json();
@@ -349,7 +349,7 @@ export const AuthProvider = ({ children }) => {
       return searchData.length > 0 ? searchData : null;
     } catch (error) {
       console.error("에러 발생:", error);
-      throw new Error("마크다운 검색 중 에러가 발생했습니다.");
+      toast.error("입력하신 검색어를 검색하던 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
 
@@ -384,7 +384,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        throw new Error("네트워크 응답이 실패했습니다.");
+        toast.error("네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
       }
 
       const responseData = await response;
@@ -521,7 +521,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        throw new Error("서버에서 오류를 반환했습니다.");
+        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
       }
 
       const data = await response.json();
@@ -532,7 +532,7 @@ export const AuthProvider = ({ children }) => {
       return data;
     } catch (error) {
       console.error("에러 발생:", error);
-      throw new Error("쿼리 전송 중 에러가 발생했습니다.");
+      toast.error("쿼리 전송 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
 
@@ -565,7 +565,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        throw new Error("서버에서 오류를 반환했습니다.");
+        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
       }
 
       const data = await response.json();
@@ -578,148 +578,151 @@ export const AuthProvider = ({ children }) => {
       return data;
     } catch (error) {
       console.error("에러 발생:", error);
-      throw new Error("summary 요청 중 에러가 발생했습니다.");
+      toast.error("summary 요청 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
 
   // -----------------------------------------------------------------------------
-// - Name: selectVideo
-// - Desc: 멤버 이메일과 비디오 URL을 로컬 스토리지에서 가져와서 서버에 전송하는 함수
-// - Input
-//   - 없음
-// - Output
-//   - 서버에서 받은 응답 데이터
-// -----------------------------------------------------------------------------
-const selectVideo = async (videoUrl) => {
-  // 로컬 스토리지에서 멤버 이메일과 비디오 URL을 가져옵니다.
-  const memberEmail = getEmailFromLocalStorage();
-  const videoUrlA = videoUrl;
-  // 요청할 데이터를 콘솔에 출력합니다.
-  console.log('전송할 데이터:', { memberEmail, videoUrl });
-
-  try {
-    // 주소와 바디를 설정하여 POST 요청을 보냅니다.
-    const response = await fetch(`${BASE_URL}/api/v1/video/select-video`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      // body: JSON.stringify({ memberEmail, videoUrl })
-      body: JSON.stringify({ 
-        memberEmail,
-        videoUrl:videoUrlA
-      })
-    });
-
-    // 응답이 성공적인지 확인합니다.
-    if (!response.ok) {
-      throw new Error('서버에서 오류를 반환했습니다.');
-    }
-
-    // 응답 데이터를 콘솔에 출력합니다.
-    const responseData = await response.json();
-    console.log('받은 데이터:', responseData);
-
-    // 받은 데이터에서 필요한 정보를 추출합니다.
-    const { summary, document, videoUrl} = responseData.video;
-    const { questions } = responseData;
-
-    // 질문과 답변을 추출합니다.
-    const extractedQuestions = questions.map(question => question.question);
-    const extractedAnswers = questions.map(question => question.answer);
-
-    // 로컬 스토리지에 정보를 저장합니다.
-    localStorage.setItem('summary', summary);
-    localStorage.setItem('document', document);
-    localStorage.setItem('videoUrl', videoUrl);
-    localStorage.setItem('questions', JSON.stringify(extractedQuestions));
-    localStorage.setItem('answers', JSON.stringify(extractedAnswers));
-
-
-    navigate("/memory")
-    // 응답 데이터를 반환합니다.
-    return responseData;
-  } catch (error) {
-    console.error('에러 발생:', error);
-    throw new Error('영상 선택 중 에러가 발생했습니다.');
-  }
-};
-
-
-// 카테고리의 전체 영상 가져오기
-const getVideoList = async (categoryName) => {
-  try {
-    localStorage.setItem('categoryName', categoryName);
-    if(categoryName==="최근 본 영상"){
-      categoryName=null;
-    }
-    // 로컬 스토리지에서 멤버 이메일 가져오기
+  // - Name: selectVideo
+  // - Desc: 멤버 이메일과 비디오 URL을 로컬 스토리지에서 가져와서 서버에 전송하는 함수
+  // - Input
+  //   - 없음
+  // - Output
+  //   - 서버에서 받은 응답 데이터
+  // -----------------------------------------------------------------------------
+  const selectVideo = async (videoUrl) => {
+    // 로컬 스토리지에서 멤버 이메일과 비디오 URL을 가져옵니다.
     const memberEmail = getEmailFromLocalStorage();
+    const videoUrlA = videoUrl;
+    // 요청할 데이터를 콘솔에 출력합니다.
+    console.log("전송할 데이터:", { memberEmail, videoUrl });
 
-    // POST 요청 보내기
-    const response = await fetch(`${BASE_URL}/api/v1/video/category-video`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // 멤버 이메일과 categoryName을 바디에 넣어서 보내기
-      body: JSON.stringify({ memberEmail, categoryName }), 
-    });
+    try {
+      // 주소와 바디를 설정하여 POST 요청을 보냅니다.
+      const response = await fetch(`${BASE_URL}/api/v1/video/select-video`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        // body: JSON.stringify({ memberEmail, videoUrl })
+        body: JSON.stringify({
+          memberEmail,
+          videoUrl: videoUrlA
+        })
+      });
 
-    // 응답 확인
-    if (!response.ok) {
-      throw new Error("네트워크 응답이 실패했습니다.");
+      // 응답이 성공적인지 확인합니다.
+      if (!response.ok) {
+        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+      }
+
+      // 응답 데이터를 콘솔에 출력합니다.
+      const responseData = await response.json();
+      console.log("받은 데이터:", responseData);
+
+      // 받은 데이터에서 필요한 정보를 추출합니다.
+      const { summary, document, videoUrl } = responseData.video;
+      const { questions } = responseData;
+
+      // 질문과 답변을 추출합니다.
+      const extractedQuestions = questions.map((question) => question.question);
+      const extractedAnswers = questions.map((question) => question.answer);
+
+      // 로컬 스토리지에 정보를 저장합니다.
+      localStorage.setItem("summary", summary);
+      localStorage.setItem("document", document);
+      localStorage.setItem("videoUrl", videoUrl);
+      localStorage.setItem("questions", JSON.stringify(extractedQuestions));
+      localStorage.setItem("answers", JSON.stringify(extractedAnswers));
+
+      navigate("/memory");
+      // 응답 데이터를 반환합니다.
+      return responseData;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error("영상 선택 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
+  };
 
-    // 응답 데이터 파싱
-    const responseData = await response.json();
-    console.log("[" + categoryName + "의 데이터를 가져옴]");
-    console.log(responseData);
+  // 카테고리의 전체 영상 가져오기
+  const getVideoList = async (categoryName) => {
+    try {
+      localStorage.setItem("categoryName", categoryName);
+      if (categoryName === "최근 본 영상") {
+        categoryName = null;
+      }
+      // 로컬 스토리지에서 멤버 이메일 가져오기
+      const memberEmail = getEmailFromLocalStorage();
 
-    // 받아온 videoList를 로컬 스토리지에 저장
-    localStorage.setItem("videoList", JSON.stringify(responseData));
-    console.log("받아온 videoList를 로컬 스토리지에 저장")
-    navigate("/mypage"); // 클릭 시 '/mypage'로 이동
-    window.location.reload();
+      // POST 요청 보내기
+      const response = await fetch(`${BASE_URL}/api/v1/video/category-video`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        // 멤버 이메일과 categoryName을 바디에 넣어서 보내기
+        body: JSON.stringify({ memberEmail, categoryName })
+      });
 
-    // videoList 반환
-    return responseData;
-  } catch (error) {
-    console.error("에러 발생:", error);
-    // throw new Error("비디오 목록을 가져오는 중 에러가 발생했습니다.");
-  }
-};
+      // 응답 확인
+      if (!response.ok) {
+        toast.error("네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
+      }
 
-const saveVideoToCategory = async (categoryName) => {
-  try {
-    // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
-    const memberEmail = getEmailFromLocalStorage();
-    const videoUrlA = localStorage.getItem("videoUrl")
-    console.log("memberEmail:" + memberEmail + ", categoryName:" + categoryName + ". videoUrl:" + videoUrlA);
-    // 주소와 바디를 설정하여 POST 요청을 보냅니다.
-    const response = await fetch(`${BASE_URL}/api/v1/category/add-video`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ memberEmail, categoryName, videoUrl : videoUrlA })
-    });
+      // 응답 데이터 파싱
+      const responseData = await response.json();
+      console.log("[" + categoryName + "의 데이터를 가져옴]");
+      console.log(responseData);
 
-    // 응답이 성공적인지 확인합니다.
-    if (!response.ok) {
-      throw new Error('서버에서 오류를 반환했습니다.');
+      // 받아온 videoList를 로컬 스토리지에 저장
+      localStorage.setItem("videoList", JSON.stringify(responseData));
+      console.log("받아온 videoList를 로컬 스토리지에 저장");
+      navigate("/mypage"); // 클릭 시 '/mypage'로 이동
+      window.location.reload();
+
+      // videoList 반환
+      return responseData;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error("비디오 목록을 가져오는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
-    console.log("🟢카테고리에 저장 성공🟢");
+  };
 
-    // 응답 데이터를 반환합니다.
-    return response;
-  } catch (error) {
-    console.error('에러 발생:', error);
-    throw new Error('비디오를 카테고리에 추가하는 중 에러가 발생했습니다.');
-  }
-};
+  const saveVideoToCategory = async (categoryName) => {
+    try {
+      // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
+      const memberEmail = getEmailFromLocalStorage();
+      const videoUrlA = localStorage.getItem("videoUrl");
+      console.log(
+        "memberEmail:" +
+          memberEmail +
+          ", categoryName:" +
+          categoryName +
+          ". videoUrl:" +
+          videoUrlA
+      );
+      // 주소와 바디를 설정하여 POST 요청을 보냅니다.
+      const response = await fetch(`${BASE_URL}/api/v1/category/add-video`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ memberEmail, categoryName, videoUrl: videoUrlA })
+      });
 
+      // 응답이 성공적인지 확인합니다.
+      if (!response.ok) {
+        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+      }
+      console.log("🟢카테고리에 저장 성공🟢");
 
+      // 응답 데이터를 반환합니다.
+      return response;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error("비디오를 카테고리에 추가하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -742,7 +745,7 @@ const saveVideoToCategory = async (categoryName) => {
         searchMarkdown,
         selectVideo,
         getVideoList,
-        saveVideoToCategory,
+        saveVideoToCategory
       }}
     >
       {children}

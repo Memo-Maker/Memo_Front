@@ -189,7 +189,8 @@ const SaveModal = ({ closeModal }) => {
   const [categoryList, setCategoryList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const { saveCategoryToLocal, saveCategoryToDB, saveVideoToCategory } = useAuth();
+  const { saveCategoryToLocal, saveCategoryToDB, saveVideoToCategory } =
+    useAuth();
 
   const handleAddContent = () => {
     saveCategoryToDB(content);
@@ -242,7 +243,7 @@ const SaveModal = ({ closeModal }) => {
       const { offsetWidth, offsetHeight } = modal;
       setModalSize({ width: offsetWidth, height: offsetHeight });
     }
-  
+
     // 모달이 열릴 때마다 로컬 스토리지에서 카테고리 리스트를 가져와 상태에 저장
     const storedCategoryList = localStorage.getItem("categoryList");
     if (storedCategoryList) {
