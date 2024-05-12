@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import checkImg from "../assets/images/check3.png";
 import YoutubeIcon from "../assets/images/youtubebutton.png";
-import RankVideo from "../components/home/RankingVideo"; 
+import RankVideo from "../components/home/RankingVideo";
 
 const CheckImage = styled.img`
   width: 7%;
@@ -15,7 +15,7 @@ const CheckImage = styled.img`
 const LoadingIcon = styled(FontAwesomeIcon).attrs({
   icon: faSpinner,
   size: "4x",
-  color: "#333",
+  color: "#333"
 })``;
 
 const LoadingText = styled.div`
@@ -79,7 +79,6 @@ const InputContainer = styled.div`
   border-radius: 1vw;
 `;
 
-
 const YoutubeIconImg = styled.img`
   width: 3vw;
   background: none;
@@ -98,7 +97,7 @@ const Button = styled.button`
   color: white;
   border: none;
   border-radius: 0.4vw;
-  margin-left:1vw;
+  margin-left: 1vw;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
   &:hover {
@@ -109,13 +108,11 @@ const Head = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 7vw; 
+  margin-top: 7vw;
 `;
 
-
 const RankingContainer = styled.div`
-margin: 8vw 0 2vw 0;
-
+  margin: 8vw 0 2vw 0;
 `;
 
 const RankingItem = styled.div`
@@ -124,13 +121,38 @@ const RankingItem = styled.div`
   display: flex;
 `;
 
+// Button 컴포넌트를 생성합니다.
+const SelectVideoButton = styled.button`
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 0.7vw 1.2vw;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 0.4vw;
+  margin-left: 1vw;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+
+  &:hover {
+    background-color: ${({ disabled }) => (disabled ? "#000" : "#555")};
+  }
+`;
+
 const HomePage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const { GPTSummary, homePageDataGET } = useAuth();
-
+  const { GPTSummary, homePageDataGET, selectVideo } = useAuth();
+  // 버튼 클릭 시 selectVideo 함수 호출
+  const handleSelectVideo = async () => {
+    try {
+      await selectVideo();
+    } catch (error) {
+      console.error("selectVideo 호출 중 에러 발생:", error);
+      // 에러 처리
+    }
+  };
   const handleUpload = async () => {
     setIsLoading(true);
     try {
@@ -251,11 +273,15 @@ const HomePage = () => {
       </Head>
       <body style={{ marginTop: "1rem" }}>
         <RankingContainer>
-        https://www.youtube.com/watch?v=uAmv-8NUGGc
+          https://www.youtube.com/watch?v=uAmv-8NUGGc
           <RankingItem>▶ 실시간 사용자가 많이 본 영상이예요..</RankingItem>
-          <RankVideo/>
+          <RankVideo />
         </RankingContainer>
       </body>
+      {/* // 버튼을 렌더링합니다. */}
+      <SelectVideoButton onClick={handleSelectVideo} disabled={isLoading}>
+        {isLoading ? "Loading.." : "Select Video"}
+      </SelectVideoButton>
     </Container>
   );
 };

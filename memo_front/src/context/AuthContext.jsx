@@ -64,6 +64,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
+  // - Name : getVideoUrlFromLocalStorage
+  // - Desc : 로컬 스토리지에서 videoUrl를 가져오는 함수
+  // -----------------------------------------------------------------------------
+  const getVideoUrlFromLocalStorage = () => {
+    const videoUrl = localStorage.getItem("videoUrl");
+    return videoUrl;
+  };
+
+  // -----------------------------------------------------------------------------
   // - Name : saveContentToLocal
   // - Desc : 메모를 html로 로컬스토리지에 저장함
   // -----------------------------------------------------------------------------
@@ -287,11 +296,18 @@ export const AuthProvider = ({ children }) => {
       console.log("🟢[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
 
       // 각 categoryName을 로컬스토리지의 categorylist에 추가
-      responseData.forEach(category => {
-        const categoryList = JSON.parse(localStorage.getItem('categorylist')) || [];
-        categoryList.push(category.categoryName);
-        localStorage.setItem('categorylist', JSON.stringify(categoryList));
-      });
+      localStorage.removeItem("categorylist");
+      
+      // "최근 본 영상" 카테고리 추가
+      responseData.unshift({ categoryName: "최근 본 영상" });
+
+      // 각 categoryName을 새로운 카테고리 목록에 추가합니다.
+      const newCategoryList = responseData.map(
+        (category) => category.categoryName
+      );
+
+      // 새로운 카테고리 목록을 로컬스토리지에 저장합니다.
+      localStorage.setItem("categorylist", JSON.stringify(newCategoryList));
 
       return responseData;
     } catch (error) {
@@ -317,9 +333,9 @@ export const AuthProvider = ({ children }) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           keyword: keyword,
-          memberEmail:memberEmail
+          memberEmail: memberEmail
         })
       });
 
@@ -331,7 +347,6 @@ export const AuthProvider = ({ children }) => {
       console.log("검색 결과:", searchData); // 검색 결과를 로그로 출력
 
       return searchData.length > 0 ? searchData : null;
-
     } catch (error) {
       console.error("에러 발생:", error);
       throw new Error("마크다운 검색 중 에러가 발생했습니다.");
@@ -358,30 +373,28 @@ export const AuthProvider = ({ children }) => {
 
       // 서버에 POST 요청을 보내고 응답을 기다림
       const response = await fetch(`${BASE_URL}/api/v1/category/create`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          categoryName:categoryName,
-          memberEmail:memberEmail
+          categoryName: categoryName,
+          memberEmail: memberEmail
         })
       });
-  
+
       if (!response.ok) {
-        throw new Error('네트워크 응답이 실패했습니다.');
+        throw new Error("네트워크 응답이 실패했습니다.");
       }
-  
+
       const responseData = await response;
-      console.log('카테고리가 성공적으로 생성되었습니다:', responseData);
+      console.log("카테고리가 성공적으로 생성되었습니다:", responseData);
       // 필요한 작업 수행 (예: 성공 메시지 표시, 상태 업데이트 등)
-  
     } catch (error) {
-      console.error('카테고리 생성 중 오류가 발생했습니다:', error);
+      console.error("카테고리 생성 중 오류가 발생했습니다:", error);
       // 필요한 작업 수행 (예: 오류 메시지 표시, 상태 업데이트 등)
     }
   };
-  
 
   // -----------------------------------------------------------------------------
   // - Name : saveCategoryToLocal
@@ -569,6 +582,103 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // -----------------------------------------------------------------------------
+// - Name: selectVideo
+// - Desc: 멤버 이메일과 비디오 URL을 로컬 스토리지에서 가져와서 서버에 전송하는 함수
+// - Input
+//   - 없음
+// - Output
+//   - 서버에서 받은 응답 데이터
+// -----------------------------------------------------------------------------
+const selectVideo = async () => {
+  // 로컬 스토리지에서 멤버 이메일과 비디오 URL을 가져옵니다.
+  const memberEmail = getEmailFromLocalStorage();
+  const videoUrl = getVideoUrlFromLocalStorage();
+
+  // 요청할 데이터를 콘솔에 출력합니다.
+  console.log('전송할 데이터:', { memberEmail, videoUrl });
+
+  try {
+    // 주소와 바디를 설정하여 POST 요청을 보냅니다.
+    const response = await fetch(`${BASE_URL}/api/v1/video/select-video`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // body: JSON.stringify({ memberEmail, videoUrl })
+      body: JSON.stringify({ memberEmail, videoUrl:"https://www.youtube.com/watch?v=t6dqKN9ZNMQ" })
+    });
+
+    // 응답이 성공적인지 확인합니다.
+    if (!response.ok) {
+      throw new Error('서버에서 오류를 반환했습니다.');
+    }
+
+    // 응답 데이터를 콘솔에 출력합니다.
+    const responseData = await response.json();
+    console.log('받은 데이터:', responseData);
+
+    // 받은 데이터에서 필요한 정보를 추출합니다.
+    const { summary, document, videoUrl} = responseData.video;
+    const { questions } = responseData;
+
+    // 질문과 답변을 추출합니다.
+    const extractedQuestions = questions.map(question => question.question);
+    const extractedAnswers = questions.map(question => question.answer);
+
+    // 로컬 스토리지에 정보를 저장합니다.
+    localStorage.setItem('summary', summary);
+    localStorage.setItem('document', document);
+    localStorage.setItem('videoUrl', videoUrl);
+    localStorage.setItem('questions', JSON.stringify(extractedQuestions));
+    localStorage.setItem('answers', JSON.stringify(extractedAnswers));
+
+
+    navigate("/memory")
+    // 응답 데이터를 반환합니다.
+    return responseData;
+  } catch (error) {
+    console.error('에러 발생:', error);
+    throw new Error('영상 선택 중 에러가 발생했습니다.');
+  }
+};
+
+
+
+const getVideoList = async () => {
+  try {
+    // 로컬 스토리지에서 멤버 이메일 가져오기
+    const memberEmail = getEmailFromLocalStorage();
+
+    // POST 요청 보내기
+    const response = await fetch(`${BASE_URL}/api/v1/video/recent-video`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ memberEmail }), // 멤버 이메일을 바디에 넣어서 보내기
+    });
+
+    // 응답 확인
+    if (!response.ok) {
+      throw new Error("네트워크 응답이 실패했습니다.");
+    }
+
+    // 응답 데이터 파싱
+    const responseData = await response.json();
+
+    // 받아온 videoList를 로컬 스토리지에 저장
+    localStorage.setItem("videoList", JSON.stringify(responseData.videoList));
+    navigate("/mypage"); // 클릭 시 '/mypage'로 이동
+    // videoList 반환
+    return responseData.videoList;
+  } catch (error) {
+    console.error("에러 발생:", error);
+    throw new Error("비디오 목록을 가져오는 중 에러가 발생했습니다.");
+  }
+};
+
+
   return (
     <AuthContext.Provider
       value={{
@@ -588,6 +698,8 @@ export const AuthProvider = ({ children }) => {
         homePageDataGET,
         getMyData,
         searchMarkdown,
+        selectVideo,
+        getVideoList,
       }}
     >
       {children}
