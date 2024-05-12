@@ -4,7 +4,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import styled from "styled-components";
 import { EditorState, convertFromHTML, ContentState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../context/AuthContext";
 import SaveModal from "../modal/SaveModal"; // SaveModal을 불러옵니다.
 
 const EditorContainer = styled.div`
@@ -16,18 +16,7 @@ const EditorContainer = styled.div`
   width: 40%;
 `;
 
-// 상태 표시줄
-const StatusBar = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  font-size: 14px;
-  color: #666;
-  border-top: 0.1vw solid #ccc; /* 가로 선 추가 */
-  padding-top: 0.5vw; /* 가로 선 위쪽 패딩 추가 */
-`;
-
-const MyBlock = styled.div` 
+const MyBlock = styled.div`
   .wrapper-class {
     width: 100%;
     margin: 0 auto;
@@ -44,12 +33,47 @@ const Button = styled.button`
   color: #fff;
   cursor: pointer;
   padding: 0.7vw 1.3vw;
-  border-radius:0.2vw;
+  border-radius: 0.2vw;
+`;
+
+const StatusBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  border-top: 0.1vw solid #ccc;
+  padding-top: 0.5vw;
+`;
+
+const FolderContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const FolderButton = styled.button`
+  display: flex;
+  justify-content: flex-start;
+  border: 0.15vw solid #000000;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.3vw 0.5vw;
+  border-radius: 0.5vw;
+`;
+
+const TextInfoContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+`;
+
+const TextInfo = styled.div`
+  margin-right: 1vw;
 `;
 
 const TextEditorForm = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const {saveContentToLocal, saveMarkdownToServer} = useAuth();
+  const { saveContentToLocal, saveMarkdownToServer } = useAuth();
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
 
   useEffect(() => {
@@ -72,9 +96,14 @@ const TextEditorForm = () => {
     const contentState = editorState.getCurrentContent();
     const htmlContent = stateToHTML(contentState);
     saveContentToLocal(htmlContent);
-    saveMarkdownToServer(htmlContent)
+    saveMarkdownToServer(htmlContent);
     console.log(htmlContent);
-    setShowModal(true); // 모달 열기
+    // setShowModal(true); // 모달 열기
+  };
+
+  // 폴더 선택하기 버튼 클릭 시 모달 열기
+  const handleFolderButtonClick = () => {
+    setShowModal(true);
   };
 
   // 타자를 칠 때마다 글자 수 업데이트
@@ -112,14 +141,22 @@ const TextEditorForm = () => {
             onEditorStateChange={handleTextChange} // 타자를 칠 때마다 호출될 핸들러 변경
           />
           <StatusBar>
-            <div style={{ marginRight: "1vw"}}>
-              글자 수: {editorState.getCurrentContent().getPlainText("").length}
-            </div>
-            <Button onClick={handleSaveContent}>저장하기</Button>
+            <FolderContainer>
+              <FolderButton onClick={handleFolderButtonClick}>
+                폴더 선택
+              </FolderButton>
+            </FolderContainer>
+            <TextInfoContainer>
+              <TextInfo>
+                글자 수:{" "}
+                {editorState.getCurrentContent().getPlainText("").length}
+              </TextInfo>
+              <Button onClick={handleSaveContent}>저장하기</Button>
+            </TextInfoContainer>
           </StatusBar>
         </MyBlock>
       </EditorContainer>
-      {showModal && <SaveModal closeModal={closeModal} />} {/* 모달 렌더링 */}
+      {showModal && <SaveModal closeModal={closeModal} />}
     </>
   );
 };
