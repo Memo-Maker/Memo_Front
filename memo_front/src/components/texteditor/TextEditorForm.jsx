@@ -52,13 +52,10 @@ const FolderContainer = styled.div`
 `;
 
 const FolderButton = styled.button`
-  display: flex;
-  justify-content: flex-start;
-  border: 0.15vw solid #000000;
-  font-weight: bold;
-  font-size: 1rem;
+  background-color: #4b4c4c;
+  color: #fff;
   cursor: pointer;
-  padding: 0.3vw 0.5vw;
+  padding: 0.7vw 1.3vw;
   border-radius: 0.5vw;
 `;
 
@@ -75,6 +72,8 @@ const TextEditorForm = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const { saveContentToLocal, saveMarkdownToServer } = useAuth();
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
 
   useEffect(() => {
     const savedContent = localStorage.getItem("editorContent");
@@ -105,6 +104,8 @@ const TextEditorForm = () => {
   const handleFolderButtonClick = () => {
     setShowModal(true);
   };
+
+  
 
   // 타자를 칠 때마다 글자 수 업데이트
   const handleTextChange = (editorState) => {
@@ -145,6 +146,7 @@ const TextEditorForm = () => {
               <FolderButton onClick={handleFolderButtonClick}>
                 폴더 선택
               </FolderButton>
+              {selectedCategory && <span>{selectedCategory}</span>}
             </FolderContainer>
             <TextInfoContainer>
               <TextInfo>
@@ -156,7 +158,12 @@ const TextEditorForm = () => {
           </StatusBar>
         </MyBlock>
       </EditorContainer>
-      {showModal && <SaveModal closeModal={closeModal} />}
+      {showModal && (
+        <SaveModal
+          closeModal={closeModal}
+          handleCategoryClick={setSelectedCategory}
+        />
+      )}
     </>
   );
 };
