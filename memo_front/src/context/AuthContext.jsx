@@ -220,7 +220,7 @@ export const AuthProvider = ({ children }) => {
         console.log("데이터를 성공적으로 받았습니다.");
         // 성공적으로 데이터를 받으면 추가 작업 수행
         const data = response.data;
-        console.log("받은 데이터:", data);
+        console.log("TOP3 받은 데이터:", data);
         // saveVideoToLocalstorage("rankingData", data)
         // 받은 데이터를 각각의 영상 정보로 나누어 저장
         if (data.length >= 1) {
@@ -237,10 +237,10 @@ export const AuthProvider = ({ children }) => {
         console.log("isLoggedIn-------" + isLoggedIn);
         const loggedIn = localStorage.getItem("isLoggedIn");
         if (loggedIn) {
-          console.log("🔴로그인 되어있음");
-          // await getMyData();
+          console.log("🔴로그인 O");
+          await getMyData();
         } else {
-          console.log("🔴로그인 xxxxx");
+          console.log("🔴로그인 X");
         }
 
         // 받은 데이터 반환
@@ -267,10 +267,10 @@ export const AuthProvider = ({ children }) => {
     const memberEmail = getEmailFromLocalStorage();
 
     try {
-      console.log("🔴getMyData 사용자 데이터를 가져오는 중...");
+      console.log("🔴getMyData함수 사용자 카테고리 데이터를 가져오는 중...");
       console.log("🔴[ 보낼 데이터 ]\n", memberEmail);
 
-      const response = await fetch(`${BASE_URL}/send-to-home`, {
+      const response = await fetch(`${BASE_URL}/api/v1/home/send-to-home`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -285,6 +285,13 @@ export const AuthProvider = ({ children }) => {
       const responseData = await response.json();
       console.log("🟢사용자 데이터 가져오기 성공!");
       console.log("🟢[ 받은 데이터 ]:", responseData); // 받은 데이터를 로그로 출력
+
+      // 각 categoryName을 로컬스토리지의 categorylist에 추가
+      responseData.forEach(category => {
+        const categoryList = JSON.parse(localStorage.getItem('categorylist')) || [];
+        categoryList.push(category.categoryName);
+        localStorage.setItem('categorylist', JSON.stringify(categoryList));
+      });
 
       return responseData;
     } catch (error) {
