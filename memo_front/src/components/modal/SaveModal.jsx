@@ -67,20 +67,24 @@ const ModalContent = styled.div`
 
 const CategoryList = styled.div`
   display: grid;
+  justify-items: center;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
   grid-gap: 1vw;
   margin: 1vw 5vw 2vw 5vw;
+  overflow-y: auto; 
+  max-height: 30vh;
 `;
 
 const Category = styled.button`
-  width: 12vw;
+  width: 80%;
   display: flex;
-  padding: 0.2vw 1vw;
+  padding: 0.3vw 1vw;
   align-items: center;
   font-size: 1rem;
+  text-align: start;
   border-radius: 0.5vw;
-  background-color: #838383;
+  border: 0.1vw solid #838383;
 `;
 
 const ButtonSet = styled.div`
@@ -90,10 +94,10 @@ const ButtonSet = styled.div`
 `;
 
 const TextInput = styled.input`
-  width: 55%;
-  padding: 10px;
+  width: 50%;
+  padding: 1vw;
   margin: 0 1vw 1vw 5vw;
-  border-radius: 8px;
+  border-radius: 1vw;
 `;
 
 const AddButton = styled.button`
@@ -121,11 +125,12 @@ const SaveModal = ({ closeModal }) => {
 
   const { saveCategoryToLocal, saveCategoryToDB } = useAuth();
 
-  const handleAddContent = () => {
-    saveCategoryToDB(content);
-    saveCategoryToLocal(content);
-    setContent("");
-  };
+const handleAddContent = () => {
+  saveCategoryToDB(content);
+  saveCategoryToLocal(content);
+  setCategoryList((prevList) => [...prevList, content]); 
+  setContent("");
+};
 
   const handleSave = () => {
     closeModal();
