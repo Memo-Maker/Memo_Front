@@ -189,7 +189,7 @@ const SaveModal = ({ closeModal }) => {
   const [categoryList, setCategoryList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const { saveCategoryToLocal, saveCategoryToDB } = useAuth();
+  const { saveCategoryToLocal, saveCategoryToDB, saveVideoToCategory } = useAuth();
 
   const handleAddContent = () => {
     saveCategoryToDB(content);
@@ -199,6 +199,7 @@ const SaveModal = ({ closeModal }) => {
   };
 
   const handleSave = () => {
+    saveVideoToCategory(selectedCategory);
     closeModal();
   };
 

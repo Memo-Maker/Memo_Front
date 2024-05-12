@@ -690,6 +690,36 @@ const getVideoList = async (categoryName) => {
   }
 };
 
+const saveVideoToCategory = async (categoryName) => {
+  try {
+    // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
+    const memberEmail = getEmailFromLocalStorage();
+    const videoUrlA = localStorage.getItem("videoUrl")
+    console.log("memberEmail:" + memberEmail + ", categoryName:" + categoryName + ". videoUrl:" + videoUrlA);
+    // 주소와 바디를 설정하여 POST 요청을 보냅니다.
+    const response = await fetch(`${BASE_URL}/api/v1/category/add-video`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ memberEmail, categoryName, videoUrl : videoUrlA })
+    });
+
+    // 응답이 성공적인지 확인합니다.
+    if (!response.ok) {
+      throw new Error('서버에서 오류를 반환했습니다.');
+    }
+    console.log("🟢카테고리에 저장 성공🟢");
+
+    // 응답 데이터를 반환합니다.
+    return response;
+  } catch (error) {
+    console.error('에러 발생:', error);
+    throw new Error('비디오를 카테고리에 추가하는 중 에러가 발생했습니다.');
+  }
+};
+
+
 
   return (
     <AuthContext.Provider
@@ -712,6 +742,7 @@ const getVideoList = async (categoryName) => {
         searchMarkdown,
         selectVideo,
         getVideoList,
+        saveVideoToCategory,
       }}
     >
       {children}
