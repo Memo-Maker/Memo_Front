@@ -147,7 +147,7 @@ const HomePage = () => {
   // 버튼 클릭 시 selectVideo 함수 호출
   const handleSelectVideo = async () => {
     try {
-      const videoUrl = "https://www.youtube.com/watch?v=HlC0L1sjkg8";
+      const videoUrl = "https://www.youtube.com/watch?v=FbM_okGx-xo";
     await selectVideo(videoUrl);
     } catch (error) {
       console.error("selectVideo 호출 중 에러 발생:", error);

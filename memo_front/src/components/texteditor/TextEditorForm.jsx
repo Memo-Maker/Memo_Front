@@ -76,16 +76,19 @@ const TextEditorForm = () => {
 
 
   useEffect(() => {
-    const savedContent = localStorage.getItem("document");
-    if (savedContent) {
-      const blocksFromHTML = convertFromHTML(savedContent);
-      const state = ContentState.createFromBlockArray(
-        blocksFromHTML.contentBlocks,
-        blocksFromHTML.entityMap
-      );
-      setEditorState(EditorState.createWithContent(state));
-    }
+    let savedContent = localStorage.getItem("document");
+
+    // 만약 가져온 document 값이 null이라면 빈 문자열로 대체합니다.
+    savedContent = (savedContent == null) ? "" : savedContent;
+  
+    const blocksFromHTML = convertFromHTML(savedContent);
+    const state = ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap
+    );
+    setEditorState(EditorState.createWithContent(state));
   }, []);
+  
 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
