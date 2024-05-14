@@ -9,29 +9,43 @@ import { useAuth } from "../../context/AuthContext"; // AuthContext import 추�
 
 const Overlay = styled.div`
   position: fixed;
-  top: -13vw;
-  left: 40vw;
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
+  top: 100px; /* y 좌푯값 지정 */
+  left: 1450px; /* x 좌푯값 지정 */
+  z-index: 99;
+  width: 23%;
+  height: 24%;
   background: rgba(0, 0, 0, 0);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
 `;
 
-const Dropdown = styled.div`
-  width: 240px;
+const DropdownContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 2vw;
+  align-items: flex-start;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   padding: 10px;
 `;
 
+const InfoBox = styled.div``;
+
 const UserInfo = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  width: 100%;
+`;
+
+const ProfileBox = styled.div``;
+
+const ProfileImage = styled.img`
+  margin-top: 1vw;
+  border-radius: 50%;
+  cursor: pointer;
 `;
 
 const Email = styled.div`
@@ -41,21 +55,16 @@ const Email = styled.div`
 `;
 
 const Nickname = styled.div`
-  font-size: 1rem;
+  font-size: 1vw;
   margin: 0 1vw 0 1vw;
   font-weight: bold;
-`;
-
-const EditButton = styled.button`
-  border: none;
-  background: none;
-  color: blue;
-  cursor: pointer;
 `;
 
 const Options = styled.div`
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Option = styled.div`
@@ -67,16 +76,8 @@ const Option = styled.div`
 `;
 
 const OptionItem = styled.div`
-  font-size: 1rem;
+  font-size: 0.8vw;
   padding: 0.5vw 1vw;
-  cursor: pointer;
-`;
-
-const ProfileImage = styled.img`
-  width: 40px;
-  margin-left: 5%;
-  height: auto;
-  border-radius: 50%;
   cursor: pointer;
 `;
 
@@ -86,9 +87,44 @@ const IconImg = styled.img`
   cursor: pointer;
 `;
 
+const Modal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e7e7e7;
+  padding: 20px;
+  border-radius: 1vw;
+`;
+
+const TextInput = styled.input`
+  font-size: 1vw;
+  background-color: #f0f0f0;
+  font-weight: bold;
+  margin: 1vw;
+  padding: 1vw;
+  border-radius: 1vw;
+  border: 0.1vw solid #000000;
+`;
+
+const Button = styled.button`
+  margin: 1vw;
+  padding: 1vw;
+  border-radius: 1vw;
+  border: 0.2vw solid #000000;
+  font-weight: bold;
+  font-size: 1vw;
+
+  &:hover {
+    background-color: #b8b8b8;
+  }
+`;
+
 const UserProfileDropdown = ({ closeModal }) => {
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
+  const [newNickname, setNewNickname] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const { logout, getVideoList } = useAuth();
 
@@ -104,6 +140,17 @@ const UserProfileDropdown = ({ closeModal }) => {
     }
   }, []);
 
+  const handleNicknameChange = (e) => {
+    setNewNickname(e.target.value);
+  };
+
+  const handleNicknameSubmit = () => {
+    setNickname(newNickname);
+    localStorage.setItem("memberName", newNickname);
+    setNewNickname("");
+    setShowModal(false);
+  };
+
   const handleClickOutside = (e) => {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -112,34 +159,71 @@ const UserProfileDropdown = ({ closeModal }) => {
 
   return (
     <Overlay onClick={handleClickOutside}>
-      <Dropdown>
-        <UserInfo>
+      <DropdownContainer>
+        <InfoBox>
+          <UserInfo>
+            <Nickname>{nickname}님 안녕하세요ᵔᴗᵔ</Nickname>
+          </UserInfo>
+          <Email>{email}</Email>
+          <Options>
+            <Option>
+              <OptionItem
+                onClick={() => {
+                  getVideoList("최근 본 영상");
+                  navigate("/mypage");
+                }}
+              >
+                내 기록보기
+              </OptionItem>
+              <IconImg src={HistoryIconImg} alt="History" />
+            </Option>
+            <Option>
+              <OptionItem onClick={() => setShowModal(true)}>
+                닉네임 변경
+              </OptionItem>
+              <IconImg
+                onClick={() => setShowModal(true)}
+                src={SettingsIconImg}
+                alt="Settings"
+              />
+            </Option>
+            <Option>
+              <OptionItem
+                onClick={() => {
+                  logout();
+                  console.log("로그아웃");
+                }}
+              >
+                로그아웃
+              </OptionItem>
+              <IconImg src={LogoutIconImg} alt="Logout" />
+            </Option>
+          </Options>
+        </InfoBox>
+        <ProfileBox>
           <ProfileImage src={Profile} alt="Profile" />
-          <Nickname>{nickname}님 안녕하세요</Nickname>
-          <EditButton>Edit</EditButton>
-        </UserInfo>
-        <Email>{email}</Email>
-        <Options>
-          <Option>
-            <OptionItem onClick={() => { getVideoList("최근 본 영상"); navigate("/mypage");}}>
-              내 기록보기
-            </OptionItem>
-            <IconImg src={HistoryIconImg} alt="History" />
-          </Option>
-          <Option>
-            <OptionItem onClick={() => console.log("정보수정")}>
-              회원정보 수정하기
-            </OptionItem>
-            <IconImg src={SettingsIconImg} alt="Settings" />
-          </Option>
-          <Option>
-            <OptionItem onClick={() => {logout(); console.log("로그아웃")}}>
-              로그아웃
-            </OptionItem>
-            <IconImg src={LogoutIconImg} alt="Logout" />
-          </Option>
-        </Options>
-      </Dropdown>
+        </ProfileBox>
+      </DropdownContainer>
+      {showModal && (
+        <Modal>
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              textAlign: "center",
+            }}
+          >
+            닉네임을 변경하시겠습니까?
+          </div>
+          <TextInput
+            type="text"
+            value={newNickname}
+            onChange={handleNicknameChange}
+            placeholder="새 닉네임 입력"
+          />
+          <Button onClick={handleNicknameSubmit}>변경하기</Button>
+        </Modal>
+      )}
     </Overlay>
   );
 };
