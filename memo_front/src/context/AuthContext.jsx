@@ -537,6 +537,41 @@ export const AuthProvider = ({ children }) => {
   };
 
   // -----------------------------------------------------------------------------
+  // - Name : duplicate
+  // - Desc : URL 중복 확인
+  // - Input
+  //   1) memberEmail : 사용자 이메일
+  //   2) videoUrl : 비디오 URL
+  // -----------------------------------------------------------------------------
+  // const checkDuplicate = async (memberEmail, videoUrl) => {
+  //   try {
+  //     const response = await axios.post(`${BASE_URL}/api/v1/video/check-duplicate`, {
+  //       memberEmail,
+  //       videoUrl
+  //     });
+  //     console.log("[checkDuplicate 결과 ] ", JSON.stringify(response.data));
+  //     return JSON.stringify(response.data); // JSON 문자열 반환
+  //   } catch (error) {
+  //     console.error("중복 확인 실패:", error);
+  //     return JSON.stringify({  }); // 오류 발생 시 false 반환
+  //   }
+  // };
+  const checkDuplicate = async (memberEmail, videoUrl) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/v1/video/check-duplicate`, {
+        memberEmail,
+        videoUrl
+      });
+  
+      console.log("[checkDuplicate 결과]", response.data);
+      return response.data; // JSON 형태의 데이터 반환
+    } catch (error) {
+      console.error("중복 확인 실패:", error);
+      return { isDuplicate: false }; // 오류 발생 시 false 반환
+    }
+  };
+
+  // -----------------------------------------------------------------------------
   // - Name : GPTSummary
   // - Desc : GPT 모델에 summary 요청을 보내는 함수
   // - Input
@@ -548,40 +583,53 @@ export const AuthProvider = ({ children }) => {
     try {
       // 로컬스토리지에서 userId 값을 가져옴
       const userId = getEmailFromLocalStorage();
-
+  
       console.log("GPT 모델에 summary 요청을 전송하는 중...");
       console.log("[ 대상 URL ] : ", url);
       console.log("[ userId ] : ", userId);
-
-      // 서버에 요청을 보내고 응답을 기다림
-      const response = await fetch(`${FLASK_BASE_URL}/summaryurl`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          url: url,
-          userId: userId // userId 값을 함께 전송
-        })
-      });
-
-      if (!response.ok) {
-        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+  
+      // 중복 확인
+      const isDuplicate = await checkDuplicate(userId, url);
+  
+      if (isDuplicate) {
+        // 중복인 경우 selectVideo 함수 호출
+        console.log("중복된 URL입니다. selectVideo 함수를 호출합니다.");
+        await selectVideo(url);
+      } else {
+        // 중복이 아닌 경우 summary 요청을 전송
+        console.log("중복되지 않은 URL입니다. summary 요청을 전송합니다.");
+  
+        const response = await fetch(`${FLASK_BASE_URL}/summaryurl`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            url: url,
+            userId: userId // userId 값을 함께 전송
+          })
+        });
+  
+        if (!response.ok) {
+          toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+          return;
+        }
+  
+        const data = await response.json();
+        // console.log("summary 요청 전송 성공!");
+        console.log("받은 summary:", data); // 받은 summary를 로그로 출력
+  
+        // 받은 summary 데이터를 로컬스토리지에 저장
+        localStorage.setItem("summary", JSON.stringify(data.summary));
+  
+        return data;
       }
-
-      const data = await response.json();
-      // console.log("summary 요청 전송 성공!");
-      console.log("받은 summary:", data); // 받은 summary를 로그로 출력
-
-      // 받은 summary 데이터를 로컬스토리지에 저장
-      localStorage.setItem("summary", JSON.stringify(data.summary));
-
-      return data;
     } catch (error) {
       console.error("에러 발생:", error);
       toast.error("summary 요청 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
+  
 
   // -----------------------------------------------------------------------------
   // - Name: selectVideo
