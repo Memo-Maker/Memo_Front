@@ -574,7 +574,7 @@ export const AuthProvider = ({ children }) => {
       console.log("받은 summary:", data); // 받은 summary를 로그로 출력
 
       // 받은 summary 데이터를 로컬스토리지에 저장
-      localStorage.setItem("summaryData", JSON.stringify(data.summary));
+      localStorage.setItem("summary", JSON.stringify(data.summary));
 
       return data;
     } catch (error) {

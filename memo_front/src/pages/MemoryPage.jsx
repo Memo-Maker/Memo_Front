@@ -4,7 +4,7 @@ import YouTube from "react-youtube";
 import TextEditorForm from "../components/texteditor/TextEditorForm";
 import Summary from "../components/memory/Summary";
 import ChatIcon from "../assets/images/chat.png";
-import Modal from "../components/memory/Chatgpt"; 
+import Modal from "../components/memory/Chatgpt";
 
 const Layout = styled.div`
   display: flex;
@@ -50,10 +50,17 @@ const Button = styled.button`
   }
 `;
 
+const DateText = styled.p`
+  font-size: 1rem;
+  margin-bottom: 1vw;
+  color: #838383;
+`;
+
 const MemoryPage = () => {
   const [videoId, setVideoId] = useState(null);
   const [playerSize, setPlayerSize] = useState({ width: 560, height: 315 });
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const storedVideoUrl = localStorage.getItem("videoUrl");
@@ -67,8 +74,13 @@ const MemoryPage = () => {
 
     window.addEventListener("resize", handleResize);
 
+    const interval = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      clearInterval(interval);
     };
   }, []);
 
@@ -97,6 +109,7 @@ const MemoryPage = () => {
   return (
     <Layout>
       <Container>
+        <DateText>{currentDate.toLocaleDateString()}</DateText>
         {videoId && (
           <YouTube
             videoId={videoId}
@@ -116,9 +129,7 @@ const MemoryPage = () => {
       </Container>
       <TextEditorForm />
 
-      <Modal visible={isModalVisible} onClose={toggleModal}>
-        모달 내용이 여기 들어갑니다.
-      </Modal>
+      <Modal visible={isModalVisible} onClose={toggleModal} />
     </Layout>
   );
 };
