@@ -3,16 +3,16 @@ import styled from "styled-components";
 import Pencil from "../../assets/images/pencil.png";
 
 const SummaryBox = styled.div`
+width: 95%;
   padding: 1vw;
   background-color: #f0f0f0;
-  max-height: 30vh;
-  overflow-y: auto;
-  margin-top:1vw;
+  border-radius: 1vw;
+  margin-top: 1vw;
 `;
 
 const TextContainer = styled.div`
   display: flex;
-  align-items: center;
+align-items: flex-start;
   margin-top:0.7vw;
 `;
 
@@ -23,13 +23,14 @@ const PencilImage = styled.img`
 `;
 
 const Text = styled.div`
+  color: #787878;
   flex: 1;
   position: relative;
 `;
 
 const Summary = () => {
   // 로컬 스토리지에서 summaryData 가져오기
-  const summaryData = JSON.parse(localStorage.getItem("summaryData"));
+  const summaryData = localStorage.getItem("summary");
   // summaryData가 없거나 비어 있을 경우 빈 배열로 설정
   const sentences = summaryData ? summaryData.split(". ") : [];
 
