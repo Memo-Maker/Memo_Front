@@ -138,7 +138,7 @@ const SearchModal = ({ closeModal }) => {
                   <SearchResultContent>
                     <h3>{item.videoTitle}</h3>
                     {/* <p>{item.summary}</p> */}
-                    <p>{item.document}</p>
+                    <p>{item.document.replace(/(<([^>]+)>)/gi, "")}</p>
                   </SearchResultContent>
                 </SearchResult>
               ))
