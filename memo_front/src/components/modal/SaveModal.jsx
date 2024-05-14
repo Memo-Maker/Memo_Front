@@ -161,6 +161,13 @@ const AddButton = styled.button`
   }
 `;
 
+// EditButton 스타일링
+const EditButton = styled(AddButton)`
+  margin-left: 1vw;
+  background-color: #ffc107;
+  border: none;
+  color: #000;
+`;
 const ConfirmButton = styled.button`
   width: 6vw;
   margin: 0 1vw 1vw 1vw;
@@ -197,31 +204,44 @@ const SaveModal = ({ closeModal }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { saveCategoryToLocal, saveCategoryToDB, saveVideoToCategory } =
-    useAuth();
+  const {
+    saveCategoryToLocal,
+    saveCategoryToDB,
+    saveVideoToCategory,
+    updateCategoryName,
+    deleteCategory
+  } = useAuth();
 
   const handleAddContent = () => {
     if (isEditMode) {
-      // 수정 모드일 때
-      if (selectedCategory) {
-        // 선택된 카테고리가 있을 경우
-        const updatedCategoryList = categoryList.map((category) =>
-          category === selectedCategory ? content : category
-        );
-        localStorage.setItem(
-          "categoryList",
-          JSON.stringify(updatedCategoryList)
-        );
-        setCategoryList(updatedCategoryList);
-        setSelectedCategory(null);
-        setIsEditMode(false);
-      }
+      handleEditContent();
     } else {
-      // 추가 모드일 때
-      saveCategoryToDB(content);
-      saveCategoryToLocal(content);
-      setCategoryList((prevList) => [...prevList, content]);
+      handleAddNewContent();
     }
+  };
+  
+  const handleEditContent = () => {
+    if (selectedCategory) {
+      // 수정 전 카테고리명과 수정 후 카테고리명을 updateCategoryName 함수에 전달하여 호출
+      updateCategoryName(selectedCategory, content);
+  
+      const updatedCategoryList = categoryList.map((category) =>
+        category === selectedCategory ? content : category
+      );
+      localStorage.setItem(
+        "categoryList",
+        JSON.stringify(updatedCategoryList)
+      );
+      setCategoryList(updatedCategoryList);
+      setSelectedCategory(null);
+      setIsEditMode(false);
+    }
+  };
+  
+  const handleAddNewContent = () => {
+    saveCategoryToDB(content);
+    saveCategoryToLocal(content);
+    setCategoryList((prevList) => [...prevList, content]);
     setContent("");
   };
 
@@ -242,6 +262,7 @@ const SaveModal = ({ closeModal }) => {
         `${selectedCategory}을(를) 삭제하시겠습니까?`
       );
       if (confirmDelete) {
+        deleteCategory(selectedCategory);
         // 로컬 스토리지에서도 해당 카테고리 삭제
         const updatedCategoryList = categoryList.filter(
           (category) => category !== selectedCategory
@@ -250,7 +271,6 @@ const SaveModal = ({ closeModal }) => {
           "categoryList",
           JSON.stringify(updatedCategoryList)
         );
-
         setCategoryList(updatedCategoryList);
         setSelectedCategory(null);
         setIsEditMode(false);
@@ -320,12 +340,14 @@ const SaveModal = ({ closeModal }) => {
               onChange={handleInputChange}
               placeholder="추가할 폴더명을 입력해주세요."
             />
-            <AddButton
-              onClick={handleAddContent}
-              hasImage={!isEditMode} // addImg가 사용될 때는 true, 그렇지 않으면 false 전달
-            >
-              {isEditMode ? "수정" : <img src={addImg} alt="Add" />}
-            </AddButton>
+            {/* isEditMode에 따라 AddButton 또는 EditButton을 렌더링 */}
+            {isEditMode ? (
+              <EditButton onClick={handleAddContent}>수정</EditButton>
+            ) : (
+              <AddButton onClick={handleAddContent} hasImage={!isEditMode}>
+                <img src={addImg} alt="Add" />
+              </AddButton>
+            )}
             <ConfirmButton onClick={handleSave}>확인</ConfirmButton>
             <DeleteButton onClick={handleCategoryRightClick}>삭제</DeleteButton>
           </ButtonSet>

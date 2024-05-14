@@ -826,6 +826,7 @@ export const AuthProvider = ({ children }) => {
       toast.error("비디오 목록을 가져오는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
+
   // -----------------------------------------------------------------------------
   // - Name: saveVideoToCategory
   // - Desc: 새로운 카테고리를 DB에 저장
@@ -870,6 +871,72 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateCategoryName = async (oldCategoryName, newCategoryName) => {
+    try {
+      // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
+      const memberEmail = getEmailFromLocalStorage();
+      
+      // PUT 요청 보내기
+      const response = await fetch(`${BASE_URL}/api/v1/category/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          memberEmail,
+          oldCategoryName,
+          newCategoryName
+        })
+      });
+  
+      // 응답 확인
+      if (!response.ok) {
+        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+      }
+  
+      console.log("🟢카테고리 이름 업데이트 성공🟢");
+  
+      // 응답 데이터를 반환합니다.
+      return response;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error("카테고리 이름을 업데이트하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+    }
+  };
+  
+
+  const deleteCategory = async (categoryName) => {
+    try {
+      // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
+      const memberEmail = getEmailFromLocalStorage();
+      
+      // PUT 요청 보내기
+      const response = await fetch(`${BASE_URL}/api/v1/category/delete-category`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          memberEmail,
+          categoryName
+        })
+      });
+  
+      // 응답 확인
+      if (!response.ok) {
+        toast.error("deleteCategory 서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+      }
+  
+      console.log("🟢", categoryName, "카테고리 삭제 성공🟢");
+  
+      // 응답 데이터를 반환합니다.
+      return response;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error("카테고리를 삭제하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -892,7 +959,9 @@ export const AuthProvider = ({ children }) => {
         selectVideo,
         getVideoList,
         saveVideoToCategory,
-        checkLoginStatus
+        checkLoginStatus,
+        updateCategoryName,
+        deleteCategory
       }}
     >
       {children}
