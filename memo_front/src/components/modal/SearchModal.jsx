@@ -122,14 +122,14 @@ const SearchModal = ({ closeModal }) => {
 
           <SearchResultSection>
             {searchResult.length > 0 ? (
-              searchResult.map(item => (
+              searchResult.map((item) => (
                 <SearchResult key={item.id}>
                   <img
                     src={item.thumbnailUrl}
                     alt="검색 결과 이미지"
                     style={{
                       width: "8vw",
-                      height:"10vh",
+                      height: "10vh",
                       marginRight: "5%",
                       borderRadius: "1rem",
                       boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.3)"
@@ -138,7 +138,15 @@ const SearchModal = ({ closeModal }) => {
                   <SearchResultContent>
                     <h3>{item.videoTitle}</h3>
                     {/* <p>{item.summary}</p> */}
-                    <p>{item.document.replace(/(<([^>]+)>)/gi, "")}</p>
+                    <p>
+                      {item.document
+                        // HTML 태그 제거 및 "&nbsp;"를 공백으로 대체
+                        .replace(/(<([^>]+)>|&nbsp;)/gi, "")
+                        // "&nbsp;"를 공백으로 대체한 후, 줄바꿈 추가
+                        .replace(/&nbsp;/g, " ")
+                        // 줄바꿈 추가
+                        .replace(/\.\s*$/, ".\n")}
+                    </p>
                   </SearchResultContent>
                 </SearchResult>
               ))
