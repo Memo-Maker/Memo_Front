@@ -52,11 +52,11 @@ const FolderContainer = styled.div`
 `;
 
 const FolderButton = styled.button`
-  background-color: #4b4c4c;
-  color: #fff;
+  color: #000000;
   cursor: pointer;
   padding: 0.7vw 1.3vw;
   border-radius: 0.5vw;
+  border: 0.15vw solid #4b4c4c;
 `;
 
 const TextInfoContainer = styled.div`
@@ -146,9 +146,11 @@ const TextEditorForm = () => {
           />
           <StatusBar>
             <FolderContainer>
+              {/* FolderButton의 텍스트를 selectedCategory로 조건부 렌더링 */}
               <FolderButton onClick={handleFolderButtonClick}>
-                폴더 선택
+                {selectedCategory ? selectedCategory : "폴더 선택"}
               </FolderButton>
+              {/* 선택된 카테고리가 있을 때만 표시 */}
               {selectedCategory && <span>{selectedCategory}</span>}
             </FolderContainer>
             <TextInfoContainer>
