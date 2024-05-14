@@ -307,6 +307,10 @@ export const AuthProvider = ({ children }) => {
       // 새로운 카테고리 목록을 로컬스토리지에 저장합니다.
       localStorage.setItem("categoryList", JSON.stringify(newCategoryList));
 
+      // memberName을 추출하여 로컬스토리지에 저장합니다.
+      const memberName = responseData[1].memberName; // 응답 데이터에서 첫 번째 객체의 memberName 추출
+      localStorage.setItem("memberName", memberName);
+
       return responseData;
     } catch (error) {
       console.error("에러 발생:", error);

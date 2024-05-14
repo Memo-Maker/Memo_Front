@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Profile from "../../assets/images/profile.png";
 import SettingsIconImg from "../../assets/images/SettingsIcon.png";
@@ -74,6 +74,7 @@ const OptionItem = styled.div`
 
 const ProfileImage = styled.img`
   width: 40px;
+  margin-left: 5%;
   height: auto;
   border-radius: 50%;
   cursor: pointer;
@@ -86,8 +87,23 @@ const IconImg = styled.img`
 `;
 
 const UserProfileDropdown = ({ closeModal }) => {
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const { logout, getVideoList } = useAuth();
+
+  useEffect(() => {
+    const memberName = localStorage.getItem("memberName");
+    if (memberName) {
+      setNickname(memberName);
+    }
+
+    const memberEmail = localStorage.getItem("userId");
+    if (memberEmail) {
+      setEmail(memberEmail);
+    }
+  }, []);
+
   const handleClickOutside = (e) => {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -99,10 +115,10 @@ const UserProfileDropdown = ({ closeModal }) => {
       <Dropdown>
         <UserInfo>
           <ProfileImage src={Profile} alt="Profile" />
-          <Nickname>박박</Nickname>
+          <Nickname>{nickname}님 안녕하세요</Nickname>
           <EditButton>Edit</EditButton>
         </UserInfo>
-        <Email>test@naver.com</Email>
+        <Email>{email}</Email>
         <Options>
           <Option>
             <OptionItem onClick={() => { getVideoList("최근 본 영상"); navigate("/mypage");}}>
