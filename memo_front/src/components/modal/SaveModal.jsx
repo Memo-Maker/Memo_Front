@@ -44,7 +44,7 @@ const StyledImg = styled.img`
 
 const SaveText = styled.div`
   color: #000000;
-  font-size: 1.5rem;
+  font-size: 1.5vw;
   text-align: center;
   font-weight: bold;
 `;
@@ -53,7 +53,7 @@ const CloseButton = styled.span`
   display: flex;
   justify-content: flex-end;
   padding: 1vw 2vw 0 2vw;
-  font-size: 1.3rem;
+  font-size: 1.5vw;
   font-weight: bold;
   cursor: pointer;
 `;
@@ -71,10 +71,9 @@ const CategoryList = styled.div`
   justify-items: center;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  grid-gap: 1vw;
   margin: 1vw 5vw 2vw 5vw;
   overflow-y: auto;
-  max-height: 25vh;
+  max-height: 30vh;
 
   &::-webkit-scrollbar {
     width: 12px;
@@ -101,8 +100,9 @@ const Category = styled.button`
   height: 3vw; /* 카테고리 상자의 높이를 고정값으로 설정 */
   display: flex;
   padding: 0.3vw 1vw;
+  margin-top: 1vw;
   align-items: center;
-  font-size: 1rem;
+  font-size: 0.8vw;
   text-align: start;
   border-radius: 0.5vw;
   border: 0.1vw solid #838383;
@@ -114,19 +114,15 @@ const Category = styled.button`
   ${({ isSelected }) =>
     isSelected &&
     css`
-      border: 0.2vw solid #646464;
-      background-color: #bababa;
+      border: 0.3vw solid #646464;
+      background-color: #d2e5ff;
       opacity: 0.9;
     `}
 
-  /* 텍스트 축소 스타일 */
-  transform-origin: left; /* 축소 중심점 설정 */
-  transform: scale(
-    ${({ scale }) => scale || 1}
-  ); /* scale 속성을 props로 전달 */
+  transform-origin: left;
+  transform: scale(${({ scale }) => scale || 1});
 
-  /* 기본 폰트 크기가 1rem일 때, 텍스트 길이에 따라 폰트 크기를 조절합니다. */
-  transition: transform 0.3s ease-in-out; /* 애니메이션 효과 추가 */
+  transition: transform 0.3s ease-in-out;
 `;
 
 const ButtonSet = styled.div`
@@ -136,32 +132,42 @@ const ButtonSet = styled.div`
 
 const TextInput = styled.input`
   width: 50%;
-  font-size: 0.9rem;
+  font-size: 0.8vw;
   background-color: #f0f0f0;
   font-weight: bold;
   padding: 1vw;
   margin: 0 0 1vw 6vw;
   border-radius: 1vw;
+  border: 0.1vw solid #000000;
 `;
 
 const AddButton = styled.button`
+  width: 6vw;
   margin: 0 0 1vw 1vw;
-  border: none;
-  background: none;
+  border-radius: 2vw;
+  border: ${({ hasImage }) => (hasImage ? "none" : "0.2vw solid #eeda25")};
+  font-weight: bold;
+  font-size: 0.8vw;
   cursor: pointer;
 
   img {
     width: 2vw;
+  }
+
+  &:not(:has(img)) {
+    &:hover {
+      background-color: #c2bd80;
+    }
   }
 `;
 
 const ConfirmButton = styled.button`
   width: 6vw;
   margin: 0 1vw 1vw 1vw;
-  border-radius: 1vw;
-  font-weight: 600;
-  color: #fff;
-  background-color: #000000;
+  border-radius: 2vw;
+  border: 0.2vw solid #000000;
+  font-weight: bold;
+  font-size: 0.8vw;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
@@ -172,9 +178,10 @@ const ConfirmButton = styled.button`
 const DeleteButton = styled.button`
   width: 6vw;
   margin: 0 6vw 1vw 0;
-  border-radius: 1vw;
-  font-weight: 600;
-  background-color: #ff3b30;
+  border-radius: 2vw;
+  border: 0.2vw solid #ff0000;
+  font-weight: bold;
+  font-size: 0.8vw;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
@@ -188,14 +195,33 @@ const SaveModal = ({ closeModal }) => {
   const [modalSize, setModalSize] = useState({ width: 0, height: 0 });
   const [categoryList, setCategoryList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const { saveCategoryToLocal, saveCategoryToDB, saveVideoToCategory } =
     useAuth();
 
   const handleAddContent = () => {
-    saveCategoryToDB(content);
-    saveCategoryToLocal(content);
-    setCategoryList((prevList) => [...prevList, content]);
+    if (isEditMode) {
+      // 수정 모드일 때
+      if (selectedCategory) {
+        // 선택된 카테고리가 있을 경우
+        const updatedCategoryList = categoryList.map((category) =>
+          category === selectedCategory ? content : category
+        );
+        localStorage.setItem(
+          "categoryList",
+          JSON.stringify(updatedCategoryList)
+        );
+        setCategoryList(updatedCategoryList);
+        setSelectedCategory(null);
+        setIsEditMode(false);
+      }
+    } else {
+      // 추가 모드일 때
+      saveCategoryToDB(content);
+      saveCategoryToLocal(content);
+      setCategoryList((prevList) => [...prevList, content]);
+    }
     setContent("");
   };
 
@@ -206,7 +232,8 @@ const SaveModal = ({ closeModal }) => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
-    console.log("선택된 카테고리:", category);
+    setContent(category);
+    setIsEditMode(true);
   };
 
   const handleCategoryRightClick = () => {
@@ -219,11 +246,14 @@ const SaveModal = ({ closeModal }) => {
         const updatedCategoryList = categoryList.filter(
           (category) => category !== selectedCategory
         );
-        localStorage.setItem("categoryList", updatedCategoryList.join(", "));
+        localStorage.setItem(
+          "categoryList",
+          JSON.stringify(updatedCategoryList)
+        );
 
         setCategoryList(updatedCategoryList);
         setSelectedCategory(null);
-        console.log(`${selectedCategory} 삭제됨`);
+        setIsEditMode(false);
       }
     }
   };
@@ -290,8 +320,11 @@ const SaveModal = ({ closeModal }) => {
               onChange={handleInputChange}
               placeholder="추가할 폴더명을 입력해주세요."
             />
-            <AddButton onClick={handleAddContent}>
-              <img src={addImg} alt="Add" />
+            <AddButton
+              onClick={handleAddContent}
+              hasImage={!isEditMode} // addImg가 사용될 때는 true, 그렇지 않으면 false 전달
+            >
+              {isEditMode ? "수정" : <img src={addImg} alt="Add" />}
             </AddButton>
             <ConfirmButton onClick={handleSave}>확인</ConfirmButton>
             <DeleteButton onClick={handleCategoryRightClick}>삭제</DeleteButton>
