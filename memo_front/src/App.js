@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/header/Header";
-import Header2 from "./components/header/Header2";
 import Footer from "./components/footer/footer";
 import HomePage from "./pages/HomePage";
 import MemoryPage from "./pages/MemoryPage";
@@ -36,7 +35,7 @@ function App() {
           <ToastContainer autoClose={1000} />
           <Routes>
             <Route path="/" element={<><Header /><HomePage /><Footer/></>} />
-            <Route path="/memory" element={<><Header2 /><MemoryPage /></>} />
+            <Route path="/memory" element={<><Header /><MemoryPage /></>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/mypage" element={<><Header /><MyPage /><Footer/></>} />

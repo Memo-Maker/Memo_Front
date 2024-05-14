@@ -30,6 +30,11 @@ const Right = styled.div`
 const LogoTitle = styled.div`
   display: flex;
   align-items: center;
+
+  img {
+    width: 80%;
+    height: auto;
+  }
 `;
 
 const HamburgerButton = styled.button`

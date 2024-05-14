@@ -116,7 +116,7 @@ const RankingContainer = styled.div`
 `;
 
 const RankingItem = styled.div`
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: bold;
   display: flex;
 `;
@@ -272,7 +272,7 @@ const HomePage = () => {
           </InputContainer>
         </Detail>
       </Head>
-      <body style={{ marginTop: "1rem" }}>
+      <body style={{ marginTop: "1rem"}}>
         <RankingContainer>
           https://www.youtube.com/watch?v=uAmv-8NUGGc
           <RankingItem>▶ 실시간 사용자가 많이 본 영상이예요..</RankingItem>
