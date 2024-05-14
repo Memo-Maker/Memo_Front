@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
 
 // 그리드 형식으로 카드들을 표시하는 컨테이너
 const GridContainer = styled.div`
@@ -97,6 +98,7 @@ const itemsPerPage = 12;
 
 const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const {selectVideo } = useAuth();
   const videoList = JSON.parse(localStorage.getItem("videoList")) || [];
   const categoryName = localStorage.getItem("categoryName");
   // 현재 페이지에 따른 데이터 계산
@@ -143,10 +145,10 @@ const MyPage = () => {
     {categoryName} 카테고리의 영상
       <GridContainer>
         {currentData.map((video, index) => (
-          <StyledButton key={index}>
-            <ButtonImage src={video.summary} alt={`Video image ${index + 1}`} />
-            <ButtonContent>{video.document}</ButtonContent>
-          </StyledButton>
+          <StyledButton key={index} onClick={() => selectVideo(video.videoUrl)}>
+          <ButtonImage src={video.thumbnailUrl} />
+          <ButtonContent>{video.videoTitle}</ButtonContent>
+        </StyledButton>
         ))}
       </GridContainer>
       <PaginationContainer>
