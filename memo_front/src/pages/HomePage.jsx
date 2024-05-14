@@ -104,6 +104,7 @@ const Button = styled.button`
     background-color: ${({ disabled }) => (disabled ? "#000" : "#555")};
   }
 `;
+
 const Head = styled.div`
   display: flex;
   flex-direction: column;
@@ -121,40 +122,15 @@ const RankingItem = styled.div`
   display: flex;
 `;
 
-// Button 컴포넌트를 생성합니다.
-const SelectVideoButton = styled.button`
-  font-size: 1rem;
-  font-weight: 800;
-  padding: 0.7vw 1.2vw;
-  background-color: #000;
-  color: white;
-  border: none;
-  border-radius: 0.4vw;
-  margin-left: 1vw;
-  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-
-  &:hover {
-    background-color: ${({ disabled }) => (disabled ? "#000" : "#555")};
-  }
-`;
-
 const HomePage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const { GPTSummary, homePageDataGET, selectVideo } = useAuth();
-  // 버튼 클릭 시 selectVideo 함수 호출
-  const handleSelectVideo = async () => {
-    try {
-      const videoUrl = "https://www.youtube.com/watch?v=uAmv-8NUGGc";
-    await selectVideo(videoUrl);
-    } catch (error) {
-      console.error("selectVideo 호출 중 에러 발생:", error);
-      // 에러 처리
-    }
-  };
+  const { GPTSummary, homePageDataGET, checkLoginStatus } = useAuth();
+
   const handleUpload = async () => {
+    checkLoginStatus();
     setIsLoading(true);
     try {
       // GPTSummary 함수 호출하여 요약 생성
@@ -224,22 +200,26 @@ const HomePage = () => {
 
   const [videoUrl, setVideoUrl] = useState("");
   const [videoId, setVideoId] = useState(null);
+  const [isValidUrl, setIsValidUrl] = useState(true); // URL 유효성 상태 추가
 
   const extractVideoId = (url) => {
     const regExp =
-      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]{11}).*/;
     const match = url.match(regExp);
     return match && match[1] ? match[1] : null;
   };
 
   const handleChange = (event) => {
-    setVideoUrl(event.target.value);
+    const url = event.target.value;
+    setVideoUrl(url);
+    setIsValidUrl(!!extractVideoId(url)); // URL 유효성 검사 및 상태 업데이트
   };
 
   const handleLoadVideo = () => {
     const id = extractVideoId(videoUrl);
     setVideoId(id);
   };
+
   return (
     <Container>
       <Head>
@@ -256,6 +236,7 @@ const HomePage = () => {
               value={videoUrl}
               onChange={handleChange}
               placeholder="https://www.youtube.com/"
+              style={{ borderColor: isValidUrl ? "initial" : "red" }} // 유효하지 않은 URL일 경우 빨간 테두리 표시
             />
             {isCompleted ? (
               <Button primary onClick={handleStart}>
@@ -263,8 +244,8 @@ const HomePage = () => {
               </Button>
             ) : (
               <Button
-                onClick={isLoading ? () => {} : handleUpload}
-                disabled={isLoading}
+                onClick={isLoading || !isValidUrl ? () => {} : handleUpload} // 유효하지 않은 URL일 경우 버튼 비활성화
+                disabled={isLoading || videoUrl.trim() === "" || !isValidUrl} // 유효하지 않은 URL일 경우 버튼 비활성화
               >
                 {isLoading ? "Loading.." : "Load Video"}
               </Button>
@@ -279,10 +260,6 @@ const HomePage = () => {
           <RankVideo />
         </RankingContainer>
       </body>
-      {/* // 버튼을 렌더링합니다. */}
-      <SelectVideoButton onClick={handleSelectVideo} disabled={isLoading}>
-        {isLoading ? "Loading.." : "Select Video"}
-      </SelectVideoButton>
     </Container>
   );
 };

@@ -70,6 +70,14 @@ export const AuthProvider = ({ children }) => {
     console.log("텍스트 내용이 로컬스토리지에 저장되었씁니다.");
   };
 
+  const checkLoginStatus = () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'false' || !isLoggedIn) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+    }
+  };
+
   // -----------------------------------------------------------------------------
   // - Name : signup
   // - Desc : 사용자를 회원가입하는 함수
@@ -205,7 +213,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("ranking2", ranking2Data);
         localStorage.setItem("ranking3", ranking3Data);
     }
-    // window.location.reload();
+    window.location.reload();
     
     navigate("/");
 };
@@ -287,7 +295,8 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        toast.error("getMyData함수 실행 중 네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
+        // toast.error("getMyData함수 실행 중 네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
+        console.log("getMyData함수 실행 중 네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
       }
 
       const responseData = await response.json();
@@ -314,7 +323,7 @@ export const AuthProvider = ({ children }) => {
       return responseData;
     } catch (error) {
       console.error("에러 발생:", error);
-      toast.error("getMyData함수 실행 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      // toast.error("getMyData함수 실행 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
 
@@ -543,20 +552,9 @@ export const AuthProvider = ({ children }) => {
   //   1) memberEmail : 사용자 이메일
   //   2) videoUrl : 비디오 URL
   // -----------------------------------------------------------------------------
-  // const checkDuplicate = async (memberEmail, videoUrl) => {
-  //   try {
-  //     const response = await axios.post(`${BASE_URL}/api/v1/video/check-duplicate`, {
-  //       memberEmail,
-  //       videoUrl
-  //     });
-  //     console.log("[checkDuplicate 결과 ] ", JSON.stringify(response.data));
-  //     return JSON.stringify(response.data); // JSON 문자열 반환
-  //   } catch (error) {
-  //     console.error("중복 확인 실패:", error);
-  //     return JSON.stringify({  }); // 오류 발생 시 false 반환
-  //   }
-  // };
   const checkDuplicate = async (memberEmail, videoUrl) => {
+    // console.log("memberEmail: ", memberEmail, "videoUrl" , videoUrl);
+
     try {
       const response = await axios.post(`${BASE_URL}/api/v1/video/check-duplicate`, {
         memberEmail,
@@ -594,11 +592,11 @@ export const AuthProvider = ({ children }) => {
       if (isDuplicate) {
         // 중복인 경우 selectVideo 함수 호출
         console.log("중복된 URL입니다. selectVideo 함수를 호출합니다.");
-        await selectVideo(url);
+        await duplicateVideo(userId, url);
       } else {
         // 중복이 아닌 경우 summary 요청을 전송
         console.log("중복되지 않은 URL입니다. summary 요청을 전송합니다.");
-  
+
         const response = await fetch(`${FLASK_BASE_URL}/summaryurl`, {
           method: "POST",
           headers: {
@@ -611,7 +609,7 @@ export const AuthProvider = ({ children }) => {
         });
   
         if (!response.ok) {
-          toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+          // toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
           return;
         }
   
@@ -685,6 +683,65 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("answers", JSON.stringify(extractedAnswers));
 
       navigate("/memory");
+
+      // 응답 데이터를 반환합니다.
+      return responseData;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error("영상 선택 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+    }
+  };
+
+  // -----------------------------------------------------------------------------
+  // - Name: duplicateVideo
+  // - Desc: 멤버 이메일과 비디오 URL을 로컬 스토리지에서 가져와서 서버에 전송하는 함수
+  // - Input
+  //   - 없음
+  // - Output
+  //   - 서버에서 받은 응답 데이터
+  // -----------------------------------------------------------------------------
+  const duplicateVideo = async (memberEmail ,videoUrl) => {
+    const videoUrlA = videoUrl;
+    
+    // // 요청할 데이터를 콘솔에 출력합니다.
+    // console.log("전송할 데이터:", { memberEmail, videoUrl });
+
+    try {
+      // 주소와 바디를 설정하여 POST 요청을 보냅니다.
+      const response = await fetch(`${BASE_URL}/api/v1/video/select-video`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          memberEmail,
+          videoUrl: videoUrlA
+        })
+      });
+
+      // 응답이 성공적인지 확인합니다.
+      if (!response.ok) {
+        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+      }
+
+      // 응답 데이터를 콘솔에 출력합니다.
+      const responseData = await response.json();
+      console.log("[ 선택한 video의 데이터: ] ", responseData);
+
+      // 받은 데이터에서 필요한 정보를 추출합니다.
+      const { summary, document, videoUrl } = responseData.video;
+      const { questions } = responseData;
+      var document2 = (document==null)?"":document;
+      // 질문과 답변을 추출합니다.
+      const extractedQuestions = questions.map((question) => question.question);
+      const extractedAnswers = questions.map((question) => question.answer);
+
+      // 로컬 스토리지에 정보를 저장합니다.
+      localStorage.setItem("summary", summary);
+      localStorage.setItem("document", document2);
+      localStorage.setItem("videoUrl", videoUrl);
+      localStorage.setItem("questions", JSON.stringify(extractedQuestions));
+      localStorage.setItem("answers", JSON.stringify(extractedAnswers));
 
       // 응답 데이터를 반환합니다.
       return responseData;
@@ -811,7 +868,8 @@ export const AuthProvider = ({ children }) => {
         searchMarkdown,
         selectVideo,
         getVideoList,
-        saveVideoToCategory
+        saveVideoToCategory,
+        checkLoginStatus
       }}
     >
       {children}
