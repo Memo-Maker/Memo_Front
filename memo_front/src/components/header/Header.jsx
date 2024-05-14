@@ -8,6 +8,7 @@ import ProfileModal from "../modal/ProfileModal"
 import SearchModal from "../modal/SearchModal";
 import SideMenu from "../menu/SideMenu"; // SideMenu 컴포넌트 추가
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const HeaderContainer = styled.div`
   position: relative; /* HeaderContainer를 relative로 설정하여 하위 요소를 absolute로 배치 */
@@ -88,6 +89,7 @@ function Header() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // 모달 열림/닫힘 상태 추가
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false); // SearchModal을 열기 위한 상태 추가
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false); // 사이드메뉴 열림/닫힘 상태 추가
+  const { checkLoginStatus } = useAuth();
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -108,7 +110,10 @@ function Header() {
 
   // 검색 모달 열기 핸들러 함수
   const openSearchModal = () => {
-    setIsSearchModalOpen(true);
+    checkLoginStatus();
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      setIsSearchModalOpen(true);
+    } 
   };
 
   // 검색 모달 닫기 핸들러 함수
@@ -122,10 +127,18 @@ const handleRefresh = () => {
   window.location.reload();
 };
 
+// 햄버거 버튼 클릭 핸들러 함수
+const handleHamburgerButtonClick = () => {
+  checkLoginStatus();
+  if (localStorage.getItem("isLoggedIn") === "true") {
+    setIsSideMenuOpen(!isSideMenuOpen);
+  }
+};
+
   return (
     <HeaderContainer>
       <Left>
-        <HamburgerButton onClick={() => setIsSideMenuOpen(!isSideMenuOpen)}>
+        <HamburgerButton onClick={handleHamburgerButtonClick}>
           ☰
         </HamburgerButton>{" "}
         {/* 사이드메뉴 버튼 클릭 시 사이드메뉴 열림/닫힘 상태를 변경하는 이벤트 추가 */}
