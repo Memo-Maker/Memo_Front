@@ -235,9 +235,21 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 200) {
         console.log("TOP3 영상을 성공적으로 받았습니다.");
         // 성공적으로 데이터를 받으면 추가 작업 수행
-        const data = response.data;
+        let data = response.data;
         console.log("TOP3 받은 데이터:", data);
-        // saveVideoToLocalstorage("rankingData", data)
+
+        // videoTitle에서 "_"를 " "로 변경하는 함수
+        const replaceUnderscoreWithSpace = (data) => {
+          return data.map(video => ({
+            ...video,
+            videoTitle: video.videoTitle.replace(/_/g, " ")
+          }));
+        };
+
+        // 데이터를 변환
+        data = replaceUnderscoreWithSpace(data);
+        console.log("변환된 데이터:", data);
+
         // 받은 데이터를 각각의 영상 정보로 나누어 저장
         if (data.length >= 1) {
           saveVideoToLocalstorage("ranking1", data[0]);
@@ -250,7 +262,6 @@ export const AuthProvider = ({ children }) => {
         }
 
         // 만약 isLoggedIn 상태가 true이면 getMyData 함수 호출
-        // console.log("isLoggedIn-------" + isLoggedIn);
         const loggedIn = localStorage.getItem("isLoggedIn");
         if (loggedIn) {
           console.log("🔴로그인 O");
@@ -784,9 +795,21 @@ export const AuthProvider = ({ children }) => {
       }
 
       // 응답 데이터 파싱
-      const responseData = await response.json();
+      let responseData = await response.json();
       console.log("[" + categoryName + "의 데이터를 가져옴]");
       console.log(responseData);
+
+      // videoTitle에서 "_"를 " "로 변경하는 함수
+      const replaceUnderscoreWithSpace = (data) => {
+        return data.map(video => ({
+          ...video,
+          videoTitle: video.videoTitle.replace(/_/g, " ")
+        }));
+      };
+
+      // 데이터를 변환
+      responseData = replaceUnderscoreWithSpace(responseData);
+      console.log("변환된 데이터:", responseData);
 
       // 받아온 videoList를 로컬 스토리지에 저장
       localStorage.setItem("videoList", JSON.stringify(responseData));
