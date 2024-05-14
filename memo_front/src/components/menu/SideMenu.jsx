@@ -6,7 +6,8 @@ import folderIcon from "../../assets/images/macos_folder.png";
 
 const SideMenuContainer = styled.div`
   position: fixed;
-  bottom: ${({ isOpen }) => (isOpen ? "0" : "-100%")}; /* isOpen 상태에 따라 아래로 내려옴/올라감 */
+  bottom: ${({ isOpen }) =>
+    isOpen ? "0" : "-100%"}; /* isOpen 상태에 따라 아래로 내려옴/올라감 */
   left: 0;
   width: 16%;
   height: 80%;
@@ -15,6 +16,31 @@ const SideMenuContainer = styled.div`
   z-index: 999;
   padding-top: 60px;
   transition: bottom 0.3s ease; /* 아래쪽으로 이동하는 애니메이션 효과 */
+`;
+
+const SideMenuWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 16%;
+  height: auto; /* 높이를 자동으로 조정하여 내용에 따라 늘어날 수 있도록 변경합니다. */
+  background-color: #ffffff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+`;
+
+const EditButtonWrapper = styled.div`
+  position: absolute;
+  bottom: 10px; /* 아래 여백 조정 */
+  left: 50%; /* 가운데 정렬 */
+  transform: translateX(-50%); /* 가운데 정렬 */
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -98,24 +124,29 @@ const SideMenu = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <SideMenuContainer isOpen={isOpen}>
-        <CloseButton onClick={onClose}>×</CloseButton>
-        <CategoryContainer>
-          {categoryList.map((category, index) => (
-            <StyledMenuItem
-              key={index}
-              onClick={() => handleMenuItemClick(category)}
-            >
-              <Icon src={folderIcon} alt="Folder Icon" />
-              <Text>{category}</Text>
-            </StyledMenuItem> // 각 카테고리에 대한 메뉴 항목 생성
-          ))}
-        </CategoryContainer>
-        <EditButton onClick={handleEditCategories}>
-          + 카테고리 수정
-        </EditButton>
-      </SideMenuContainer>
-      {isModalOpen && <SaveModal closeModal={closeModal} />} {/* 모달을 조건부로 렌더링 */}
+      <SideMenuWrapper>
+        <SideMenuContainer isOpen={isOpen}>
+          <CloseButton onClick={onClose}>×</CloseButton>
+          <CategoryContainer>
+            {categoryList.map((category, index) => (
+              <StyledMenuItem
+                key={index}
+                onClick={() => handleMenuItemClick(category)}
+              >
+                <Icon src={folderIcon} alt="Folder Icon" />
+                <Text>{category}</Text>
+              </StyledMenuItem>
+            ))}
+          </CategoryContainer>
+          <EditButtonWrapper>
+            <EditButton onClick={handleEditCategories}>
+              + 카테고리 수정
+            </EditButton>
+          </EditButtonWrapper>
+        </SideMenuContainer>
+      </SideMenuWrapper>
+      {isModalOpen && <SaveModal closeModal={closeModal} />}{" "}
+      {/* 모달을 조건부로 렌더링 */}
     </>
   );
 };
