@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth를 import합니다.
-
+import gptIcon from "../../assets/images/GPTIcon.png"
 const ModalBackground = styled.div`
   position: fixed;
   top: 0;
@@ -58,11 +58,13 @@ const BotMessage = styled.div`
   align-self: flex-start;
 `;
 
-const BotIcon = styled.span`
-  margin-right: 1vw;
-  font-size: 1.5rem;
-`;
 
+// gptIcon 컴포넌트 생성
+const GptIcon = styled.img`
+  margin-right: 1vw;
+  width: 1.5rem; /* 아이콘 크기 조정 */
+  height: 1.5rem; /* 아이콘 크기 조정 */
+`;
 const UserIcon = styled.span`
   margin-left: 1vw;
   font-size: 1.5rem;
@@ -124,6 +126,24 @@ const Modal = ({ visible, onClose }) => {
   };
 
   useEffect(() => {
+    if (visible) {
+      // 로컬 스토리지에서 questions와 answers를 가져와 messages 상태에 저장
+      const questions = JSON.parse(localStorage.getItem("questions")) || [];
+      const answers = JSON.parse(localStorage.getItem("answers")) || [];
+      const loadedMessages = [];
+
+      questions.forEach((question, index) => {
+        loadedMessages.push({ type: "user", content: question });
+        if (answers[index]) {
+          loadedMessages.push({ type: "bot", content: answers[index] });
+        }
+      });
+
+      setMessages(loadedMessages);
+    }
+  }, [visible]);
+
+  useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
@@ -135,22 +155,27 @@ const Modal = ({ visible, onClose }) => {
     if (message.trim() !== "") {
       const newUserMessage = { type: "user", content: message };
       setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-  
+
       // GPTQuery 함수를 호출하여 쿼리 전송
       try {
         const response = await GPTQuery(message);
         // 서버로부터 받은 답변을 화면에 표시
         const newBotMessage = { type: "bot", content: response.qAnswer }; // 받은 답변의 내용을 사용하여 새로운 봇 메시지 생성
-        setMessages((prevMessages) => [...prevMessages, newBotMessage]); // 답변을 메시지 목록에 추가
+        setMessages((prevMessages) => [...prevMessages, newBotMessage]);
+
+        // 로컬 스토리지에 질문과 답변 저장
+        const updatedQuestions = [...(JSON.parse(localStorage.getItem("questions")) || []), message];
+        const updatedAnswers = [...(JSON.parse(localStorage.getItem("answers")) || []), response.qAnswer];
+        localStorage.setItem("questions", JSON.stringify(updatedQuestions));
+        localStorage.setItem("answers", JSON.stringify(updatedAnswers));
       } catch (error) {
         console.error("GPTQuery 호출 중 에러 발생:", error);
         // 에러 처리
       }
-  
+
       setMessage("");
     }
   };
-  
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -161,6 +186,8 @@ const Modal = ({ visible, onClose }) => {
   const handleRefresh = () => {
     setMessages([]);
     setMessage("");
+    localStorage.removeItem("questions");
+    localStorage.removeItem("answers");
   };
 
   return (
@@ -177,7 +204,8 @@ const Modal = ({ visible, onClose }) => {
                   </UserMessage>
                 ) : (
                   <BotMessage key={index}>
-                    <BotIcon>🤖</BotIcon>
+                    {/* // BotIcon 대신 GptIcon으로 대체 */}
+                    <GptIcon src={gptIcon} alt="GPT Icon" />
                     {msg.content}
                   </BotMessage>
                 )}
