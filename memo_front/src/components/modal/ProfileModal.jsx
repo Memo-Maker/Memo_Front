@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Profile from "../../assets/images/profile.png";
 import SettingsIconImg from "../../assets/images/SettingsIcon.png";
@@ -38,6 +38,7 @@ const UserInfo = styled.div`
   align-items: center;
   margin-bottom: 10px;
   width: 100%;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 `;
 
 const ProfileBox = styled.div``;
@@ -58,6 +59,7 @@ const Nickname = styled.div`
   font-size: 1vw;
   margin: 0 1vw 0 1vw;
   font-weight: bold;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 `;
 
 const Options = styled.div`
@@ -126,7 +128,9 @@ const UserProfileDropdown = ({ closeModal }) => {
   const [newNickname, setNewNickname] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const { logout, getVideoList } = useAuth();
+  const { logout, getVideoList, changeNickname } = useAuth();
+  const modalRef = useRef();
+  const overlayRef = useRef();
 
   useEffect(() => {
     const memberName = localStorage.getItem("memberName");
@@ -138,27 +142,38 @@ const UserProfileDropdown = ({ closeModal }) => {
     if (memberEmail) {
       setEmail(memberEmail);
     }
-  }, []);
+
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeModal]);
 
   const handleNicknameChange = (e) => {
     setNewNickname(e.target.value);
   };
 
-  const handleNicknameSubmit = () => {
-    setNickname(newNickname);
-    localStorage.setItem("memberName", newNickname);
-    setNewNickname("");
-    setShowModal(false);
-  };
-
-  const handleClickOutside = (e) => {
-    if (e.target === e.currentTarget) {
-      closeModal();
+  const handleNicknameSubmit = async () => {
+    try {
+      await changeNickname(newNickname);
+      setNickname(newNickname);
+      localStorage.setItem("memberName", newNickname);
+      setNewNickname("");
+      setShowModal(false);
+    } catch (error) {
+      console.error("닉네임 변경 오류:", error);
     }
   };
 
   return (
-    <Overlay onClick={handleClickOutside}>
+    <Overlay ref={overlayRef}>
       <DropdownContainer>
         <InfoBox>
           <UserInfo>
@@ -205,7 +220,7 @@ const UserProfileDropdown = ({ closeModal }) => {
         </ProfileBox>
       </DropdownContainer>
       {showModal && (
-        <Modal>
+        <Modal ref={modalRef}>
           <div
             style={{
               fontWeight: "bold",

@@ -224,7 +224,7 @@ const getCurrentDate = () => {
     }
     window.location.reload();
     
-    navigate("/");
+    navigate("/login");
 };
 
 
@@ -983,7 +983,37 @@ const deleteVideo = async (videoUrl) => {
     console.error(`스프링 서버에 DELETE 요청 중 오류가 발생했습니다: ${error}`);
     toast.error("영상을 삭제하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
   }
-};
+  };
+  
+  const changeNickname = async (newNickname) => {
+    try {
+      console.log("[ 변경할 닉네임 ]\n", newNickname);
+      const userEmail = getEmailFromLocalStorage(); // 로컬 스토리지에서 이메일 가져오기
+
+      // 서버에 POST 요청 보내기
+      const response = await fetch(`${BASE_URL}/api/v1/user/update-name`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          memberEmail: userEmail,
+          newName : newNickname
+        }),
+      });
+
+      if (response.ok) {
+        console.log("닉네임 변경 성공!");
+        // 저장 성공 시 추가 작업 수행
+      } else {
+        console.error("닉네임 변경 실패:", response.statusText);
+        // 저장 실패 시 에러 처리
+      }
+    } catch (error) {
+      console.error(" 닉네임 변경 중 에러 발생:", error);
+      // 에러 발생 시 에러 처리
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -1011,6 +1041,7 @@ const deleteVideo = async (videoUrl) => {
         updateCategoryName,
         deleteCategory,
         deleteVideo,
+        changeNickname,
       }}
     >
       {children}
