@@ -109,7 +109,7 @@ const MemoryPage = () => {
   return (
     <Layout>
       <Container>
-        <DateText>{currentDate.toLocaleDateString()}</DateText>
+        <DateText>{localStorage.getItem("documentDate")}</DateText>
         {videoId && (
           <YouTube
             videoId={videoId}
