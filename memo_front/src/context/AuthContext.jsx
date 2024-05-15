@@ -78,6 +78,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // 날짜를 "YYYY-MM-DD" 형식으로 반환하는 함수
+const getCurrentDate = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
   // -----------------------------------------------------------------------------
   // - Name : signup
   // - Desc : 사용자를 회원가입하는 함수
@@ -452,6 +461,7 @@ export const AuthProvider = ({ children }) => {
       console.log("[ 저장할 마크다운 내용 ]\n", markdownContent);
       const userEmail = getEmailFromLocalStorage(); // 로컬 스토리지에서 이메일 가져오기
       const videoUrl = getVideoUrlFromLocalStorage(); // 로컬 스토리지에서 비디오 URL 가져오기
+      const documentDate = getCurrentDate(); // 현재 날짜 가져오기
 
       // 서버에 POST 요청 보내기
       const response = await fetch(`${BASE_URL}/api/v1/video/document-save`, {
@@ -462,7 +472,8 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({
           memberEmail: userEmail,
           videoUrl: videoUrl,
-          document: markdownContent
+          document: markdownContent,
+          documentDate: documentDate // 현재 날짜 추가
         })
       });
 
@@ -679,7 +690,7 @@ export const AuthProvider = ({ children }) => {
       console.log("[ 선택한 video의 데이터: ] ", responseData);
 
       // 받은 데이터에서 필요한 정보를 추출합니다.
-      const { summary, document, videoUrl } = responseData.video;
+      const { summary, document, videoUrl, documentDate } = responseData.video;
       const { questions } = responseData;
       var document2 = (document==null)?"":document;
       // 질문과 답변을 추출합니다.
@@ -690,6 +701,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("summary", summary);
       localStorage.setItem("document", document2);
       localStorage.setItem("videoUrl", videoUrl);
+      localStorage.setItem("documentDate", documentDate);
       localStorage.setItem("questions", JSON.stringify(extractedQuestions));
       localStorage.setItem("answers", JSON.stringify(extractedAnswers));
 
@@ -740,7 +752,7 @@ export const AuthProvider = ({ children }) => {
       console.log("[ 선택한 video의 데이터: ] ", responseData);
 
       // 받은 데이터에서 필요한 정보를 추출합니다.
-      const { summary, document, videoUrl } = responseData.video;
+      const { summary, document, videoUrl, documentDate } = responseData.video;
       const { questions } = responseData;
       var document2 = (document==null)?"":document;
       // 질문과 답변을 추출합니다.
@@ -751,6 +763,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("summary", summary);
       localStorage.setItem("document", document2);
       localStorage.setItem("videoUrl", videoUrl);
+      localStorage.setItem("documentDate", documentDate);
       localStorage.setItem("questions", JSON.stringify(extractedQuestions));
       localStorage.setItem("answers", JSON.stringify(extractedAnswers));
 
@@ -910,7 +923,7 @@ export const AuthProvider = ({ children }) => {
       // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
       const memberEmail = getEmailFromLocalStorage();
       
-      // PUT 요청 보내기
+      // DELETE 요청 보내기
       const response = await fetch(`${BASE_URL}/api/v1/category/delete-category`, {
         method: "DELETE",
         headers: {
@@ -937,6 +950,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // 영상 삭제 함수
+const deleteVideo = async (videoUrl) => {
+  try {
+    // 로컬 스토리지에서 memberEmail 가져오기
+    const memberEmail = getEmailFromLocalStorage();
+
+    // DELETE 요청 보내기
+    const response = await fetch(`${BASE_URL}/api/v1/category/delete-category`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        memberEmail,
+        videoUrl
+      })
+    });
+
+    if (response.status === 200) {
+      console.log("영상을 스프링 서버에서 성공적으로 삭제했습니다.");
+      alert("영상이 성공적으로 삭제되었습니다.");
+    } else {
+      console.error(`스프링 서버에서 영상을 삭제하는 중 오류가 발생했습니다. 응답 상태코드: ${response.status}`);
+    }
+  } catch (error) {
+    console.error(`스프링 서버에 DELETE 요청 중 오류가 발생했습니다: ${error}`);
+    toast.error("영상을 삭제하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+  }
+};
+
   return (
     <AuthContext.Provider
       value={{
@@ -961,13 +1004,15 @@ export const AuthProvider = ({ children }) => {
         saveVideoToCategory,
         checkLoginStatus,
         updateCategoryName,
-        deleteCategory
+        deleteCategory,
+        deleteVideo,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

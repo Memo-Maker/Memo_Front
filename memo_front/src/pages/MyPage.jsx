@@ -161,7 +161,7 @@ const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const { selectVideo } = useAuth();
+  const { selectVideo, deleteVideo } = useAuth();
   const videoList = JSON.parse(localStorage.getItem("videoList")) || [];
   const categoryName = localStorage.getItem("categoryName");
 
@@ -254,7 +254,8 @@ const MyPage = () => {
               <CancelButton onClick={closeModal}>취소</CancelButton>
               <DeleteButton
                 onClick={() => {
-                  /* 삭제 함수 호출 */ closeModal();
+                  deleteVideo(selectedVideo.videoUrl);
+                  closeModal();
                 }}
               >
                 삭제
