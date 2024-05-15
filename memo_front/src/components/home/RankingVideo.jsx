@@ -5,7 +5,6 @@ const RankingContainer = styled.div`
   margin-top: 1vw;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
 `;
@@ -39,8 +38,13 @@ const ButtonImage = styled.img`
 
 const ButtonContent = styled.div`
   text-align: center;
-  font-size: 1rem;
+  font-size: 1vw;
   font-weight: bold;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const RankingVideo = () => {
@@ -65,19 +69,20 @@ const RankingVideo = () => {
 
   const handleButtonClick = (videoUrl) => {
     // 클립보드에 videoUrl 복사
-    navigator.clipboard.writeText(videoUrl)
+    navigator.clipboard
+      .writeText(videoUrl)
       .then(() => {
         // 클립보드에 복사되었을 때의 처리
-        alert(`YouTube URL이 클립보드에 복사되었습니다😁\n아래의 입력창에 붙여넣어주세요❗❗`);
+        alert(
+          `YouTube URL이 클립보드에 복사되었습니다😁\n아래의 입력창에 붙여넣어주세요❗❗`
+        );
       })
       .catch((error) => {
         // 복사 실패 시 처리
-        console.error('클립보드에 복사 실패:', error);
-        alert('클립보드에 복사하는 중 오류가 발생했습니다.');
+        console.error("클립보드에 복사 실패:", error);
+        alert("클립보드에 복사하는 중 오류가 발생했습니다.");
       });
   };
-  
-  
 
   return (
     <RankingContainer>

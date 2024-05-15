@@ -9,12 +9,12 @@ const SideMenuContainer = styled.div`
   bottom: ${({ isOpen }) =>
     isOpen ? "0" : "-100%"}; /* isOpen 상태에 따라 아래로 내려옴/올라감 */
   left: 0;
-  width: 16%;
-  height: 80%;
+  width: 18%;
+  height: 85%;
   background-color: #ffffff;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 999;
-  padding-top: 60px;
+  padding-top: 30px;
   transition: bottom 0.3s ease; /* 아래쪽으로 이동하는 애니메이션 효과 */
 `;
 
@@ -54,16 +54,30 @@ const CloseButton = styled.button`
 `;
 
 const CategoryContainer = styled.div`
-  max-height: 90%; /* 높이 제한을 설정하여 스크롤이 필요한 경우 스크롤바가 나타나도록 함 */
+margin: 1vw;
+  max-height: 80%; /* 높이 제한을 설정하여 스크롤이 필요한 경우 스크롤바가 나타나도록 함 */
   overflow-y: auto;
-  margin-bottom: 1rem;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #a7a7a7;
+    border-radius: 1vw;
+    margin-right: 5%;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #646464;
+  }
 `;
 
 const StyledMenuItem = styled.div`
   display: flex;
   width: 80%;
   border-radius: 10px; /* 둥근 네모 모양의 버튼으로 만들기 위해 border-radius 값을 조정합니다. */
-  margin: 1vw 0 1vw 1.2vw;
+  margin: 0 0 1vw 1.2vw;
   padding: 1vw 0 1vw 0;
   border: 2px solid #d9d9d9; /* 테두리를 추가하여 버튼처럼 보이도록 설정합니다. */
   cursor: pointer; /* 마우스 포인터를 올렸을 때 버튼임을 나타내기 위해 커서 모양을 변경합니다. */
