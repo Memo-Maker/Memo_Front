@@ -60,7 +60,7 @@ const MemoryPage = () => {
   const [videoId, setVideoId] = useState(null);
   const [playerSize, setPlayerSize] = useState({ width: 560, height: 315 });
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  // const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const storedVideoUrl = localStorage.getItem("videoUrl");
@@ -74,13 +74,13 @@ const MemoryPage = () => {
 
     window.addEventListener("resize", handleResize);
 
-    const interval = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
+    // const interval = setInterval(() => {
+    //   setCurrentDate(new Date());
+    // }, 1000);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      clearInterval(interval);
+      // clearInterval(interval);
     };
   }, []);
 
