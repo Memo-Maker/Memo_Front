@@ -955,9 +955,10 @@ const deleteVideo = async (videoUrl) => {
   try {
     // 로컬 스토리지에서 memberEmail 가져오기
     const memberEmail = getEmailFromLocalStorage();
+    const videoList = JSON.parse(localStorage.getItem("videoList")) || [];
 
     // DELETE 요청 보내기
-    const response = await fetch(`${BASE_URL}/api/v1/category/delete-category`, {
+    const response = await fetch(`${BASE_URL}/api/v1/video/delete-video`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -971,6 +972,10 @@ const deleteVideo = async (videoUrl) => {
     if (response.status === 200) {
       console.log("영상을 스프링 서버에서 성공적으로 삭제했습니다.");
       alert("영상이 성공적으로 삭제되었습니다.");
+      // videoList에서 videoUrl에 해당하는 항목 삭제
+      const updatedVideoList = videoList.filter(video => video.videoUrl !== videoUrl);
+      localStorage.setItem("videoList", JSON.stringify(updatedVideoList));
+      window.location.reload();
     } else {
       console.error(`스프링 서버에서 영상을 삭제하는 중 오류가 발생했습니다. 응답 상태코드: ${response.status}`);
     }
