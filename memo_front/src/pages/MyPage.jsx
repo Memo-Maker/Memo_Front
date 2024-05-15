@@ -2,12 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../context/AuthContext";
 
-const MypageContainer = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-`;
-
 // 모달창 배경
 const ModalBackdrop = styled.div`
   position: fixed;
@@ -46,7 +40,7 @@ const CancelButton = styled.button`
   cursor: pointer;
   background-color: #adadad;
   color: #000000;
-  font-size: 1vw;
+  font-size: 1rem;
   border-bottom-left-radius: 0.3rem; /* 왼쪽 하단 모서리에만 border-radius 적용 */
   &:hover {
     background-color: #606060;
@@ -89,8 +83,8 @@ const StyledButton = styled.button`
   border-radius: 1vw;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  height: 11vw;
-  padding-bottom: 1vw;
+  width: 15vw;
+  height: 10vw;
   cursor: pointer;
   transition: background-color 0.3s;
 
@@ -112,13 +106,8 @@ const ButtonImage = styled.img`
 
 const ButtonContent = styled.div`
   text-align: center;
-  font-size: 1vw;
+  font-size: 1rem;
   font-weight: bold;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 // 페이지네이션 컨테이너
@@ -126,30 +115,25 @@ const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 1vw;
-  margin-bottom: 2vw;
 `;
 
 const PageButton = styled.button`
   padding: 0.5vw 0.7vw;
   margin: 0 0.3vw 0 0.3vw;
-  border: 0.1vw solid #838383;
-  background-color: ${({ isActive }) => (isActive ? "#838383" : "transparent")};
+  border: none;
+  background-color: ${({ isActive }) => (isActive ? "#ccc" : "transparent")};
   border-radius: 0.5vw;
   cursor: pointer;
-  &:hover {
-    color: #ffffff;
-  }
 `;
 
 const PrevButton = styled.button`
   padding: 0.5vw 0.7vw;
-  border: 0.1vw solid #d9d9d9;
-  border-radius: 0.6vw;
+  border-radius: 0.5vw;
   cursor: pointer;
   color: #fff;
   font-size: 1rem;
   font-weight: bold;
-  background-color: #d9d9d9;
+  background-color: #838383;
 
   &:hover {
     background-color: #606060;
@@ -158,13 +142,12 @@ const PrevButton = styled.button`
 
 const NextButton = styled.button`
   padding: 0.5vw 0.7vw;
-  border: 0.1vw solid #d9d9d9;
-  border-radius: 0.6vw;
+  border-radius: 0.5vw;
   cursor: pointer;
-  color: #d9d9d9;
+  color: #fff;
   font-size: 1rem;
   font-weight: bold;
-  background-color: #ffffff;
+  background-color: #838383;
 
   &:hover {
     background-color: #606060;
@@ -178,7 +161,7 @@ const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const { selectVideo, deleteVideo } = useAuth();
+  const { selectVideo } = useAuth();
   const videoList = JSON.parse(localStorage.getItem("videoList")) || [];
   const categoryName = localStorage.getItem("categoryName");
 
@@ -238,10 +221,9 @@ const MyPage = () => {
 
   return (
     <>
-      <MypageContainer>
-      {categoryName} 카테고리의 영상</MypageContainer>
+      {categoryName} 카테고리의 영상
       <GridContainer>
-        {currentData.map((video, index) => (
+        {currentData.reverse().map((video, index) => (
           <StyledButton
             key={index}
             onClick={() => selectVideo(video.videoUrl)}
@@ -272,8 +254,7 @@ const MyPage = () => {
               <CancelButton onClick={closeModal}>취소</CancelButton>
               <DeleteButton
                 onClick={() => {
-                  deleteVideo(selectedVideo.videoUrl);
-                  closeModal();
+                  /* 삭제 함수 호출 */ closeModal();
                 }}
               >
                 삭제
