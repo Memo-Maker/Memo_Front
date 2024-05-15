@@ -46,7 +46,7 @@ const CancelButton = styled.button`
   cursor: pointer;
   background-color: #adadad;
   color: #000000;
-  font-size: 1rem;
+  font-size: 1vw;
   border-bottom-left-radius: 0.3rem; /* 왼쪽 하단 모서리에만 border-radius 적용 */
   &:hover {
     background-color: #606060;
@@ -89,8 +89,8 @@ const StyledButton = styled.button`
   border-radius: 1vw;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 15vw;
-  height: 10vw;
+  height: 11vw;
+  padding-bottom: 1vw;
   cursor: pointer;
   transition: background-color 0.3s;
 
@@ -112,8 +112,13 @@ const ButtonImage = styled.img`
 
 const ButtonContent = styled.div`
   text-align: center;
-  font-size: 1rem;
+  font-size: 1vw;
   font-weight: bold;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 // 페이지네이션 컨테이너
@@ -121,25 +126,30 @@ const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 1vw;
+  margin-bottom: 2vw;
 `;
 
 const PageButton = styled.button`
   padding: 0.5vw 0.7vw;
   margin: 0 0.3vw 0 0.3vw;
-  border: none;
-  background-color: ${({ isActive }) => (isActive ? "#ccc" : "transparent")};
+  border: 0.1vw solid #838383;
+  background-color: ${({ isActive }) => (isActive ? "#838383" : "transparent")};
   border-radius: 0.5vw;
   cursor: pointer;
+  &:hover {
+    color: #ffffff;
+  }
 `;
 
 const PrevButton = styled.button`
   padding: 0.5vw 0.7vw;
-  border-radius: 0.5vw;
+  border: 0.1vw solid #d9d9d9;
+  border-radius: 0.6vw;
   cursor: pointer;
   color: #fff;
   font-size: 1rem;
   font-weight: bold;
-  background-color: #838383;
+  background-color: #d9d9d9;
 
   &:hover {
     background-color: #606060;
@@ -148,12 +158,13 @@ const PrevButton = styled.button`
 
 const NextButton = styled.button`
   padding: 0.5vw 0.7vw;
-  border-radius: 0.5vw;
+  border: 0.1vw solid #d9d9d9;
+  border-radius: 0.6vw;
   cursor: pointer;
-  color: #fff;
+  color: #d9d9d9;
   font-size: 1rem;
   font-weight: bold;
-  background-color: #838383;
+  background-color: #ffffff;
 
   &:hover {
     background-color: #606060;
