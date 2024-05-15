@@ -10,6 +10,7 @@ import MemoryPage from "./pages/MemoryPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import MyPage from "./pages/MyPage";
+import ErrorPage from "./pages/ErrorPage";
 import { AuthProvider } from "./context/AuthContext";
 import LoginHandler from "./components/login/LoginHandler"; // 로그인 핸들러 컴포넌트 import
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/mypage" element={<><Header /><MyPage /><Footer/></>} />
             {/* /auth 경로에 대한 라우트 추가 */}
             <Route path="/auth" element={<LoginHandler />} />
+             <Route component={ErrorPage} />
           </Routes>
         </div>
       </AuthProvider>
