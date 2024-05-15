@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../context/AuthContext";
 
+const MypageContainer = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+`;
+
 // 모달창 배경
 const ModalBackdrop = styled.div`
   position: fixed;
@@ -221,7 +227,8 @@ const MyPage = () => {
 
   return (
     <>
-      {categoryName} 카테고리의 영상
+      <MypageContainer>
+      {categoryName} 카테고리의 영상</MypageContainer>
       <GridContainer>
         {currentData.map((video, index) => (
           <StyledButton
