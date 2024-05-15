@@ -126,7 +126,6 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [showProgressBar, setShowProgressBar] = useState(false);
   const { GPTSummary, homePageDataGET, checkLoginStatus } = useAuth();
 
   const handleUpload = async () => {
