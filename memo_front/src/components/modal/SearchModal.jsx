@@ -20,15 +20,32 @@ const ModalBackdrop = styled.div`
 const ModalContent = styled.div`
   background-color: #ffffff;
   width: 30%;
-  padding: 2rem;
+  padding: 2vw;
+  border: 0.2vw solid #000000;
   border-radius: 0.5rem;
+  overflow-y: auto;
+  max-height: 30rem;
+
+  &::-webkit-scrollbar {
+    width: 1vw;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #a7a7a7;
+    border-radius: 1vw;
+    margin-right: 1vw;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #646464;
+  }
 `;
 
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  flex-direction: column; /* 결과를 세로로 표시하기 위해 컨테이너 방향 변경 */
+  flex-direction: column;
 `;
 
 const SearchFunction = styled.div`
@@ -39,11 +56,11 @@ const SearchFunction = styled.div`
 `;
 
 const SearchInput = styled.input`
-  padding: 0.5rem;
+  padding: 1vw;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 0.2vw solid #000000;
   border-radius: 0.3rem;
-  margin-bottom: 1rem; /* 검색 버튼과의 간격을 추가 */
+  margin-bottom: 1rem;
 `;
 
 const SearchButton = styled.img`
@@ -55,23 +72,28 @@ const SearchButton = styled.img`
 `;
 
 const SearchResultSection = styled.div`
-  width: 100%;
-  background-color: #4a4a4a;
-  margin-top: 1rem; /* 검색 결과와의 간격을 추가 */
-  overflow-y: auto; /* 세로 스크롤을 허용 */
-  max-height: 30rem; /* 최대 높이 지정 */
 `;
 
 const SearchResult = styled.div`
   display: flex;
   background-color: #ffffff;
-  margin-top: 0.5%; /* 검색 결과와의 간격을 추가 */
+  margin-top: 1vw;
+  align-items: center;
   /* justify-content: space-between; */
 `;
 
 const SearchResultContent = styled.div`
   background-color: #ffffff;
 `;
+
+const Title = styled.div`
+  font-size: 1vw;
+`;
+
+const Text = styled.div`
+font-size: 0.8vw;
+`;
+
 
 const SearchModal = ({ closeModal }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -83,15 +105,16 @@ const SearchModal = ({ closeModal }) => {
     try {
       // 검색된 결과를 필터링하여 저장
       const result = await searchMarkdown(searchQuery);
-      setSearchResult(result); // 검색 결과가 있든 없든 일단 설정
+      setSearchResult(result || []); // 검색 결과가 undefined일 경우 빈 배열로 초기화
 
-      if (result.length === 0) {
+      if (!result || result.length === 0) {
         setSearchError(true); // 검색 결과가 없는 경우만 에러 상태 설정
       } else {
         setSearchError(false); // 검색 결과가 있는 경우에는 에러 상태 초기화
       }
     } catch (error) {
       console.error("검색 중 오류가 발생했습니다:", error);
+      setSearchError(true); // 검색 중 오류가 발생하면 에러 상태 설정
     }
   };
 
@@ -121,7 +144,7 @@ const SearchModal = ({ closeModal }) => {
           </SearchFunction>
 
           <SearchResultSection>
-            {searchResult.length > 0 ? (
+            {searchResult && searchResult.length > 0 ? (
               searchResult.map((item) => (
                 <SearchResult key={item.id}>
                   <img
@@ -132,13 +155,12 @@ const SearchModal = ({ closeModal }) => {
                       height: "10vh",
                       marginRight: "5%",
                       borderRadius: "1rem",
-                      boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.3)"
+                      boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.3)",
                     }}
                   />
                   <SearchResultContent>
-                    <h3>{item.videoTitle}</h3>
-                    {/* <p>{item.summary}</p> */}
-                    <p>
+                    <Title>{item.videoTitle}</Title>
+                    <Text>
                       {item.document
                         // HTML 태그 제거 및 "&nbsp;"를 공백으로 대체
                         .replace(/(<([^>]+)>|&nbsp;)/gi, "")
@@ -146,7 +168,8 @@ const SearchModal = ({ closeModal }) => {
                         .replace(/&nbsp;/g, " ")
                         // 줄바꿈 추가
                         .replace(/\.\s*$/, ".\n")}
-                    </p>
+                    </Text>
+
                   </SearchResultContent>
                 </SearchResult>
               ))
