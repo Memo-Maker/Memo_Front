@@ -836,7 +836,9 @@ const getCurrentDate = () => {
       return responseData;
     } catch (error) {
       console.error("에러 발생:", error);
-      toast.error("해당 카테고리는 비어있습니다.");
+      toast.error(
+        "비디오 목록을 가져오는 중 에러가 발생했습니다. 개발자에게 문의하세요."
+      );
     }
   };
 
