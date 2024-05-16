@@ -824,6 +824,9 @@ const getCurrentDate = () => {
       responseData = replaceUnderscoreWithSpace(responseData);
       console.log("변환된 데이터:", responseData);
 
+      // videoList를 내림차순으로 정렬
+      responseData.reverse();
+
       // 받아온 videoList를 로컬 스토리지에 저장
       localStorage.setItem("videoList", JSON.stringify(responseData));
       console.log("받아온 videoList를 로컬 스토리지에 저장");
