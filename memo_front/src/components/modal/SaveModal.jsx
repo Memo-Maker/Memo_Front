@@ -168,6 +168,7 @@ const EditButton = styled(AddButton)`
   border: none;
   color: #000;
 `;
+
 const ConfirmButton = styled.button`
   width: 6vw;
   margin: 0 1vw 1vw 1vw;

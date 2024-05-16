@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import axios from "axios"; // axios를 import합니다.
 
 // 공통 URL 정의
-// const BASE_URL = "http://localhost:8080";
-const BASE_URL = "http://taeksin.iptime.org:8081";
+const BASE_URL = "http://localhost:8080";
+// const BASE_URL = "http://taeksin.iptime.org:8081";
 // const FLASK_BASE_URL = "http://localhost:5000";
 const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
 // 카카오 REST API 키와 리다이렉트 URI 설정
@@ -435,20 +435,21 @@ const getCurrentDate = () => {
   // -----------------------------------------------------------------------------
   const saveCategoryToLocal = (categoryName) => {
     console.log(categoryName + "을 로컬에 저장해보겠습니다");
-
+  
     // 기존에 저장된 카테고리 리스트를 가져옴
     const existingCategories = localStorage.getItem("categoryList");
-
-    // 기존에 저장된 카테고리가 없다면 새로운 카테고리로 설정
-    if (!existingCategories) {
-      localStorage.setItem("categoryList", categoryName);
-      console.log(categoryName + "이 로컬에 저장되었습니다.");
-      return;
+  
+    // 기존에 저장된 카테고리가 없다면 새로운 카테고리 배열로 설정
+    let categories = [];
+    if (existingCategories) {
+      categories = JSON.parse(existingCategories);
     }
-
-    // 기존에 저장된 카테고리와 새로운 카테고리를 합침
-    const updatedCategories = existingCategories + ", " + categoryName;
-    localStorage.setItem("categoryList", updatedCategories);
+  
+    // 새로운 카테고리를 배열에 추가
+    categories.push(categoryName);
+  
+    // 배열을 JSON 형식으로 변환하여 로컬 스토리지에 저장
+    localStorage.setItem("categoryList", JSON.stringify(categories));
     console.log(categoryName + "이 로컬에 저장되었습니다.");
   };
 
@@ -880,15 +881,16 @@ const getCurrentDate = () => {
 
       // 응답이 성공적인지 확인합니다.
       if (!response.ok) {
-        toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+        // toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+        console.error("비디오를 카테고리에 추가하는 중 에러 발생 서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
       }
       console.log("🟢카테고리에 저장 성공🟢");
 
       // 응답 데이터를 반환합니다.
       return response;
     } catch (error) {
-      console.error("에러 발생:", error);
-      toast.error("비디오를 카테고리에 추가하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      console.error("비디오를 카테고리에 추가하는 중 에러 발생:", error);
+      // toast.error("비디오를 카테고리에 추가하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
 
