@@ -371,7 +371,8 @@ const getCurrentDate = () => {
       });
 
       if (!response.ok) {
-        toast.error("searchMarkdown함수 처리 중 네트워크 응답에 실패했습니다. 개발자에게 문의하세요.");
+        console.log("searchMarkdown함수 처리 중 네트워크 응답에 실패했습니다. 개발자에게 문의하세요.");
+        // toast.error("searchMarkdown함수 처리 중 네트워크 응답에 실패했습니다. 개발자에게 문의하세요.");
       }
 
       const searchData = await response.json();
@@ -380,7 +381,8 @@ const getCurrentDate = () => {
       return searchData.length > 0 ? searchData : null;
     } catch (error) {
       console.error("에러 발생:", error);
-      toast.error("searchMarkdown 함수 처리 중 입력하신 검색어를 검색하던 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      // toast.error("searchMarkdown 함수 처리 중 입력하신 검색어를 검색하던 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      console.log("searchMarkdown 함수 처리 중 입력하신 검색어를 검색하던 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
 
