@@ -9,11 +9,15 @@ import { useAuth } from "../../context/AuthContext"; // AuthContext import 추�
 
 const Overlay = styled.div`
   position: fixed;
-  top: 100px; /* y 좌푯값 지정 */
-  left: 1450px; /* x 좌푯값 지정 */
+  //top: 100px; /* y 좌푯값 지정 */
+  //left: 1450px; /* x 좌푯값 지정 */
+  top: ${({ top }) => (top)-(top*0.9)}px; /* y 좌푯값 지정 */
+  left: ${({ left }) => (left)-(left*0.3)}px; /* x 좌푯값 지정 */
   z-index: 99;
-  width: 23%;
-  height: 24%;
+  /* width: 23%;
+  height: 24%; */
+  width: ${({ width }) => (width) - (width * 1.15)}px; /* 동적으로 width 조정 */
+  height: ${({ height }) => (height) - (height * 1.2)}px; /* 동적으로 height 조정 */
   background: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: flex-end;
@@ -41,12 +45,16 @@ const UserInfo = styled.div`
   white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 `;
 
-const ProfileBox = styled.div``;
+const ProfileBox = styled.div`
+
+`;
 
 const ProfileImage = styled.img`
-  margin-top: 1vw;
+  margin-top: 1vw;  
   border-radius: 50%;
   cursor: pointer;
+  //width: ${({ width }) => (width) - (width * 0.9)}px; /* 동적으로 width 조정 */
+  //height: ${({ height }) => (height) - (height* 0.9) }px; /* 동적으로 height 조정 */
 `;
 
 const Email = styled.div`
@@ -132,6 +140,27 @@ const UserProfileDropdown = ({ closeModal }) => {
   const modalRef = useRef();
   const overlayRef = useRef();
 
+
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     const memberName = localStorage.getItem("memberName");
     if (memberName) {
@@ -156,6 +185,12 @@ const UserProfileDropdown = ({ closeModal }) => {
     };
   }, [closeModal]);
 
+  
+  useEffect(() => {
+      console.log("top:", windowSize.height);
+      console.log("left:", windowSize.width);
+    }, [windowSize]);
+
   const handleNicknameChange = (e) => {
     setNewNickname(e.target.value);
   };
@@ -173,7 +208,7 @@ const UserProfileDropdown = ({ closeModal }) => {
   };
 
   return (
-    <Overlay ref={overlayRef}>
+    <Overlay ref={overlayRef} top={windowSize.height} left={windowSize.width} width={windowSize.width} height={windowSize.height}>
       <DropdownContainer>
         <InfoBox>
           <UserInfo>
@@ -215,8 +250,9 @@ const UserProfileDropdown = ({ closeModal }) => {
             </Option>
           </Options>
         </InfoBox>
-        <ProfileBox>
-          <ProfileImage src={Profile} alt="Profile" />
+        <ProfileBox >
+          {/* <ProfileImage src={Profile} alt="Profile" width={windowSize.width} height={windowSize.height}/> */}
+          <ProfileImage src={Profile} alt="Profile"/>
         </ProfileBox>
       </DropdownContainer>
       {showModal && (

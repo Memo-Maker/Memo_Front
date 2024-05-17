@@ -10,9 +10,18 @@ const BASE_URL = "http://localhost:8080";
 const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
 // 카카오 REST API 키와 리다이렉트 URI 설정
 
-const AuthContext = createContext();
+const getWindowSize = () => {
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+};
+
+const AuthContext = createContext({windowSize: getWindowSize()});
+
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [windowSize, setWindowSize] = useState(getWindowSize());
   // const [token, setToken] = useState(""); // 토큰 상태 추가
   const navigate = useNavigate(); // useNavigate를 통해 navigate 함수를 가져옵니다.
 
@@ -26,7 +35,17 @@ export const AuthProvider = ({ children }) => {
       // setToken(storedToken); // 저장된 토큰 상태로 설정
       console.log("로컬 스토리지에서 로그인 여부 및 토큰을 가져왔습니다.");
     }
+
+    const handleResize = () => {
+      setWindowSize(getWindowSize());
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+
 
   // -----------------------------------------------------------------------------
   // - Name : getTokenFromLocalStorage
@@ -844,7 +863,7 @@ const getCurrentDate = () => {
     } catch (error) {
       console.error("에러 발생:", error);
       toast.error(
-        "비디오 목록을 가져오는 중 에러가 발생했습니다. 개발자에게 문의하세요."
+        "해당 카테고리가 비어있습니다."
       );
     }
   };
@@ -1052,12 +1071,15 @@ const deleteVideo = async (videoUrl) => {
         deleteCategory,
         deleteVideo,
         changeNickname,
+        getWindowSize,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
+
+
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
