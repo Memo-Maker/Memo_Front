@@ -66,28 +66,37 @@ const RankingVideo = () => {
       rankingData.push(data);
     }
   }
+      // // 클립보드 API가 지원되는지 확인
+      // if (navigator.clipboard && navigator.clipboard.writeText) {
+      //   // 클립보드에 videoUrl 복사
+      //   navigator.clipboard.writeText(videoUrl)
+      //     .then(() => {
+      //       // 클립보드에 복사되었을 때의 처리
+      //       alert(
+      //         `YouTube URL이 클립보드에 복사되었습니다😁\n아래의 입력창에 붙여넣어주세요❗❗`
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       // 복사 실패 시 처리
+      //       console.error("클립보드에 복사 실패:", error);
+      //       alert("클립보드에 복사하는 중 오류가 발생했습니다.");
+      //     });
+      // } else {
+      //   // 클립보드 API가 지원되지 않는 경우
+      //   console.error("클립보드 API가 지원되지 않습니다.");
+      //   alert("클립보드 API가 지원되지 않습니다. 다른 브라우저를 사용해 보세요.");
+      // }
+  
 
   const handleButtonClick = (videoUrl) => {
-    // 클립보드 API가 지원되는지 확인
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      // 클립보드에 videoUrl 복사
-      navigator.clipboard.writeText(videoUrl)
-        .then(() => {
-          // 클립보드에 복사되었을 때의 처리
-          alert(
-            `YouTube URL이 클립보드에 복사되었습니다😁\n아래의 입력창에 붙여넣어주세요❗❗`
-          );
-        })
-        .catch((error) => {
-          // 복사 실패 시 처리
-          console.error("클립보드에 복사 실패:", error);
-          alert("클립보드에 복사하는 중 오류가 발생했습니다.");
-        });
-    } else {
-      // 클립보드 API가 지원되지 않는 경우
-      console.error("클립보드 API가 지원되지 않습니다.");
-      alert("클립보드 API가 지원되지 않습니다. 다른 브라우저를 사용해 보세요.");
-    }
+    const textarea = document.createElement("textarea");
+    textarea.value = videoUrl;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+    alert(`YouTube URL이 복사되었습니다😁\n아래의 입력창에 넣어보세요❗❗\n`);
+    // alert(`YouTube URL이 복사되었습니다😁\n아래의 입력창에 넣어보세요❗❗\n${videoUrl}`);
   };
 
   return (
