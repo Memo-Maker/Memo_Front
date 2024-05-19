@@ -74,13 +74,12 @@ const TextEditorForm = () => {
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-
   useEffect(() => {
     let savedContent = localStorage.getItem("document");
 
     // 만약 가져온 document 값이 null이라면 빈 문자열로 대체합니다.
-    savedContent = (savedContent == null) ? "" : savedContent;
-  
+    savedContent = savedContent == null ? "" : savedContent;
+
     const blocksFromHTML = convertFromHTML(savedContent);
     const state = ContentState.createFromBlockArray(
       blocksFromHTML.contentBlocks,
@@ -88,7 +87,13 @@ const TextEditorForm = () => {
     );
     setEditorState(EditorState.createWithContent(state));
   }, []);
-  
+
+  useEffect(() => {
+    const storedCategory = localStorage.getItem("categoryName");
+    if (storedCategory !== "null") {
+      setSelectedCategory(storedCategory);
+    }
+  }, []);
 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
@@ -107,8 +112,6 @@ const TextEditorForm = () => {
   const handleFolderButtonClick = () => {
     setShowModal(true);
   };
-
-  
 
   // 타자를 칠 때마다 글자 수 업데이트
   const handleTextChange = (editorState) => {
@@ -135,11 +138,11 @@ const TextEditorForm = () => {
               list: { inDropdown: true },
               textAlign: { inDropdown: true },
               link: { inDropdown: true },
-              history: { inDropdown: false },
+              history: { inDropdown: false }
             }}
             placeholder="필기하고 싶은 내용을 정리해주세요."
             localization={{
-              locale: "ko",
+              locale: "ko"
             }}
             editorState={editorState}
             onEditorStateChange={handleTextChange} // 타자를 칠 때마다 호출될 핸들러 변경
@@ -151,8 +154,9 @@ const TextEditorForm = () => {
                 {selectedCategory ? selectedCategory : "폴더 선택"}
               </FolderButton>
               {/* 선택된 카테고리가 있을 때만 표시 */}
-              {selectedCategory && <span>{selectedCategory}</span>}
+              {/* {selectedCategory && <span>에 저장됨</span>} */}
             </FolderContainer>
+
             <TextInfoContainer>
               <TextInfo>
                 글자 수:{" "}
