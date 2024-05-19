@@ -5,7 +5,7 @@ import Logo from "../../assets/images/logo.png";
 import Search from "../../assets/images/search.png";
 import Profile from "../../assets/images/profile.png";
 import ProfileModal from "../modal/ProfileModal"
-import SearchModal from "../modal/SearchModal";
+import SearchModal from "../modal/MobileSearchModal";
 import SideMenu from "../menu/SideMenu"; // SideMenu 컴포넌트 추가
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -28,22 +28,23 @@ const Right = styled.div`
   gap: 3vw;
 `;
 
-const LogoTitle = styled.div`
-  display: flex;
-  align-items: center;
-
-  img {
-    width: 80%;
-    height: auto;
-  }
-`;
-
 const HamburgerButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 2vw;
+  font-size: 5vw;
 `;
+
+const LogoTitle = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 1vh;
+  img {
+    width: 60%;
+    height: auto;
+  }
+`;
+
 
 const SearchButton = styled.div`
   display: flex;
@@ -150,7 +151,6 @@ const handleHamburgerButtonClick = () => {
       </Left>
       <Right>
         <SearchButton onClick={openSearchModal}>
-          {" "}
           {/* SearchButton 클릭 시 검색 모달 열도록 설정 */}
           <img src={Search} alt="Search" />
         </SearchButton>

@@ -35,14 +35,14 @@ function App() {
         <div className="App" style={{ height: `${windowHeight}px` }}>
           <ToastContainer autoClose={1000} />
           <Routes>
-            <Route path="/" element={<><Header /><HomePage /><Footer/></>} />
+            <Route path="/" element={<><HomePage /></>} />
             <Route path="/memory" element={<><Header /><MemoryPage /></>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/mypage" element={<><Header /><MyPage /><Footer/></>} />
             {/* /auth 경로에 대한 라우트 추가 */}
             <Route path="/auth" element={<LoginHandler />} />
-             <Route component={ErrorPage} />
+            <Route component={ErrorPage} />
           </Routes>
         </div>
       </AuthProvider>

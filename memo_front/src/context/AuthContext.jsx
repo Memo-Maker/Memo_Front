@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import axios from "axios"; // axios를 import합니다.
 
 // 공통 URL 정의
-const BASE_URL = "http://localhost:8080";
-// const BASE_URL = "http://taeksin.iptime.org:8081";
+// const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://taeksin.iptime.org:8081";
 // const FLASK_BASE_URL = "http://localhost:5000";
 const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
 // 카카오 REST API 키와 리다이렉트 URI 설정
@@ -252,7 +252,7 @@ export const AuthProvider = ({ children }) => {
   // -----------------------------------------------------------------------------
   const homePageDataGET = async () => {
     try {
-      console.log("백엔드로 TOP3 영상 GET 요청을 보내는 중...");
+      // console.log("백엔드로 TOP3 영상 GET 요청을 보내는 중...");
 
       // 서버에 GET 요청 보내기
       const response = await axios.get(
@@ -260,7 +260,6 @@ export const AuthProvider = ({ children }) => {
       );
 
       if (response.status === 200) {
-        console.log("TOP3 영상을 성공적으로 받았습니다.");
         // 성공적으로 데이터를 받으면 추가 작업 수행
         let data = response.data;
         console.log("TOP3 받은 데이터:", data);
@@ -275,7 +274,7 @@ export const AuthProvider = ({ children }) => {
 
         // 데이터를 변환
         data = replaceUnderscoreWithSpace(data);
-        console.log("변환된 데이터:", data);
+        // console.log("변환된 데이터:", data);
 
         // 받은 데이터를 각각의 영상 정보로 나누어 저장
         if (data.length >= 1) {
@@ -291,8 +290,8 @@ export const AuthProvider = ({ children }) => {
         // 만약 isLoggedIn 상태가 true이면 getMyData 함수 호출
         const loggedIn = localStorage.getItem("isLoggedIn");
         if (loggedIn) {
-          console.log("🔴로그인 O");
-          console.log("getMyData함수를 실행합니다.");
+          // console.log("🔴로그인 O");
+          // console.log("getMyData함수를 실행합니다.");
           await getMyData();
         } else {
           console.log("🔴로그인 X");
@@ -322,7 +321,7 @@ export const AuthProvider = ({ children }) => {
     const memberEmail = getEmailFromLocalStorage();
 
     try {
-      console.log("getMyData 함수 사용자 카테고리 데이터를 가져오는 중...");
+      // console.log("getMyData 함수 사용자 카테고리 데이터를 가져오는 중...");
 
       const response = await fetch(`${BASE_URL}/api/v1/home/send-to-home`, {
         method: "POST",
@@ -341,7 +340,7 @@ export const AuthProvider = ({ children }) => {
 
       const responseData = await response.json();
       console.log(
-        "[ 🔴🔴🔴🔴🔴🔴🔴🔴🔴`받은 닉네임, categoryList ]:",
+        "[받은 닉네임, categoryList ]:",
         responseData
       ); // 받은 데이터를 로그로 출력
 

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import SearchImage from "../../assets/images/search.png";
-import dummyData from "../../assets/dummyDatas/searchDummy.json"; // 더미 데이터 불러오기
 import { useAuth } from "../../context/AuthContext";
 
 const ModalBackdrop = styled.div`
@@ -19,12 +18,13 @@ const ModalBackdrop = styled.div`
 
 const ModalContent = styled.div`
   background-color: #ffffff;
-  width: 30%;
+  width: 70%;
+  max-height: 30rem;
   padding: 2vw;
   border: 0.2vw solid #000000;
   border-radius: 0.5rem;
   overflow-y: auto;
-  max-height: 30rem;
+  
 
   &::-webkit-scrollbar {
     width: 1vw;
@@ -87,11 +87,11 @@ const SearchResultContent = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 1vw;
+  font-size: 3vw;
 `;
 
 const Text = styled.div`
-font-size: 0.8vw;
+font-size: 2.4vw;
 `;
 
 
@@ -123,7 +123,7 @@ const SearchModal = ({ closeModal }) => {
       handleSearch();
     }
   };
-  
+
   const handleResultClick = (videoUrl) => {
     selectVideo(videoUrl); // selectVideo 함수 호출
     closeModal(); // 모달 닫기
@@ -157,7 +157,7 @@ const SearchModal = ({ closeModal }) => {
                     src={item.thumbnailUrl}
                     alt="검색 결과 이미지"
                     style={{
-                      width: "8vw",
+                      width: "30vw",
                       height: "10vh",
                       marginRight: "5%",
                       borderRadius: "1rem",

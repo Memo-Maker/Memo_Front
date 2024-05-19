@@ -1,0 +1,274 @@
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import checkImg from "../../assets/images/check3.png";
+import YoutubeIcon from "../../assets/images/youtubebutton.png";
+import MobileRankVideo from "./MobileRankingVideo";
+
+const CheckImage = styled.img`
+  width: 7%;
+`;
+
+const LoadingIcon = styled(FontAwesomeIcon).attrs({
+  icon: faSpinner,
+  size: "4x",
+  color: "#333"
+})``;
+
+const LoadingText = styled.div`
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2vw;
+  margin-bottom: 2vw;
+`;
+
+const RedText = styled.span`
+  font-size: 1rem;
+  color: red;
+  font-weight: bold;
+`;
+
+const Container = styled.div`
+  width: 100vw;
+  height: 83vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow-y: auto;  // 수직 스크롤 가능하도록 설정
+`;
+
+const Title = styled.h1`
+  color: #000000;
+  font-weight: bold;
+  font-size: 1rem;
+`;
+
+const SubTitle = styled.h5`
+  color: #333;
+  margin-top: -1vw;
+  font-size: 0%.8;
+`;
+
+const Detail = styled.div`
+  /* display: flex;
+  flex-direction: row;
+  gap: 1vw; */
+`;
+
+const InputContainer = styled.div`
+  background-color: #bababa;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 0.7vw 1.5vw 0.7vw 1.5vw;
+  border-radius: 3vw;
+  margin-bottom: 3vh;
+`;
+
+const YoutubeIconImg = styled.img`
+  width: 10vw;
+  background: none;
+  border: 1vw solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  margin-right: 1vw;
+`;
+
+const Input = styled.input`
+  width: 60vw;
+  height: 5vh;
+  padding: 1vw;
+  border: none;
+  border-radius: 0.4vw;
+  background-color: #bababa;
+  font-size: 0.8rem;
+  color: white;
+  ::placeholder {
+    color: white;
+  }
+`;
+
+const Button = styled.button`
+  padding: 0.7vw 1.2vw;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 2vw;
+  margin-left: 1vw;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+
+  &:hover {
+    background-color: ${({ disabled }) => (disabled ? "#000" : "#555")};
+  }
+`;
+
+const Head = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40vh;
+`;
+
+const RankingContainer = styled.div`
+  margin: 8vw 0 2vw 0;
+  padding: 0 2% 0 2%;
+`;
+
+const RankingItemText = styled.div`
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  margin-bottom: 5%;
+`;
+
+const MobileHomePage = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const { GPTSummary, homePageDataGET, checkLoginStatus } = useAuth();
+
+  const handleUpload = async () => {
+    checkLoginStatus();
+    setIsLoading(true);
+    try {
+      // GPTSummary 함수 호출하여 요약 생성
+      await GPTSummary(videoUrl);
+      console.log("영상 링크:", videoUrl); // 링크 콘솔에 출력
+      localStorage.setItem("videoUrl", videoUrl); // 로컬스토리지에 videoUrl 저장
+      setIsCompleted(true);
+    } catch (error) {
+      console.error("GPTSummary 호출 중 에러 발생:", error);
+      // 에러 처리
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    homePageDataGET(); // 홈페이지 데이터 호출
+    localStorage.setItem("document", "");
+  }, []);
+
+  const getTitleContent = () => {
+    if (isLoading) {
+      return (
+        <>
+          <LoadingIcon spin />
+          <LoadingText>
+            Loading...
+            <br />
+            잠깐! 새로고침은 안돼요!
+            <br />
+            <RedText>새로고침 시 영상변환이 초기화되니 유의해주세요.</RedText>
+          </LoadingText>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {isCompleted && <CheckImage src={checkImg} alt="Check" />}
+          <Title>{getTitleText()}</Title>
+          <SubTitle>{getSubTitleText()}</SubTitle>
+        </>
+      );
+    }
+  };
+
+  const getTitleText = () => {
+    if (isLoading) {
+      return "영상을 요약하고 있어요...";
+    } else if (isCompleted) {
+      return "요약을 완료했어요! 이제 필기하러 가볼까요?";
+    } else {
+      return "정리할 영상의 링크를 걸어주세요!";
+    }
+  };
+
+  const getSubTitleText = () => {
+    if (isCompleted) {
+      return "지금 바로 MEMO 하러 가요";
+    } else {
+      return "정리하고 싶은 YouTube 영상의 링크를 붙여넣어주세요.";
+    }
+  };
+
+  const handleStart = () => {
+    navigate("/memory");
+  };
+
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoId, setVideoId] = useState(null);
+  const [isValidUrl, setIsValidUrl] = useState(true); // URL 유효성 상태 추가
+
+  const extractVideoId = (url) => {
+    const regExp =
+      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]{11}).*/;
+    const match = url.match(regExp);
+    return match && match[1] ? match[1] : null;
+  };
+
+  const handleChange = (event) => {
+    const url = event.target.value;
+    setVideoUrl(url);
+    setIsValidUrl(!!extractVideoId(url)); // URL 유효성 검사 및 상태 업데이트
+  };
+
+  const handleLoadVideo = () => {
+    const id = extractVideoId(videoUrl);
+    setVideoId(id);
+  };
+
+  return (
+    <Container>
+      <Head>
+        {getTitleContent()}
+        <Detail>
+          <InputContainer>
+            <YoutubeIconImg
+              src={YoutubeIcon} // 이미지 소스 설정
+              alt="유튜브 아이콘"
+              onClick={handleLoadVideo} // 클릭 이벤트 핸들러
+            />
+            <Input
+              type="text"
+              value={videoUrl}
+              onChange={handleChange}
+              placeholder="https://www.youtube.com/"
+              style={{ borderColor: isValidUrl ? "initial" : "red" }} // 유효하지 않은 URL일 경우 빨간 테두리 표시
+            />
+          </InputContainer>
+        </Detail>
+        {isCompleted ? (
+          <Button primary onClick={handleStart}>
+            Start MEMO
+          </Button>
+        ) : (
+          <Button
+            onClick={isLoading || !isValidUrl ? () => {} : handleUpload} // 유효하지 않은 URL일 경우 버튼 비활성화
+            disabled={isLoading || videoUrl.trim() === "" || !isValidUrl} // 유효하지 않은 URL일 경우 버튼 비활성화
+          >
+            {isLoading ? "Loading.." : "Load Video"}
+          </Button>
+        )}
+      </Head>
+      <body style={{ marginTop: "5vw"}}>
+        <RankingContainer>
+          https://www.youtube.com/watch?v=uAmv-8NUGGc
+          <RankingItemText>
+            ▶ 실시간 사용자가 많이 본 영상이예요..
+          </RankingItemText>
+          <MobileRankVideo />
+        </RankingContainer>
+      </body>
+    </Container>
+  );
+};
+
+export default MobileHomePage;
