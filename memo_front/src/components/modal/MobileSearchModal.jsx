@@ -87,6 +87,7 @@ const SearchResultContent = styled.div`
 `;
 
 const Title = styled.div`
+  margin-bottom: 2%;
   font-size: 3vw;
 `;
 
