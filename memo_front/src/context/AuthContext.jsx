@@ -17,7 +17,7 @@ const getWindowSize = () => {
   };
 };
 
-const AuthContext = createContext({windowSize: getWindowSize()});
+const AuthContext = createContext({ windowSize: getWindowSize() });
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -44,8 +44,6 @@ export const AuthProvider = ({ children }) => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-
 
   // -----------------------------------------------------------------------------
   // - Name : getTokenFromLocalStorage
@@ -91,21 +89,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const checkLoginStatus = () => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn === 'false' || !isLoggedIn) {
-      alert('로그인이 필요합니다.');
-      navigate('/login');
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (isLoggedIn === "false" || !isLoggedIn) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
     }
   };
 
   // 날짜를 "YYYY-MM-DD" 형식으로 반환하는 함수
-const getCurrentDate = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+  const getCurrentDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   // -----------------------------------------------------------------------------
   // - Name : signup
@@ -238,15 +236,15 @@ const getCurrentDate = () => {
     console.log("로그인 정보 및 인증 정보가 로컬 스토리지에서 삭제되었습니다.");
     // ranking1Data가 null이 아니면 다시 저장
     if (ranking1Data) {
-        localStorage.setItem("ranking1", ranking1Data);
-        localStorage.setItem("ranking2", ranking2Data);
-        localStorage.setItem("ranking3", ranking3Data);
+      localStorage.setItem("ranking1", ranking1Data);
+      localStorage.setItem("ranking2", ranking2Data);
+      localStorage.setItem("ranking3", ranking3Data);
     }
-    window.location.reload();
-    
-    navigate("/login");
-};
 
+    navigate("/");
+
+    window.location.reload();
+  };
 
   // -----------------------------------------------------------------------------
   // - Name : homePageDataGET
@@ -269,7 +267,7 @@ const getCurrentDate = () => {
 
         // videoTitle에서 "_"를 " "로 변경하는 함수
         const replaceUnderscoreWithSpace = (data) => {
-          return data.map(video => ({
+          return data.map((video) => ({
             ...video,
             videoTitle: video.videoTitle.replace(/_/g, " ")
           }));
@@ -336,11 +334,16 @@ const getCurrentDate = () => {
 
       if (!response.ok) {
         // toast.error("getMyData함수 실행 중 네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
-        console.log("getMyData함수 실행 중 네트워크 응답이 실패했습니다. 개발자에게 문의하세요.");
+        console.log(
+          "getMyData함수 실행 중 네트워크 응답이 실패했습니다. 개발자에게 문의하세요."
+        );
       }
 
       const responseData = await response.json();
-      console.log("[ 🔴🔴🔴🔴🔴🔴🔴🔴🔴`받은 닉네임, categoryList ]:", responseData); // 받은 데이터를 로그로 출력
+      console.log(
+        "[ 🔴🔴🔴🔴🔴🔴🔴🔴🔴`받은 닉네임, categoryList ]:",
+        responseData
+      ); // 받은 데이터를 로그로 출력
 
       // 이미 있던 categoryList 삭제
       localStorage.removeItem("categoryList");
@@ -391,7 +394,9 @@ const getCurrentDate = () => {
       });
 
       if (!response.ok) {
-        console.log("searchMarkdown함수 처리 중 네트워크 응답에 실패했습니다. 개발자에게 문의하세요.");
+        console.log(
+          "searchMarkdown함수 처리 중 네트워크 응답에 실패했습니다. 개발자에게 문의하세요."
+        );
         // toast.error("searchMarkdown함수 처리 중 네트워크 응답에 실패했습니다. 개발자에게 문의하세요.");
       }
 
@@ -402,7 +407,9 @@ const getCurrentDate = () => {
     } catch (error) {
       console.error("에러 발생:", error);
       // toast.error("searchMarkdown 함수 처리 중 입력하신 검색어를 검색하던 중 에러가 발생했습니다. 개발자에게 문의하세요.");
-      console.log("searchMarkdown 함수 처리 중 입력하신 검색어를 검색하던 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      console.log(
+        "searchMarkdown 함수 처리 중 입력하신 검색어를 검색하던 중 에러가 발생했습니다. 개발자에게 문의하세요."
+      );
     }
   };
 
@@ -454,19 +461,19 @@ const getCurrentDate = () => {
   // -----------------------------------------------------------------------------
   const saveCategoryToLocal = (categoryName) => {
     console.log(categoryName + "을 로컬에 저장해보겠습니다");
-  
+
     // 기존에 저장된 카테고리 리스트를 가져옴
     const existingCategories = localStorage.getItem("categoryList");
-  
+
     // 기존에 저장된 카테고리가 없다면 새로운 카테고리 배열로 설정
     let categories = [];
     if (existingCategories) {
       categories = JSON.parse(existingCategories);
     }
-  
+
     // 새로운 카테고리를 배열에 추가
     categories.push(categoryName);
-  
+
     // 배열을 JSON 형식으로 변환하여 로컬 스토리지에 저장
     localStorage.setItem("categoryList", JSON.stringify(categories));
     console.log(categoryName + "이 로컬에 저장되었습니다.");
@@ -575,7 +582,9 @@ const getCurrentDate = () => {
       });
 
       if (!response.ok) {
-        toast.error("GPTQuery 실행 중 서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+        toast.error(
+          "GPTQuery 실행 중 서버에서 오류를 반환했습니다. 개발자에게 문의하세요."
+        );
       }
 
       const data = await response.json();
@@ -601,11 +610,14 @@ const getCurrentDate = () => {
     // console.log("memberEmail: ", memberEmail, "videoUrl" , videoUrl);
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/video/check-duplicate`, {
-        memberEmail,
-        videoUrl
-      });
-  
+      const response = await axios.post(
+        `${BASE_URL}/api/v1/video/check-duplicate`,
+        {
+          memberEmail,
+          videoUrl
+        }
+      );
+
       console.log("[checkDuplicate 결과]", response.data);
       return response.data; // JSON 형태의 데이터 반환
     } catch (error) {
@@ -626,14 +638,14 @@ const getCurrentDate = () => {
     try {
       // 로컬스토리지에서 userId 값을 가져옴
       const userId = getEmailFromLocalStorage();
-  
+
       console.log("GPT 모델에 summary 요청을 전송하는 중...");
       console.log("[ 대상 URL ] : ", url);
       console.log("[ userId ] : ", userId);
-  
+
       // 중복 확인
       const isDuplicate = await checkDuplicate(userId, url);
-  
+
       if (isDuplicate) {
         // 중복인 경우 selectVideo 함수 호출
         console.log("중복된 URL입니다. selectVideo 함수를 호출합니다.");
@@ -652,27 +664,28 @@ const getCurrentDate = () => {
             userId: userId // userId 값을 함께 전송
           })
         });
-  
+
         if (!response.ok) {
           // toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
           return;
         }
-  
+
         const data = await response.json();
         // console.log("summary 요청 전송 성공!");
         console.log("받은 summary:", data); // 받은 summary를 로그로 출력
-  
+
         // 받은 summary 데이터를 로컬스토리지에 저장
         localStorage.setItem("summary", JSON.stringify(data.summary));
-  
+
         return data;
       }
     } catch (error) {
       console.error("에러 발생:", error);
-      toast.error("summary 요청 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      toast.error(
+        "summary 요청 중 에러가 발생했습니다. 개발자에게 문의하세요."
+      );
     }
   };
-  
 
   // -----------------------------------------------------------------------------
   // - Name: selectVideo
@@ -686,7 +699,7 @@ const getCurrentDate = () => {
     // 로컬 스토리지에서 멤버 이메일과 비디오 URL을 가져옵니다.
     const memberEmail = getEmailFromLocalStorage();
     const videoUrlA = videoUrl;
-    
+
     // 요청할 데이터를 콘솔에 출력합니다.
     console.log("전송할 데이터:", { memberEmail, videoUrl });
 
@@ -715,7 +728,7 @@ const getCurrentDate = () => {
       // 받은 데이터에서 필요한 정보를 추출합니다.
       const { summary, document, videoUrl, documentDate } = responseData.video;
       const { questions } = responseData;
-      var document2 = (document==null)?"":document;
+      var document2 = document == null ? "" : document;
       // 질문과 답변을 추출합니다.
       const extractedQuestions = questions.map((question) => question.question);
       const extractedAnswers = questions.map((question) => question.answer);
@@ -746,9 +759,9 @@ const getCurrentDate = () => {
   // - Output
   //   - 서버에서 받은 응답 데이터
   // -----------------------------------------------------------------------------
-  const duplicateVideo = async (memberEmail ,videoUrl) => {
+  const duplicateVideo = async (memberEmail, videoUrl) => {
     const videoUrlA = videoUrl;
-    
+
     // // 요청할 데이터를 콘솔에 출력합니다.
     // console.log("전송할 데이터:", { memberEmail, videoUrl });
 
@@ -777,7 +790,7 @@ const getCurrentDate = () => {
       // 받은 데이터에서 필요한 정보를 추출합니다.
       const { summary, document, videoUrl, documentDate } = responseData.video;
       const { questions } = responseData;
-      var document2 = (document==null)?"":document;
+      var document2 = document == null ? "" : document;
       // 질문과 답변을 추출합니다.
       const extractedQuestions = questions.map((question) => question.question);
       const extractedAnswers = questions.map((question) => question.answer);
@@ -837,7 +850,7 @@ const getCurrentDate = () => {
 
       // videoTitle에서 "_"를 " "로 변경하는 함수
       const replaceUnderscoreWithSpace = (data) => {
-        return data.map(video => ({
+        return data.map((video) => ({
           ...video,
           videoTitle: video.videoTitle.replace(/_/g, " ")
         }));
@@ -854,7 +867,7 @@ const getCurrentDate = () => {
       localStorage.setItem("videoList", JSON.stringify(responseData));
       console.log("받아온 videoList를 로컬 스토리지에 저장");
       navigate("/mypage"); // 클릭 시 '/mypage'로 이동
-      
+
       // 새로고침
       window.location.reload();
 
@@ -862,9 +875,7 @@ const getCurrentDate = () => {
       return responseData;
     } catch (error) {
       console.error("에러 발생:", error);
-      toast.error(
-        "해당 카테고리가 비어있습니다."
-      );
+      toast.error("해당 카테고리가 비어있습니다.");
     }
   };
 
@@ -901,7 +912,9 @@ const getCurrentDate = () => {
       // 응답이 성공적인지 확인합니다.
       if (!response.ok) {
         // toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
-        console.error("비디오를 카테고리에 추가하는 중 에러 발생 서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+        console.error(
+          "비디오를 카테고리에 추가하는 중 에러 발생 서버에서 오류를 반환했습니다. 개발자에게 문의하세요."
+        );
       }
       console.log("🟢카테고리에 저장 성공🟢");
 
@@ -917,7 +930,7 @@ const getCurrentDate = () => {
     try {
       // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
       const memberEmail = getEmailFromLocalStorage();
-      
+
       // PUT 요청 보내기
       const response = await fetch(`${BASE_URL}/api/v1/category/update`, {
         method: "PUT",
@@ -930,90 +943,106 @@ const getCurrentDate = () => {
           newCategoryName
         })
       });
-  
+
       // 응답 확인
       if (!response.ok) {
         toast.error("서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
       }
-  
+
       console.log("🟢카테고리 이름 업데이트 성공🟢");
-  
+
       // 응답 데이터를 반환합니다.
       return response;
     } catch (error) {
       console.error("에러 발생:", error);
-      toast.error("카테고리 이름을 업데이트하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      toast.error(
+        "카테고리 이름을 업데이트하는 중 에러가 발생했습니다. 개발자에게 문의하세요."
+      );
     }
   };
-  
 
   const deleteCategory = async (categoryName) => {
     try {
       // 로컬 스토리지에서 멤버 이메일을 가져옵니다.
       const memberEmail = getEmailFromLocalStorage();
-      
+
       // DELETE 요청 보내기
-      const response = await fetch(`${BASE_URL}/api/v1/category/delete-category`, {
+      const response = await fetch(
+        `${BASE_URL}/api/v1/category/delete-category`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            memberEmail,
+            categoryName
+          })
+        }
+      );
+
+      // 응답 확인
+      if (!response.ok) {
+        toast.error(
+          "deleteCategory 서버에서 오류를 반환했습니다. 개발자에게 문의하세요."
+        );
+      }
+
+      console.log("🟢", categoryName, "카테고리 삭제 성공🟢");
+
+      // 응답 데이터를 반환합니다.
+      return response;
+    } catch (error) {
+      console.error("에러 발생:", error);
+      toast.error(
+        "카테고리를 삭제하는 중 에러가 발생했습니다. 개발자에게 문의하세요."
+      );
+    }
+  };
+
+  // 영상 삭제 함수
+  const deleteVideo = async (videoUrl) => {
+    try {
+      // 로컬 스토리지에서 memberEmail 가져오기
+      const memberEmail = getEmailFromLocalStorage();
+      const videoList = JSON.parse(localStorage.getItem("videoList")) || [];
+
+      // DELETE 요청 보내기
+      const response = await fetch(`${BASE_URL}/api/v1/video/delete-video`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
           memberEmail,
-          categoryName
+          videoUrl
         })
       });
-  
-      // 응답 확인
-      if (!response.ok) {
-        toast.error("deleteCategory 서버에서 오류를 반환했습니다. 개발자에게 문의하세요.");
+
+      if (response.status === 200) {
+        console.log("영상을 스프링 서버에서 성공적으로 삭제했습니다.");
+        alert("영상이 성공적으로 삭제되었습니다.");
+        // videoList에서 videoUrl에 해당하는 항목 삭제
+        const updatedVideoList = videoList.filter(
+          (video) => video.videoUrl !== videoUrl
+        );
+        localStorage.setItem("videoList", JSON.stringify(updatedVideoList));
+        window.location.reload();
+      } else {
+        console.error(
+          `스프링 서버에서 영상을 삭제하는 중 오류가 발생했습니다. 응답 상태코드: ${response.status}`
+        );
       }
-  
-      console.log("🟢", categoryName, "카테고리 삭제 성공🟢");
-  
-      // 응답 데이터를 반환합니다.
-      return response;
     } catch (error) {
-      console.error("에러 발생:", error);
-      toast.error("카테고리를 삭제하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
+      console.error(
+        `스프링 서버에 DELETE 요청 중 오류가 발생했습니다: ${error}`
+      );
+      toast.error(
+        "영상을 삭제하는 중 에러가 발생했습니다. 개발자에게 문의하세요."
+      );
     }
   };
 
-  // 영상 삭제 함수
-const deleteVideo = async (videoUrl) => {
-  try {
-    // 로컬 스토리지에서 memberEmail 가져오기
-    const memberEmail = getEmailFromLocalStorage();
-    const videoList = JSON.parse(localStorage.getItem("videoList")) || [];
-
-    // DELETE 요청 보내기
-    const response = await fetch(`${BASE_URL}/api/v1/video/delete-video`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        memberEmail,
-        videoUrl
-      })
-    });
-
-    if (response.status === 200) {
-      console.log("영상을 스프링 서버에서 성공적으로 삭제했습니다.");
-      alert("영상이 성공적으로 삭제되었습니다.");
-      // videoList에서 videoUrl에 해당하는 항목 삭제
-      const updatedVideoList = videoList.filter(video => video.videoUrl !== videoUrl);
-      localStorage.setItem("videoList", JSON.stringify(updatedVideoList));
-      window.location.reload();
-    } else {
-      console.error(`스프링 서버에서 영상을 삭제하는 중 오류가 발생했습니다. 응답 상태코드: ${response.status}`);
-    }
-  } catch (error) {
-    console.error(`스프링 서버에 DELETE 요청 중 오류가 발생했습니다: ${error}`);
-    toast.error("영상을 삭제하는 중 에러가 발생했습니다. 개발자에게 문의하세요.");
-  }
-  };
-  
   const changeNickname = async (newNickname) => {
     try {
       console.log("[ 변경할 닉네임 ]\n", newNickname);
@@ -1023,12 +1052,12 @@ const deleteVideo = async (videoUrl) => {
       const response = await fetch(`${BASE_URL}/api/v1/user/update-name`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           memberEmail: userEmail,
-          newName : newNickname
-        }),
+          newName: newNickname
+        })
       });
 
       if (response.ok) {
@@ -1071,15 +1100,13 @@ const deleteVideo = async (videoUrl) => {
         deleteCategory,
         deleteVideo,
         changeNickname,
-        getWindowSize,
+        getWindowSize
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
-
-
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
