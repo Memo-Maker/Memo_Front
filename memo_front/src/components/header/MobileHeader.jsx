@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Search from "../../assets/images/search.png";
 import Profile from "../../assets/images/profile.png";
-import ProfileModal from "../modal/ProfileModal"
+import ProfileModal from "../modal/MobileProfileModal"
 import SearchModal from "../modal/MobileSearchModal";
-import SideMenu from "../menu/SideMenu"; // SideMenu 컴포넌트 추가
+import SideMenu from "../menu/MobileSideMenu"; // SideMenu 컴포넌트 추가
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
