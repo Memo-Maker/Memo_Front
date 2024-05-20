@@ -173,7 +173,7 @@ const handleHamburgerButtonClick = () => {
         ) : (
           <ProfileTitle>
             <Link to="/login">
-              <Button>로그인하기</Button>
+              <Button>로그인</Button>
             </Link>
           </ProfileTitle>
         )}
