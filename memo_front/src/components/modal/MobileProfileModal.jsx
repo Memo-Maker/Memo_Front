@@ -31,14 +31,20 @@ const DropdownContainer = styled.div`
   padding: 10px;
 `;
 
-const InfoBox = styled.div``;
+const InfoBox = styled.div`
+  /* background-color: aquamarine; */
+  width: 100%;
+`;
 
 
 
-const ProfileBox = styled.div``;
+const ProfileBox = styled.div`
+/* background-color: beige; */
+width:50%;;
+`;
 
 const ProfileImage = styled.img`
-  width: 50%;
+  width: 100%;
   margin-top: 1vw;  
   border-radius: 50%;
 `;
