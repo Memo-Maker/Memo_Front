@@ -261,7 +261,7 @@ const MobileHomePage = () => {
       <body style={{ marginTop: "5vw"}}>
         <RankingContainer>
           <RankingItemText>
-            ▶ 실시간 사용자가 많이 본 영상이예요..
+          ▶ 실시간! 사용자가 많이 본 영상
           </RankingItemText>
           <MobileRankVideo />
         </RankingContainer>

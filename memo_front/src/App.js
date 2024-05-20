@@ -35,8 +35,8 @@ function App() {
         <div className="App" style={{ height: `${windowHeight}px` }}>
           <ToastContainer autoClose={1000} />
           <Routes>
-            <Route path="/" element={<><HomePage /></>} />
-            <Route path="/memory" element={<><Header /><MemoryPage /></>} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/memory" element={<MemoryPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/mypage" element={<><Header /><MyPage /><Footer/></>} />
