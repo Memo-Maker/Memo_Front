@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Search from "../../assets/images/search.png";
 import Profile from "../../assets/images/profile.png";
-import ProfileModal from "../modal/MobileProfileModal"
+import ProfileModal from "../modal/MobileProfileModal";
 import SearchModal from "../modal/MobileSearchModal";
 import SideMenu from "../menu/MobileSideMenu"; // SideMenu 컴포넌트 추가
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,7 @@ const Left = styled.div`
 `;
 
 const Right = styled.div`
+  width: 30%;
   display: flex;
   gap: 3vw;
 `;
@@ -45,7 +46,6 @@ const LogoTitle = styled.div`
   }
 `;
 
-
 const SearchButton = styled.div`
   display: flex;
   align-items: center;
@@ -53,6 +53,8 @@ const SearchButton = styled.div`
 `;
 
 const ProfileTitle = styled.div`
+  width: 100%;
+  /* background-color: blue; */
   display: flex;
   align-items: center;
   position: relative; /* 상대적인 위치 설정 */
@@ -92,7 +94,7 @@ function Header() {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false); // 사이드메뉴 열림/닫힘 상태 추가
   const { checkLoginStatus } = useAuth();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // 페이지 로드 시 로컬 스토리지에서 로그인 여부를 확인하여 상태를 설정합니다.
     const isLoggedIn = localStorage.getItem("isLoggedIn");
@@ -114,7 +116,7 @@ function Header() {
     checkLoginStatus();
     if (localStorage.getItem("isLoggedIn") === "true") {
       setIsSearchModalOpen(true);
-    } 
+    }
   };
 
   // 검색 모달 닫기 핸들러 함수
@@ -123,18 +125,18 @@ function Header() {
   };
 
   //새로고침
-const handleRefresh = () => {
-  navigate("/");
-  window.location.reload();
-};
+  const handleRefresh = () => {
+    navigate("/");
+    window.location.reload();
+  };
 
-// 햄버거 버튼 클릭 핸들러 함수
-const handleHamburgerButtonClick = () => {
-  checkLoginStatus();
-  if (localStorage.getItem("isLoggedIn") === "true") {
-    setIsSideMenuOpen(!isSideMenuOpen);
-  }
-};
+  // 햄버거 버튼 클릭 핸들러 함수
+  const handleHamburgerButtonClick = () => {
+    checkLoginStatus();
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      setIsSideMenuOpen(!isSideMenuOpen);
+    }
+  };
 
   return (
     <HeaderContainer>
