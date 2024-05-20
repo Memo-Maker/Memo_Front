@@ -260,7 +260,6 @@ const MobileHomePage = () => {
       </Head>
       <body style={{ marginTop: "5vw"}}>
         <RankingContainer>
-          https://www.youtube.com/watch?v=uAmv-8NUGGc
           <RankingItemText>
             ▶ 실시간 사용자가 많이 본 영상이예요..
           </RankingItemText>
