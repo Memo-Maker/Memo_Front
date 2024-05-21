@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../assets/images/logo.png";
-import Banner from "../assets/images/Banner.png";
-import { useAuth } from "../context/AuthContext"; // AuthContext import 추가
+import { useAuth } from "../context/AuthContext";
+import BannerSlider from "../components/login/BannerSlider";
 
 const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
 const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
@@ -27,11 +27,6 @@ const RightSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const BannerImg = styled.div`
-  width: 70%;
-  border-radius: 0.3vw;
 `;
 
 const LoginForm = styled.form`
@@ -203,9 +198,7 @@ const LoginPage = () => {
       </LeftSection>
 
       <RightSection>
-        <BannerImg>
-          <img src={Banner} alt="Banner를 부를 수 없어요!" />
-        </BannerImg>
+       <BannerSlider/>
       </RightSection>
     </Container>
   );

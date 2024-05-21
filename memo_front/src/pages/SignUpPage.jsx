@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom"; // Link import 추가
 import Logo from "../assets/images/logo.png";
-import Banner from "../assets/images/Banner.png";
+import BannerSlider from "../components/login/BannerSlider";
 import { useAuth } from "../context/AuthContext"; // AuthContext import 추가
 
 const Container = styled.div`
@@ -24,11 +24,6 @@ const RightSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const BannerImg = styled.div`
-  width: 70%;
-  border-radius: 0.3vw;
 `;
 
 const SignupForm = styled.form`
@@ -147,9 +142,7 @@ const SignupPage = () => {
       </LeftSection>
 
       <RightSection>
-        <BannerImg>
-          <img src={Banner} alt="Banner를 부를 수 없어요!" />
-        </BannerImg>
+        <BannerSlider />
       </RightSection>
     </Container>
   );

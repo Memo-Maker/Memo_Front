@@ -34,16 +34,16 @@ const Footer = () => {
   return (
     <FooterContainer>
       <LeftSection>
-        <Link href="#">회사소개</Link>
-        <Link href="#">이용약관</Link>
+        <Link href="#">한성대학교</Link>
+        <Link href="#">캡스톤</Link>
         <Link href="#">개인정보처리방침</Link>
-        <Link href="#">청소년보호정책</Link>
+        <Link href="#">이용약관</Link>
         <Link href="#">광고문의</Link>
       </LeftSection>
       <RightSection>
         <CopyRight>© 2024 HSU MEMO </CopyRight>
         <CopyRight>2024.02.17 ~ All Rights Reserved</CopyRight>
-        <CopyRight>고객센터: (주)Maker</CopyRight>
+        <CopyRight>(팀)Maker</CopyRight>
       </RightSection>
     </FooterContainer>
   );

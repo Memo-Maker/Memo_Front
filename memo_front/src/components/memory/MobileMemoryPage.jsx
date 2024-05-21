@@ -3,7 +3,7 @@ import styled from "styled-components";
 import YouTube from "react-youtube";
 import MobileTextEditorForm from "../texteditor/MobileTextEditorForm";
 import Summary from "./MobileSummary";
-import ChatIcon from "../../assets/images/chat.png";
+import ChatIcon from "../../assets/images/GPTIcon.png";
 import Modal from "./Chatgpt";
 
 const Layout = styled.div`
