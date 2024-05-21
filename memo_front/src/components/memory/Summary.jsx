@@ -1,31 +1,42 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import Pencil from "../../assets/images/pencil.png";
 
+// GlobalStyle을 정의하여 Google Fonts를 불러옵니다.
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+
+  body {
+    font-family: 'Noto Sans', sans-serif;
+  }
+`;
+
 const SummaryBox = styled.div`
-width: 95%;
+  width: 95%;
   padding: 1vw;
   background-color: #f0f0f0;
   border-radius: 1vw;
   margin-top: 1vw;
+  font-family: "Noto Sans", sans-serif; /* 폰트 적용 */
 `;
 
 const TextContainer = styled.div`
   display: flex;
-align-items: flex-start;
-  margin-top:0.7vw;
+  align-items: flex-start;
+  margin-top: 0.7vw;
 `;
 
 const PencilImage = styled.img`
   width: 1.5vw;
   height: auto;
-  margin-right: 0.5vw; 
+  margin-right: 0.5vw;
 `;
 
 const Text = styled.div`
-  color: #787878;
+  color: #000000;
   flex: 1;
   position: relative;
+  font-family: "Noto Sans", sans-serif; /* 폰트 적용 */
 `;
 
 const Summary = () => {
@@ -46,7 +57,12 @@ const Summary = () => {
     ));
   };
 
-  return <SummaryBox>{renderSentences(sentences)}</SummaryBox>;
+  return (
+    <>
+      <GlobalStyle />
+      <SummaryBox>{renderSentences(sentences)}</SummaryBox>
+    </>
+  );
 };
 
 export default Summary;

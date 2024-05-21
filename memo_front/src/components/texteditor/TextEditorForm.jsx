@@ -7,6 +7,7 @@ import { stateToHTML } from "draft-js-export-html";
 import { useAuth } from "../../context/AuthContext";
 import SaveModal from "../modal/SaveModal"; // SaveModal을 불러옵니다.
 
+
 const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -137,12 +138,14 @@ const TextEditorForm = () => {
               inline: { inDropdown: true },
               list: { inDropdown: true },
               textAlign: { inDropdown: true },
-              link: { inDropdown: true },
-              history: { inDropdown: false }
+              history: { inDropdown: false },
+              // 폰트 기능 비활성화
+              fontFamily: false,
+              fontSize: false,
             }}
             placeholder="필기하고 싶은 내용을 정리해주세요."
             localization={{
-              locale: "ko"
+              locale: "ko",
             }}
             editorState={editorState}
             onEditorStateChange={handleTextChange} // 타자를 칠 때마다 호출될 핸들러 변경
@@ -151,7 +154,9 @@ const TextEditorForm = () => {
             <FolderContainer>
               {/* FolderButton의 텍스트를 selectedCategory로 조건부 렌더링 */}
               <FolderButton onClick={handleFolderButtonClick}>
-                {selectedCategory ? selectedCategory : "폴더 선택"}
+                {selectedCategory || selectedCategory === "최근 본 영상"
+                  ? selectedCategory
+                  : "폴더 선택"}
               </FolderButton>
               {/* 선택된 카테고리가 있을 때만 표시 */}
               {/* {selectedCategory && <span>에 저장됨</span>} */}

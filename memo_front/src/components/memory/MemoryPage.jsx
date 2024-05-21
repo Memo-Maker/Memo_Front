@@ -3,13 +3,12 @@ import styled from "styled-components";
 import YouTube from "react-youtube";
 import TextEditorForm from "../texteditor/TextEditorForm";
 import Summary from "./Summary";
-import ChatIcon from "../../assets/images/chat.png";
+import ChatIcon from "../../assets/images/GPTIcon.png";
 import Modal from "./Chatgpt";
 
 const Layout = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
   flex-direction: row;
   align-items: center;
   background-color: #ffffff;
@@ -32,7 +31,6 @@ const Button = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   padding: 1vw;
-
   background-image: url(${ChatIcon});
   background-size: cover;
   background-repeat: no-repeat;
@@ -41,13 +39,9 @@ const Button = styled.button`
   height: 3vw;
 
   position: relative;
-  top: -1vh;
+  top: -1vw;
   left: -4vw;
   transform: translateY(-50%);
-
-  &:hover {
-    background-color: #838383;
-  }
 `;
 
 const DateText = styled.p`
