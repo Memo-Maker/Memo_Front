@@ -151,7 +151,7 @@ const TextEditorForm = () => {
             <FolderContainer>
               {/* FolderButton의 텍스트를 selectedCategory로 조건부 렌더링 */}
               <FolderButton onClick={handleFolderButtonClick}>
-                {selectedCategory ? selectedCategory : "폴더 선택"}
+              {(selectedCategory || selectedCategory==="최근 본 영상") ? selectedCategory : "폴더 선택"}
               </FolderButton>
               {/* 선택된 카테고리가 있을 때만 표시 */}
               {/* {selectedCategory && <span>에 저장됨</span>} */}

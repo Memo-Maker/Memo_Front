@@ -208,7 +208,7 @@ export const AuthProvider = ({ children }) => {
         console.log("[ token ]\n" + jwtToken);
 
         navigate("/");
-        // window.location.reload();
+        window.location.reload();
       } else {
         console.error("로그인 실패:", response.statusText);
         // 로그인 실패 시 토스트 메시지 표시
@@ -351,9 +351,9 @@ export const AuthProvider = ({ children }) => {
       responseData.unshift({ categoryName: "최근 본 영상" });
 
       // 각 categoryName을 새로운 카테고리 목록에 추가합니다.
-      const newCategoryList = responseData.map(
-        (category) => category.categoryName
-      );
+      const newCategoryList = responseData
+        .filter(category => category && category.categoryName) // null 값과 categoryName이 없는 항목 제외
+        .map(category => category.categoryName);
 
       // 새로운 카테고리 목록을 로컬스토리지에 저장합니다.
       localStorage.setItem("categoryList", JSON.stringify(newCategoryList));
@@ -368,6 +368,7 @@ export const AuthProvider = ({ children }) => {
       // toast.error("getMyData함수 실행 중 에러가 발생했습니다. 개발자에게 문의하세요.");
     }
   };
+
 
   // -----------------------------------------------------------------------------
   // - Name : searchMarkdown

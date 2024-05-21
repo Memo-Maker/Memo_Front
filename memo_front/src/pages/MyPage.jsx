@@ -238,7 +238,7 @@ const MyPage = () => {
 
   return (
     <>
-      <MypageContainer>{categoryName} 카테고리의 영상</MypageContainer>
+      <MypageContainer>{categoryName==="null" ?  "최근 본 영상": categoryName + " 카테고리 영상"}</MypageContainer>
       <GridContainer>
         {currentData.map((video, index) => (
           <StyledButton
