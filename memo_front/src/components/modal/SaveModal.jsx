@@ -148,7 +148,7 @@ const AddButton = styled.button`
   font-weight: bold;
   font-size: 0.8vw;
   cursor: pointer;
-  background-color: ${({ disabled }) => (disabled ? "#c2c2c2" : "#fff")};
+  background-color: ${({ disabled }) => (disabled ? "#f0f0f0" : "#f0f0f0")};
 
   img {
     width: 2vw;
