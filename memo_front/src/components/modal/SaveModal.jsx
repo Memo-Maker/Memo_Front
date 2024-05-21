@@ -22,7 +22,6 @@ const ModalBackdrop = styled.div`
 const ModalWrapper = styled.div`
   position: fixed;
   width: 40%;
-  //height: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -149,6 +148,7 @@ const AddButton = styled.button`
   font-weight: bold;
   font-size: 0.8vw;
   cursor: pointer;
+  background-color: ${({ disabled }) => (disabled ? "#c2c2c2" : "#fff")};
 
   img {
     width: 2vw;
@@ -156,12 +156,15 @@ const AddButton = styled.button`
 
   &:not(:has(img)) {
     &:hover {
-      background-color: #c2bd80;
+      background-color: ${({ disabled }) => (disabled ? "#c2c2c2" : "#c2bd80")};
     }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 `;
 
-// EditButton 스타일링
 const EditButton = styled(AddButton)`
   margin-left: 1vw;
   background-color: #ffc107;
@@ -210,7 +213,7 @@ const SaveModal = ({ closeModal }) => {
     saveCategoryToDB,
     saveVideoToCategory,
     updateCategoryName,
-    deleteCategory
+    deleteCategory,
   } = useAuth();
 
   const handleAddContent = () => {
@@ -220,12 +223,12 @@ const SaveModal = ({ closeModal }) => {
       handleAddNewContent();
     }
   };
-  
+
   const handleEditContent = () => {
     if (selectedCategory) {
       // 수정 전 카테고리명과 수정 후 카테고리명을 updateCategoryName 함수에 전달하여 호출
       updateCategoryName(selectedCategory, content);
-  
+
       const updatedCategoryList = categoryList.map((category) =>
         category === selectedCategory ? content : category
       );
@@ -238,7 +241,7 @@ const SaveModal = ({ closeModal }) => {
       setIsEditMode(false);
     }
   };
-  
+
   const handleAddNewContent = () => {
     saveCategoryToDB(content);
     saveCategoryToLocal(content);
@@ -345,7 +348,11 @@ const SaveModal = ({ closeModal }) => {
             {isEditMode ? (
               <EditButton onClick={handleAddContent}>수정</EditButton>
             ) : (
-              <AddButton onClick={handleAddContent} hasImage={!isEditMode}>
+              <AddButton
+                onClick={handleAddContent}
+                hasImage={!isEditMode}
+                disabled={!content.trim()}
+              >
                 <img src={addImg} alt="Add" />
               </AddButton>
             )}
