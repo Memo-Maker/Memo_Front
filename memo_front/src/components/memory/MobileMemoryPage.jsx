@@ -12,8 +12,7 @@ const Layout = styled.div`
   height: 90%;
   flex-direction: column;
   align-items: flex-start;
-  /* background-color: #ffffff; */
-  background-color: #ffc2c2;
+  background-color: #ffffff;
   justify-content: center;
   gap: 2vw;
 `;
@@ -25,7 +24,7 @@ const Container = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #ff9a9a;
+  background-color: #ffffff;
 `;
 
 // GPT 버튼

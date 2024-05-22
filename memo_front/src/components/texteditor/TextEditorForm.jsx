@@ -64,6 +64,7 @@ const TextEditorForm = () => {
       setSelectedCategory(storedCategory);
     }
   }, []);
+  
   const handleSaveContent = () => {
     saveContentToLocal(htmlContent);
     saveMarkdownToServer(htmlContent);
@@ -75,6 +76,7 @@ const TextEditorForm = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+
   return (
     <>
       <EditorContainer>
