@@ -1,5 +1,3 @@
-
-// Edit.jsx
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Editor } from '@tiptap/core';
@@ -55,6 +53,7 @@ const Button = styled.button`
     opacity: 0.5;
   }
 `;
+
 const EditorField = styled.div`
   padding: 8px;
   min-height: 280px;
@@ -63,16 +62,39 @@ const EditorField = styled.div`
   .tiptap ol p {
     display: inline;
   }
+  
   .tiptap p.is-editor-empty:first-child::before {
-    content: attr(placeholder);
-    float: left;
-    height: 10;
-    color: #0e5ce2;
-    background-color: #4c00ff;
+    content: attr(placeholder); // placeholder 속성의 값을 콘텐츠로 표시
+    float: left; // 왼쪽으로 정렬
+    width: 100%; // 너비 설정
+    height: 20vh; // 높이 설정
+    background-color: #582fff; // 배경색 설정
+  }
+
+  .tiptap p.is-editor-empty {
+    border: 1px solid #000; // 테두리 설정
+    background-color: #f0f0f0; // 배경색 설정
+  }
+
+  .tiptap p.is-editor-empty:hover::before { /* 마우스 호버시 효과 */
+    border: 1px solid #000; // 호버 시 테두리 설정
+    width: 100%; // 호버 시 너비 설정
+    height: 20vh; // 호버 시 높이 
+    background-color: #a4a4a4; // 배경색 설정
   }
 `;
+
+const HoverEffect = styled.div`
+  .text-gray-600.bg-blue-100:hover {
+    border: 2px solid transparent; /* 테두리 설정을 2px로 변경 */
+    transition: border-color 0.2s; /* 테두리 색상 전환 애니메이션 */
+    border-color: #000; /* 마우스 호버 시 테두리 색상 변경 */
+  }
+`;
+
 const Edit = ({ setHtmlContent, initialContent }) => {
   const editorRef = useRef(null);
+  
   useEffect(() => {
     if (!editorRef.current) return;
 
@@ -85,18 +107,13 @@ const Edit = ({ setHtmlContent, initialContent }) => {
           width: '100%',
           height: '100%'
         }),
-        StarterKit.configure({
-
-        }),
+        StarterKit.configure({}),
         Paragraph.configure({
           HTMLAttributes: {
-          class: 'text-gray-600 bg-blue-100', // 배경색을 추가한 클래스
-          style: 'width: 20vw; height: 2vh; line-height: 1.2; margin: 0; padding: 0.2vw; border: 1px solid transparent;', // 너비, 높이, 줄간격, 여백 및 테두리 설정
+            class: 'text-gray-600 bg-blue-100',
+            style: 'width: 20vw; height: 2vh; line-height: 1.2; margin: 0; padding: 0.2vw; border: 1px solid transparent;',
           },
-          })
-        
-        
-        ,
+        }),
         Bold.configure({
           HTMLAttributes: {
             class: 'font-bold',
@@ -125,11 +142,12 @@ const Edit = ({ setHtmlContent, initialContent }) => {
           },
         }),
       ],
-      content: initialContent, // 초기 콘텐츠 설정
+      content: initialContent,
       onUpdate({ editor }) {
-        setHtmlContent(editor.getHTML()); // 콘텐츠가 업데이트될 때마다 콜백 호출
+        setHtmlContent(editor.getHTML());
       },
     });
+
     const actions = [
       { id: 'data-hs-editor-bold', fn: () => editor.chain().focus().toggleBold().run() },
       { id: 'data-hs-editor-italic', fn: () => editor.chain().focus().toggleItalic().run() },
@@ -145,13 +163,26 @@ const Edit = ({ setHtmlContent, initialContent }) => {
       { id: 'data-hs-editor-blockquote', fn: () => editor.chain().focus().toggleBlockquote().run() },
       { id: 'data-hs-editor-code', fn: () => editor.chain().focus().toggleCode().run() },
     ];
+
     actions.forEach(({ id, fn }) => {
       const button = document.querySelector(`[${id}]`);
       if (button) {
         button.addEventListener('click', fn);
       }
     });
-    return () => editor.destroy();
+
+    const handleClick = (e) => {
+      if (e.target === editorRef.current) {
+        editor.chain().focus().run();
+      }
+    };
+
+    editorRef.current.addEventListener('click', handleClick);
+
+    return () => {
+      editor.destroy();
+      editorRef.current.removeEventListener('click', handleClick);
+    };
   }, [editorRef.current]);
 
   return (
@@ -169,56 +200,47 @@ const Edit = ({ setHtmlContent, initialContent }) => {
         </Button>
         <Button type="button" data-hs-editor-underline>
           <svg width="20" height="20" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 5V11C16 13.2091 14.2091 15 12 15V15C9.79086 15 8 13.2091 8 11V5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M6 19L18 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M8 5V10C8 12.2091 9.79086 14 12 14V14C14.2091 14 16 12.2091 16 10V5M6 19H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
         </Button>
         <Button type="button" data-hs-editor-strike>
-          <svg width="20" height="20" viewBox="0 0 24 24" strokeWidth="1.5" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 12L21 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M16.2857 3L10.068 3C7.82129 3 6 4.82129 6 7.06797C6 8.81895 7.12044 10.3735 8.78157 10.9272L12 12M6 21H13.932C16.1787 21 18 19.1787 18 16.932C18 16.2409 17.8255 15.5804 17.512 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+          <svg width="20" height="20" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 9.35484C18 7.60435 16.2091 6.19355 14 6.19355M10 6.19355C8.34315 6.19355 7 7.35034 7 8.77419C7 11.5 10 12 12 12C14 12 17 12.5 17 15.2258C17 16.6497 15.6569 17.8065 14 17.8065M10 17.8065C7.79086 17.8065 6 16.3957 6 14.6452" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M5 12L19 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
         </Button>
         <Button type="button" data-hs-editor-link>
           <svg width="20" height="20" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 11.9976C14 9.5059 11.683 7 8.85714 7C8.37089 7 7.88757 7.07803 7.42345 7.22794M9.70711 14.2929C8.42122 15.5788 6.51197 15.5788 5.22608 14.2929C3.94019 13.007 3.94019 11.0977 5.22608 9.81185M7.42345 7.22794C8.05672 6.91826 8.81836 6.7938 9.60773 7.03597M16.5848 9.00991C17.4703 9.35158 18.1074 10.0772 18.3535 10.9659M9.70711 14.2929C10.5118 15.0976 11.7386 15.2912 12.7071 14.7929M19.7683 13.9802C20.0564 13.2058 20.0576 12.2743 19.7684 11.4999C19.3013 10.1605 18.0763 9.23631 16.6317 9.00991M12.7071 14.7929C12.0433 15.1257 11.3198 15.1914 10.6464 14.9999" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M10 14C10.6215 14.6223 11.4307 15 12.3 15C13.1693 15 13.9785 14.6223 14.6 14L16.9 11.7C17.5215 11.0777 17.9 10.2685 17.9 9.39999C17.9 8.53151 17.5215 7.7223 16.9 7.09999C16.2777 6.47848 15.4685 6.09999 14.6 6.09999C13.7307 6.09999 12.9215 6.47848 12.3 7.09999L11.8 7.59999" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M14 10C13.3785 9.37769 12.5693 9 11.7 9C10.8307 9 10.0215 9.37769 9.40002 10L7.10002 12.3C6.47851 12.9223 6.10002 13.7315 6.10002 14.6C6.10002 15.4685 6.47851 16.2777 7.10002 16.9C7.72154 17.5215 8.53074 17.9 9.40002 17.9C10.2693 17.9 11.0785 17.5215 11.7 16.9L12.2 16.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
         </Button>
         <Button type="button" data-hs-editor-ol>
           <svg width="20" height="20" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 6L21 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M8 12L21 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M8 18L21 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M3 7H5L3 9H5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M3.5 17L4 16C4.5 15 3.5 14 3 14C2.5 14 2 14.5 2 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M3 11H4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M10 6H20M10 12H20M10 18H20M4 5.5L5 5V10M5 10H3M3 10V8.5M5 10V11M4 14H5.5C6 14 7 14 7 15C7 16 6 16 5.5 16H4.5M4 16V18M5 18V17.5M5 18C5 18 6 18 6 18.5C6 19 5.5 19.5 5 19.5C4.5 19.5 4 19 4 18.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
         </Button>
         <Button type="button" data-hs-editor-ul>
           <svg width="20" height="20" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 6L21 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M8 12L21 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M8 18L21 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M3 6.5H3.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M3 12.5H3.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M3 18.5H3.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M10 6H20M10 12H20M10 18H20M5 6H5.01M5 12H5.01M5 18H5.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
         </Button>
         <Button type="button" data-hs-editor-blockquote>
           <svg width="20" height="20" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 9.5C6 8.39543 6.89543 7.5 8 7.5C9.10457 7.5 10 8.39543 10 9.5C10 10.3284 9.32843 11 8.5 11H7.5C6.67157 11 6 11.6716 6 12.5V15.5M16 9.5C16 8.39543 16.8954 7.5 18 7.5C19.1046 7.5 20 8.39543 20 9.5C20 10.3284 19.3284 11 18.5 11H17.5C16.6716 11 16 11.6716 16 12.5V15.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M5 8.25H7.5C7.91421 8.25 8.25 8.58579 8.25 9V11.25C8.25 12.0784 7.57843 12.75 6.75 12.75H5.25V15H8.25M12 8.25H14.5C14.9142 8.25 15.25 8.58579 15.25 9V11.25C15.25 12.0784 14.5784 12.75 13.75 12.75H12.25V15H15.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
         </Button>
         <Button type="button" data-hs-editor-code>
           <svg width="20" height="20" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 8L10 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M7 10L4 12L7 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M17 10L20 12L17 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M14.5 8L18 12L14.5 16M9.5 8L6 12L9.5 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
         </Button>
       </Toolbar>
-      <EditorField ref={editorRef} className="tiptap" placeholder="Start typing..." />
+      <HoverEffect>
+        <EditorField ref={editorRef} className="tiptap" />
+      </HoverEffect>
     </Container>
   );
 };
+
 export default Edit;
