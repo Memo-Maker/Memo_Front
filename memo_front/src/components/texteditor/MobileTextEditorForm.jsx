@@ -67,7 +67,7 @@ const TextInfo = styled.div`
 `;
 
 const TextEditorForm = () => {
-  // const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [charCount, setCharCount] = useState(0); // 글자 수 상태 추가
   const { saveContentToLocal, saveMarkdownToServer } = useAuth();
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -97,19 +97,12 @@ const TextEditorForm = () => {
     setShowModal(false);
   };
 
-  // 타자를 칠 때마다 글자 수 업데이트
-  // const handleTextChange = (editorState) => {
-  //   setEditorState(editorState);
-  //   const plainText = editorState.getCurrentContent().getPlainText("");
-  //   console.log("글자 수:", plainText.length);
-  // };
-
 
   return (
     <>
       <EditorContainer>
         <MyBlock>
-        <MobileEdit setHtmlContent={setHtmlContent} initialContent={htmlContent} /> {/* Edit 컴포넌트에 props 전달 */}
+        <MobileEdit setHtmlContent={setHtmlContent} initialContent={htmlContent} setCharCount={setCharCount} /> {/* Edit 컴포넌트에 props 전달 */}
           <StatusBar>
             <FolderContainer>
               {/* FolderButton의 텍스트를 selectedCategory로 조건부 렌더링 */}
@@ -122,8 +115,7 @@ const TextEditorForm = () => {
 
             <TextInfoContainer>
               <TextInfo>
-                글자 수:{" "}
-                {/* {editorState.getCurrentContent().getPlainText("").length} */}
+              글자 수: {charCount}
               </TextInfo>
               <Button onClick={handleSaveContent}>저장하기</Button>
             </TextInfoContainer>

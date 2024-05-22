@@ -48,6 +48,7 @@ const TextInfo = styled.div`
   margin-right: 1vw;
 `;
 const TextEditorForm = () => {
+  const [charCount, setCharCount] = useState(0); // 글자 수 상태 추가
   const { saveContentToLocal, saveMarkdownToServer } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -64,7 +65,7 @@ const TextEditorForm = () => {
       setSelectedCategory(storedCategory);
     }
   }, []);
-  
+
   const handleSaveContent = () => {
     saveContentToLocal(htmlContent);
     saveMarkdownToServer(htmlContent);
@@ -80,7 +81,7 @@ const TextEditorForm = () => {
   return (
     <>
       <EditorContainer>
-        <Edit setHtmlContent={setHtmlContent} initialContent={htmlContent} /> {/* Edit 컴포넌트에 props 전달 */}
+        <Edit setHtmlContent={setHtmlContent} initialContent={htmlContent} setCharCount={setCharCount} /> {/* Edit 컴포넌트에 props 전달 */}
         <StatusBar>
           <FolderContainer>
             <FolderButton onClick={handleFolderButtonClick}>
@@ -90,6 +91,9 @@ const TextEditorForm = () => {
             </FolderButton>
           </FolderContainer>
           <TextInfoContainer>
+          <TextInfo>
+              글자 수: {charCount}
+              </TextInfo>
             <Button onClick={handleSaveContent}>저장하기</Button>
           </TextInfoContainer>
         </StatusBar>

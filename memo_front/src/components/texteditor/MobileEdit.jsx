@@ -94,7 +94,7 @@ const HoverEffect = styled.div`
   }
 `;
 
-const Edit = ({ setHtmlContent, initialContent }) => {
+const Edit = ({ setHtmlContent, initialContent, setCharCount }) => {
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -144,6 +144,7 @@ const Edit = ({ setHtmlContent, initialContent }) => {
       content: initialContent,
       onUpdate({ editor }) {
         setHtmlContent(editor.getHTML());
+        setCharCount(editor.getText().length); // 글자 수 업데이트
       },
     });
 
@@ -159,6 +160,9 @@ const Edit = ({ setHtmlContent, initialContent }) => {
         }
       }
     });
+
+    // 에디터가 초기화될 때 초기 컨텐츠의 글자 수 설정
+    setCharCount(editor.getText().length);
 
     const actions = [
       { id: 'data-hs-editor-bold', fn: () => editor.chain().focus().toggleBold().run() },
@@ -200,7 +204,7 @@ const Edit = ({ setHtmlContent, initialContent }) => {
       // 에디터 인스턴스 파괴
       editor.destroy();
     };
-  }, [editorRef.current]);
+  }, [editorRef.current, setCharCount]);
 
   return (
     <Container>
