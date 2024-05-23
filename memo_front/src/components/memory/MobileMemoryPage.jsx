@@ -31,6 +31,7 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   background-color: #ffffff;
+  z-index: 1; /* 유튜브 영상 컨테이너의 z-index 설정 */
 `;
 
 const Button = styled.button`
