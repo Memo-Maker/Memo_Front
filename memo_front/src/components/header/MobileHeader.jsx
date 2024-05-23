@@ -69,6 +69,8 @@ const ProfileImage = styled.img`
 `;
 
 const Button = styled.button`
+  width: 17vw;
+  height: 4vh;
   padding: 1vw 2vw;
   background-color: #000;
   color: white;

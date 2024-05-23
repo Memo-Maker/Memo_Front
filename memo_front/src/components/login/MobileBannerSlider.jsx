@@ -14,11 +14,14 @@ const Container = styled.div`
 
 const BannerWrapper = styled.div`
   display: flex;
+  justify-content: center; /* 이미지 중앙 정렬 */
   width: 100%;
+  margin-top: 5%;
+  /* margin-bottom: 5%; */
 `;
 
 const BannerImage = styled.img`
-  width: 70%;
+  width: 60%;
   height: auto;
 `;
 

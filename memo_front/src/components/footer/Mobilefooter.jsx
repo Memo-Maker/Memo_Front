@@ -27,13 +27,13 @@ const Link = styled.a`
 
 const CopyRight = styled.span`
   display: block;
-  text-align: right;
+  text-align: left;
 `;
 
 const Footer = () => {
   return (
     <FooterContainer>
-      <LeftSection>
+      {/* <LeftSection>
         <Link href="#">이용약관</Link>
         <Link href="#">광고문의</Link>
         <Link href="#">개인정보처리방침</Link>
@@ -44,7 +44,11 @@ const Footer = () => {
         <CopyRight>© 2024 HSU MEMO </CopyRight>
         <CopyRight>24.02.17 ~ 05.31 Rights Reserved</CopyRight>
         <CopyRight>고객센터: Maker</CopyRight>
-      </RightSection>
+      </RightSection> */}
+      <LeftSection>
+        <CopyRight>Maker 박시현 최영서 김택신 정진혁 </CopyRight>
+        <CopyRight>Copyright MEMO.co&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved</CopyRight>
+      </LeftSection>
     </FooterContainer>
   );
 };
