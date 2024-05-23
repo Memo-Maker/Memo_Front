@@ -50,6 +50,18 @@ const DateText = styled.p`
   color: #838383;
 `;
 
+const TitleText = styled.div`
+  font-size: 0.8rem;
+  margin-top: 1vw;
+  margin-bottom: 1vw;
+  color: #000000;
+  border: 3px solid #8d8d8d;
+  border-radius: 1vw;
+  padding: 0.5vw; /* 원하는 패딩 값 */
+`;
+
+
+
 const MemoryPage = () => {
   const [videoId, setVideoId] = useState(null);
   const [playerSize, setPlayerSize] = useState({ width: 560, height: 315 });
@@ -79,8 +91,7 @@ const MemoryPage = () => {
   }, []);
 
   const extractVideoId = (url) => {
-    const regExp =
-      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return match && match[1] ? match[1] : null;
   };
@@ -118,6 +129,7 @@ const MemoryPage = () => {
             }}
           />
         )}
+        <TitleText>{localStorage.getItem("videoTitle")}</TitleText>
         <Summary />
         <Button onClick={handleButtonClick}></Button>
       </Container>

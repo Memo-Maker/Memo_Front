@@ -726,7 +726,7 @@ export const AuthProvider = ({ children }) => {
       console.log("[ 선택한 video의 데이터: ] ", responseData);
 
       // 받은 데이터에서 필요한 정보를 추출합니다.
-      const { summary, document, videoUrl, documentDate, categoryName } = responseData.video;
+      const { summary, document, videoUrl, documentDate, categoryName, videoTitle } = responseData.video;
       const { questions } = responseData;
       var document2 = document == null ? "" : document;
       // 질문과 답변을 추출합니다.
@@ -737,6 +737,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("summary", summary);
       localStorage.setItem("document", document2);
       localStorage.setItem("videoUrl", videoUrl);
+      localStorage.setItem("videoTitle", videoTitle);
       localStorage.setItem("documentDate", documentDate);
       localStorage.setItem("categoryName", categoryName);
       localStorage.setItem("questions", JSON.stringify(extractedQuestions));
