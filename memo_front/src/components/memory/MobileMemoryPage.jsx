@@ -4,7 +4,13 @@ import YouTube from "react-youtube";
 import MobileTextEditorForm from "../texteditor/MobileTextEditorForm";
 import Summary from "./MobileSummary";
 import ChatIcon from "../../assets/images/GPTIcon.png";
-import Modal from "./Chatgpt";
+import Chatgpt from "./MobileChatgpt";
+import SummaryO from "../../assets/images/Summary_O.png";
+import SummaryX from "../../assets/images/Summary_X.png";
+import GPTO from "../../assets/images/GPT_O.png";
+import GPTX from "../../assets/images/GPT_X.png";
+import MemoO from "../../assets/images/Memo_O.png";
+import MemoX from "../../assets/images/Memo_X.png";
 
 const Layout = styled.div`
   display: flex;
@@ -27,9 +33,7 @@ const Container = styled.div`
   background-color: #ffffff;
 `;
 
-// GPT 버튼
 const Button = styled.button`
-  /* background-color: #fff; */
   background-color: #02ff56;
   color: white;
   border: none;
@@ -56,7 +60,7 @@ const Button = styled.button`
 
 const DateText = styled.p`
   font-size: 1rem;
-  margin-top: 0vw;
+  margin-top: 2.1vw;
   margin-bottom: -1vw;
   margin-left: 3vw;
   color: #838383;
@@ -65,7 +69,7 @@ const DateText = styled.p`
 const TitleText = styled.div`
   display: flex;
   font-size: 0.8rem;
-  margin:1vw 2vw 1vw 2vw;
+  margin: 1vw 2vw 1vw 2vw;
   color: #000000;
   justify-content: center;
   border: 3px solid #8d8d8d;
@@ -73,15 +77,48 @@ const TitleText = styled.div`
   padding: 0.5vw; /* 원하는 패딩 값 */
 `;
 
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: normal;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+`;
+
+const ButtonSet = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10vw;
+  background-color: #ffffff;
+  padding: 1vw;
+  width: 100%;
+`;
+
+const ImageButton = styled.button`
+  display: flex;
+  background-color: ${({ selected }) => (selected ? "#ffffff" : "transparent")};
+  border: none;
+  border-radius: 1vw;
+  cursor: pointer;
+  width: 10vw;
+  height: 10vw;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
 const MemoryPage = () => {
   const [videoId, setVideoId] = useState(null);
   const [playerSize, setPlayerSize] = useState({ width: 560, height: 315 });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedButton, setSelectedButton] = useState("summary"); // 기본값을 "summary"로 설정
 
   useEffect(() => {
     const storedVideoUrl = localStorage.getItem("videoUrl");
-    console.log("storedVideoUrl::" + storedVideoUrl);
+    // console.log("storedVideoUrl::" + storedVideoUrl);
     if (storedVideoUrl) {
       const videoId = extractVideoId(storedVideoUrl);
       setVideoId(videoId);
@@ -103,15 +140,15 @@ const MemoryPage = () => {
 
   const extractVideoId = (url) => {
     const regExp =
-      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      /^.*(?:youtu.be\/|v\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return match && match[1] ? match[1] : null;
   };
 
   const handleResize = () => {
     setPlayerSize({
-      width: window.innerWidth * 0.95, // 40% -> 90%로 증가
-      height: (window.innerWidth * 0.95 * 9) / 16, // 16:9 비율 유지
+      width: window.innerWidth * 0.95,
+      height: (window.innerWidth * 0.95 * 9) / 16,
     });
   };
 
@@ -123,11 +160,14 @@ const MemoryPage = () => {
     toggleModal();
   };
 
+  const handleImageButtonClick = (buttonType) => {
+    setSelectedButton(buttonType);
+  };
+
   return (
     <Layout>
       <DateText>{localStorage.getItem("documentDate")}</DateText>
       <Container>
-        {/* Youtube 컴포넌트 */}
         {videoId && (
           <YouTube
             videoId={videoId}
@@ -143,12 +183,37 @@ const MemoryPage = () => {
           />
         )}
         <TitleText>{localStorage.getItem("videoTitle")}</TitleText>
-        <Summary />
-        <Button onClick={handleButtonClick}></Button>
-        <MobileTextEditorForm />
+        <Content>
+          {selectedButton === "summary" && <Summary />}
+          {selectedButton === "gpt" && <Chatgpt />}
+          {selectedButton === "memo" && <MobileTextEditorForm />}
+        </Content>
       </Container>
-
-      <Modal visible={isModalVisible} onClose={toggleModal} />
+      <ButtonSet>
+        <ImageButton
+          onClick={() => handleImageButtonClick("summary")}
+          style={{
+            backgroundImage: `url(${
+              selectedButton === "summary" ? SummaryO : SummaryX
+            })`,
+          }}
+          selected={selectedButton === "summary"}
+        />
+        <ImageButton
+          onClick={() => handleImageButtonClick("gpt")}
+          style={{
+            backgroundImage: `url(${selectedButton === "gpt" ? GPTO : GPTX})`,
+          }}
+          selected={selectedButton === "gpt"}
+        />
+        <ImageButton
+          onClick={() => handleImageButtonClick("memo")}
+          style={{
+            backgroundImage: `url(${selectedButton === "memo" ? MemoO : MemoX})`,
+          }}
+          selected={selectedButton === "memo"}
+        />
+      </ButtonSet>
     </Layout>
   );
 };

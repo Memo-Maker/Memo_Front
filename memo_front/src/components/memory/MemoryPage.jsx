@@ -51,7 +51,7 @@ const DateText = styled.p`
 `;
 
 const TitleText = styled.div`
-  display: flex;
+display: flex;
   font-size: 0.8rem;
   margin-top: 1vw;
   margin-bottom: 1vw;
@@ -73,7 +73,7 @@ const MemoryPage = () => {
 
   useEffect(() => {
     const storedVideoUrl = localStorage.getItem("videoUrl");
-    console.log("storedVideoUrl::" + storedVideoUrl);
+    // console.log("storedVideoUrl::" + storedVideoUrl);
     if (storedVideoUrl) {
       const videoId = extractVideoId(storedVideoUrl);
       setVideoId(videoId);

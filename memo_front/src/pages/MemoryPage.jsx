@@ -20,7 +20,7 @@ const MemoryPage = () => {
         <>
           <MobileHeader />
           <MobileMemoryPage />
-          <MobileFooter />
+          {/* <MobileFooter /> */}
         </>
       ) : (
         <>
