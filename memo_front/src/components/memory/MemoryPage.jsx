@@ -51,13 +51,16 @@ const DateText = styled.p`
 `;
 
 const TitleText = styled.div`
+display: flex;
   font-size: 0.8rem;
   margin-top: 1vw;
   margin-bottom: 1vw;
   color: #000000;
+  justify-content: center;
   border: 3px solid #8d8d8d;
-  border-radius: 1vw;
+  border-radius: 3vw;
   padding: 0.5vw; /* 원하는 패딩 값 */
+  
 `;
 
 
