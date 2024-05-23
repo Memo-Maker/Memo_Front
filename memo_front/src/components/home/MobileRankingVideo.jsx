@@ -47,6 +47,7 @@ const ButtonContent = styled.div`
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #000000; /* 텍스트 색상 명시적으로 지정 */
 `;
 
 const RankingVideo = () => {

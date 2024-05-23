@@ -34,6 +34,7 @@ const HamburgerButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 5vw;
+  color: #000000; /* 텍스트 색상 명시적으로 지정 */
 `;
 
 const LogoTitle = styled.div`

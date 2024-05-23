@@ -15,7 +15,7 @@ const ModalBackdrop = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 98;
+  z-index: 998;
   overflow-y: auto;
 `;
 
@@ -27,7 +27,7 @@ const ModalWrapper = styled.div`
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 1vw;
-  z-index: 99;
+  z-index: 999;
 `;
 
 const SaveContainer = styled.div`
