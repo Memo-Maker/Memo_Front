@@ -111,7 +111,7 @@ const Edit = ({ setHtmlContent, initialContent, setCharCount }) => {
         Paragraph.configure({
           HTMLAttributes: {
             class: 'text-gray-600 bg-blue-100',
-            style: 'width: 95vw; height: 2vh; line-height: 1; margin-top: 1px; padding: 0.2vw; border: 1px solid transparent;',
+            style: 'width: 95vw; height: 2vh; line-height: 1.3; margin-top: 1px; padding: 0.2vw; border: 1px solid transparent;',
           },
         }),
         Bold.configure({
