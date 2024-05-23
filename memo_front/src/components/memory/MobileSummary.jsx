@@ -26,7 +26,7 @@ const Text = styled.div`
   color: #787878;
   flex: 1;
   position: relative;
-  font-size: ${({ windowWidth }) => (windowWidth / 100) + 'vw'}; /* 창 크기를 기반으로 글자 크기 계산 */
+  font-size: ${({ windowWidth }) => ((windowWidth / 100) + 11)+ 'px'}; /* 창 크기를 기반으로 글자 크기 계산 */
 `;
 
 const Summary = () => {

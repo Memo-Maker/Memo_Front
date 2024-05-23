@@ -51,7 +51,7 @@ const DateText = styled.p`
 `;
 
 const TitleText = styled.div`
-display: flex;
+  display: flex;
   font-size: 0.8rem;
   margin-top: 1vw;
   margin-bottom: 1vw;
