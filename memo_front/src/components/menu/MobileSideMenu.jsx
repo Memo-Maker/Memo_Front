@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../context/AuthContext";
-import SaveModal from "../modal/SaveModal"; // SaveModal을 불러옵니다.
+import SaveModal from "../modal/MobileSaveModal"; // SaveModal을 불러옵니다.
 import folderIcon from "../../assets/images/macos_folder.png";
 
 const SideMenuContainer = styled.div`
@@ -13,7 +13,7 @@ const SideMenuContainer = styled.div`
   height: 85%;
   background-color: #ffffff;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 99999;
+  z-index: 999;
   padding-top: 30px;
   transition: bottom 0.3s ease; /* 아래쪽으로 이동하는 애니메이션 효과 */
 `;
@@ -26,7 +26,7 @@ const SideMenuWrapper = styled.div`
   height: auto; /* 높이를 자동으로 조정하여 내용에 따라 늘어날 수 있도록 변경합니다. */
   background-color: #ffffff;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 99999;
+  z-index: 999;
 `;
 
 const CloseButton = styled.button`

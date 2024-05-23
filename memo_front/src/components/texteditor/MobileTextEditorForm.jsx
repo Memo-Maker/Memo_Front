@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../context/AuthContext";
-import SaveModal from "../modal/SaveModal";
+import SaveModal from "../modal/MobileSaveModal";
 import MobileEdit from "./MobileEdit";
 
 const EditorContainer = styled.div`

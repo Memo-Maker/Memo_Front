@@ -21,7 +21,7 @@ const ModalBackdrop = styled.div`
 
 const ModalWrapper = styled.div`
   position: fixed;
-  width: 40%;
+  width: 80%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -43,7 +43,7 @@ const StyledImg = styled.img`
 
 const SaveText = styled.div`
   color: #000000;
-  font-size: 1.5vw;
+  font-size: 4vw;
   text-align: center;
   font-weight: bold;
 `;
@@ -52,28 +52,32 @@ const CloseButton = styled.span`
   display: flex;
   justify-content: flex-end;
   padding: 1vw 2vw 0 2vw;
-  font-size: 1.5vw;
+  font-size: 5vw;
   font-weight: bold;
   cursor: pointer;
 `;
 
 const ModalContent = styled.div`
   display: flex;
+  height: 40vh;
   flex-direction: column;
   overflow-y: auto;
   background-color: #f0f0f0;
+  /* background-color: #cc6666; */
   border-radius: 1vw;
 `;
 
 const CategoryList = styled.div`
   display: grid;
+  height: 80%;
   justify-items: center;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
   margin: 1vw 5vw 2vw 5vw;
   overflow-y: auto;
-  max-height: 30vh;
-
+  max-height: vh;
+  background-color: #f0f0f0;
+  /* background-color: #d3ca50; */
   &::-webkit-scrollbar {
     width: 12px;
   }
@@ -90,18 +94,19 @@ const CategoryList = styled.div`
 `;
 
 const CategoryImage = styled.img`
-  width: 2vw;
+  width: 4vw;
   margin-right: 1vw;
 `;
 
 const Category = styled.button`
-  width: 80%;
-  height: 3vw; /* 카테고리 상자의 높이를 고정값으로 설정 */
+  width: 85%;
+  height: 8vw; /* 카테고리 상자의 높이를 고정값으로 설정 */
   display: flex;
   padding: 0.3vw 1vw;
   margin-top: 1vw;
   align-items: center;
-  font-size: 0.8vw;
+  color: #000000;
+  font-size: 4vw;
   text-align: start;
   border-radius: 0.5vw;
   border: 0.1vw solid #838383;
@@ -124,34 +129,46 @@ const Category = styled.button`
   transition: transform 0.3s ease-in-out;
 `;
 
+// const CategoryText = styled.button`
+//   /* width: 100%;
+//   color: #000000;
+//   font-size: 4vw; */
+//   border: none;
+//   text-align: start;
+// `
 const ButtonSet = styled.div`
+  height: 15%;
   display: flex;
   justify-content: space-between;
+  /* background-color: #65afaf; */
 `;
 
 const TextInput = styled.input`
-  width: 50%;
-  font-size: 0.8vw;
+  width: 45%;
+  font-size: 2.4vw;
   background-color: #f0f0f0;
   font-weight: bold;
   padding: 1vw;
-  margin: 0 0 1vw 6vw;
+  margin: 1vw 0 1vw 4vw;
   border-radius: 1vw;
   border: 0.1vw solid #000000;
 `;
 
 const AddButton = styled.button`
-  width: 6vw;
-  margin: 0 0 1vw 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10vw;
+  margin: 1vw 1vw 1vw 1vw;
   border-radius: 2vw;
   border: ${({ hasImage }) => (hasImage ? "none" : "0.2vw solid #eeda25")};
   font-weight: bold;
-  font-size: 0.8vw;
+  font-size: 2.4vw;
   cursor: pointer;
   background-color: ${({ disabled }) => (disabled ? "#f0f0f0" : "#f0f0f0")};
 
   img {
-    width: 2vw;
+    width: 6vw;
   }
 
   &:not(:has(img)) {
@@ -166,6 +183,7 @@ const AddButton = styled.button`
 `;
 
 const EditButton = styled(AddButton)`
+  font-size: 2.4vw;
   margin-left: 1vw;
   background-color: #ffc107;
   border: none;
@@ -173,12 +191,16 @@ const EditButton = styled(AddButton)`
 `;
 
 const ConfirmButton = styled.button`
-  width: 6vw;
-  margin: 0 1vw 1vw 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10vw;
+  margin: 1vw 1vw 1vw 0.5vw;
   border-radius: 2vw;
   border: 0.2vw solid #000000;
   font-weight: bold;
-  font-size: 0.8vw;
+  font-size: 2.5vw;
+  color: #000000;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
@@ -187,12 +209,16 @@ const ConfirmButton = styled.button`
 `;
 
 const DeleteButton = styled.button`
-  width: 6vw;
-  margin: 0 6vw 1vw 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10vw;
+  margin: 1vw 4vw 1vw 0.5vw;
   border-radius: 2vw;
   border: 0.2vw solid #ff0000;
   font-weight: bold;
-  font-size: 0.8vw;
+  font-size: 2.5vw;
+  color: #000000;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
@@ -333,6 +359,7 @@ const SaveModal = ({ closeModal }) => {
                 isSelected={selectedCategory === category}
               >
                 <CategoryImage src={Floder} alt="Folder" />
+                {/* <CategoryText>{category}</CategoryText> */}
                 {category}
               </Category>
             ))}
