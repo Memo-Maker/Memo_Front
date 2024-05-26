@@ -45,6 +45,16 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 문자열의 처음과 끝에 쌍따옴표가 있는 경우 이를 제거하는 함수
+  const removeSurroundingQuotes = (str) => {
+    // 처음과 끝이 쌍따옴표인 경우 쌍따옴표 제거
+    if (str.startsWith('"') && str.endsWith('"')) {
+      return str.slice(1, -1);
+    }
+    // 쌍따옴표가 아닌 경우 원래 문자열 반환
+    return str;
+  };
+
   // -----------------------------------------------------------------------------
   // - Name : getTokenFromLocalStorage
   // - Desc : 로컬 스토리지에서 토큰을 가져오는 함수
@@ -675,9 +685,12 @@ export const AuthProvider = ({ children }) => {
         // console.log("summary 요청 전송 성공!");
         console.log("받은 summary:", data); // 받은 summary를 로그로 출력
 
+        let cleanedSummary = removeSurroundingQuotes(JSON.stringify(data.summary));
+        let cleanedTitle = removeSurroundingQuotes(JSON.stringify(data.cleaned_title));
+
         // 받은 summary 데이터를 로컬스토리지에 저장
-        localStorage.setItem("summary", JSON.stringify(data.summary));
-        localStorage.setItem("videoTitle", JSON.stringify(data.cleaned_title));
+        localStorage.setItem("summary", cleanedSummary);
+        localStorage.setItem("videoTitle", cleanedTitle);
 
         return data;
       }
@@ -734,6 +747,9 @@ export const AuthProvider = ({ children }) => {
       // 질문과 답변을 추출합니다.
       const extractedQuestions = questions.map((question) => question.question);
       const extractedAnswers = questions.map((question) => question.answer);
+      
+      // let cleanedSummary = removeSurroundingQuotes(JSON.stringify(data.summary));
+      // let cleanedTitle = removeSurroundingQuotes(JSON.stringify(data.cleaned_title));
 
       // 로컬 스토리지에 정보를 저장합니다.
       localStorage.setItem("summary", summary);
