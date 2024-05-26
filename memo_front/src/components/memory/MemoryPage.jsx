@@ -10,17 +10,16 @@ const Layout = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  background-color: #e06a6a;
+  background-color: #fffc5e;
   justify-content: center;
   gap: 2vw;
 `;
 
 const Container = styled.div`
-  width: 40%;
+  width: 35%;
 `;
 
 const GPTButton = styled.button`
-  background-color: #350de7;
   color: white;
   border: none;
   cursor: pointer;
@@ -55,12 +54,15 @@ const TitleText = styled.div`
   border: 3px solid #8d8d8d;
   border-radius: 3vw;
   padding: 0.5vw;
+  white-space: nowrap; /* 한 줄로만 표시하도록 설정 */
+  overflow: hidden; /* 넘칠 경우 숨김 처리 */
+  text-overflow: ellipsis; /* 말 줄임표(...) 추가 */
 `;
 
 const Scroll = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 18vw;
+  max-height: 16vw;
 
   &::-webkit-scrollbar {
     width: 12px;
@@ -69,7 +71,6 @@ const Scroll = styled.div`
   &::-webkit-scrollbar-thumb {
     background: #a7a7a7;
     border-radius: 1vw;
-    margin-right: 5%;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -114,8 +115,8 @@ const MemoryPage = () => {
 
   const handleResize = () => {
     setPlayerSize({
-      width: window.innerWidth * 0.4,
-      height: (window.innerWidth * 0.4 * 9) / 16,
+      width: window.innerWidth * 0.35,
+      height: (window.innerWidth * 0.35 * 9) / 16,
     });
   };
 
@@ -151,9 +152,9 @@ const MemoryPage = () => {
             <Summary />
           </Scroll>
           <GPTButton onClick={handleButtonClick}></GPTButton>
+          <Modal visible={isModalVisible} onClose={toggleModal} />
         </Container>
         <TextEditorForm />
-        <Modal visible={isModalVisible} onClose={toggleModal} />
       </Layout>
     </>
   );
