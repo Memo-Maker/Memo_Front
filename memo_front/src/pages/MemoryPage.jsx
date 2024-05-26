@@ -26,7 +26,7 @@ const MemoryPage = () => {
         <>
           <Header />
           <PCMemoryPage />
-          <Footer />
+          {/* <Footer /> */}
         </>
       )}
     </div>

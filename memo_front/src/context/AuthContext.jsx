@@ -509,6 +509,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         console.log("마크다운 저장 성공!");
+        toast.success("메모 저장 성공");
         // 저장 성공 시 추가 작업 수행
       } else {
         console.error("마크다운 저장 실패:", response.statusText);

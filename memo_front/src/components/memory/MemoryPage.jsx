@@ -21,7 +21,23 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 40vw;
-  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 45vw;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #a7a7a7;
+    border-radius: 1vw;
+    margin-right: 5%;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #646464;
+  }
 `;
 
 const Button = styled.button`
@@ -46,7 +62,7 @@ const Button = styled.button`
 
 const DateText = styled.p`
   font-size: 1rem;
-  margin-bottom: 1vw;
+  margin-bottom: 0.5vw;
   color: #838383;
 `;
 

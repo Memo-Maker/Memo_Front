@@ -253,9 +253,9 @@ const HomePage = () => {
           </InputContainer>
         </Detail>
       </Head>
-      <body style={{ marginTop: "5vw"}}>
+      <body style={{ marginTop: "5vw" }}>
         <RankingContainer>
-          https://www.youtube.com/watch?v=uAmv-8NUGGc
+          https://www.youtube.com/watch?v=S1MMG6w4DrM&pp=ygUG64m07Iqk
           <RankingItem>▶ 실시간 사용자가 많이 본 영상이예요..</RankingItem>
           <RankVideo />
         </RankingContainer>

@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Header from "./components/header/Header";
-import Footer from "./components/footer/footer";
 import HomePage from "./pages/HomePage";
 import MemoryPage from "./pages/MemoryPage";
 import LoginPage from "./pages/LoginPage";

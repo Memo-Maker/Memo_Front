@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Pencil from "../../assets/images/pencil.png"
+import Pencil from "../../assets/images/pencil.png";
 
 const SummaryBox = styled.div`
   width: 95%;
@@ -36,12 +36,13 @@ const SummaryDetail = styled.div`
   text-align: center;
 `;
 
-
 const Summary = () => {
   // 로컬 스토리지에서 summaryData 가져오기
   const summaryData = localStorage.getItem("summary");
   // summaryData가 없거나 비어 있을 경우 빈 배열로 설정
-  const sentences = summaryData ? summaryData.split(". ") : [];
+  const sentences = summaryData
+    ? summaryData.split(".").filter((sentence) => sentence.trim() !== "")
+    : [];
 
   // 문장을 받아서 각 문장의 시작에 연필 이미지를 붙이는 함수
   const renderSentences = (sentences) => {
@@ -56,11 +57,10 @@ const Summary = () => {
   };
 
   return (
-    <>
-      <SummaryBox>
-        <SummaryDetail>요약된 내용</SummaryDetail>
-        {renderSentences(sentences)}</SummaryBox >
-    </>
+    <SummaryBox>
+      <SummaryDetail>요약된 내용</SummaryDetail>
+      {renderSentences(sentences)}
+    </SummaryBox>
   );
 };
 
