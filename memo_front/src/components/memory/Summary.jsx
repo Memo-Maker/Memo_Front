@@ -34,6 +34,7 @@ const SummaryDetail = styled.div`
   font-size: 1vw;
   font-weight: bold;
   text-align: center;
+  font-family: "KCC-Hanbit";
 `;
 
 const Summary = () => {
