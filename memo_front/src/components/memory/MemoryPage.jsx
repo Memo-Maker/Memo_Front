@@ -52,15 +52,15 @@ const DateText = styled.p`
 
 const TitleText = styled.div`
 display: flex;
-  font-size: 0.8rem;
-  margin-top: 1vw;
-  margin-bottom: 1vw;
+  font-size: 1.1vw;
+  font-weight: 800;
+  text-align: start;
+  margin-top: 0.5vw;
   color: #000000;
   justify-content: center;
   border: 3px solid #8d8d8d;
   border-radius: 3vw;
-  padding: 0.5vw; /* 원하는 패딩 값 */
-  
+  padding: 0.5vw;
 `;
 
 

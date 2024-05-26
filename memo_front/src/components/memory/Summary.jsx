@@ -1,23 +1,13 @@
 import React from "react";
-import styled, { createGlobalStyle } from "styled-components";
-import Pencil from "../../assets/images/pencil.png";
-
-// GlobalStyle을 정의하여 Google Fonts를 불러옵니다.
-const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
-
-  body {
-    font-family: 'Noto Sans', sans-serif;
-  }
-`;
+import styled from "styled-components";
+import Pencil from "../../assets/images/pencil.png"
 
 const SummaryBox = styled.div`
   width: 95%;
   padding: 1vw;
   background-color: #f0f0f0;
   border-radius: 1vw;
-  margin-top: 1vw;
-  font-family: "Noto Sans", sans-serif; /* 폰트 적용 */
+  margin-top: 0.5vw;
 `;
 
 const TextContainer = styled.div`
@@ -36,8 +26,16 @@ const Text = styled.div`
   color: #000000;
   flex: 1;
   position: relative;
-  font-family: "Noto Sans", sans-serif; /* 폰트 적용 */
+  font-family: "KCC-Hanbit";
+  line-height: 1.5vw;
 `;
+
+const SummaryDetail = styled.div`
+  font-size: 1vw;
+  font-weight: bold;
+  text-align: center;
+`;
+
 
 const Summary = () => {
   // 로컬 스토리지에서 summaryData 가져오기
@@ -59,8 +57,9 @@ const Summary = () => {
 
   return (
     <>
-      <GlobalStyle />
-      <SummaryBox>{renderSentences(sentences)}</SummaryBox>
+      <SummaryBox>
+        <SummaryDetail>요약된 내용</SummaryDetail>
+        {renderSentences(sentences)}</SummaryBox >
     </>
   );
 };
