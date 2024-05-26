@@ -691,6 +691,7 @@ export const AuthProvider = ({ children }) => {
         // 받은 summary 데이터를 로컬스토리지에 저장
         localStorage.setItem("summary", cleanedSummary);
         localStorage.setItem("videoTitle", cleanedTitle);
+        localStorage.setItem("documentDate", data.documentDate);
 
         return data;
       }
