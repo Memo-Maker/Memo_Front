@@ -8,22 +8,59 @@ import Modal from "./Chatgpt";
 
 const Layout = styled.div`
   display: flex;
-  width: 100%;
   flex-direction: row;
-  align-items: center;
-  background-color: #ffffff;
+  align-items: flex-start;
+  background-color: #e06a6a;
   justify-content: center;
   gap: 2vw;
 `;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  width: 40%;
+`;
+
+const GPTButton = styled.button`
+  background-color: #350de7;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 1vw;
+  background-image: url(${ChatIcon});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 3vw;
+  height: 3vw;
+
+  position: relative;
+  top: -2vw;
+  left: -4vw;
+  transform: translateY(-50%);
+`;
+
+const DateText = styled.div`
+  font-size: 1rem;
+  margin-bottom: 0.5vw;
+  color: #838383;
+`;
+
+const TitleText = styled.div`
+  font-size: 1.1vw;
+  font-weight: 800;
+  text-align: start;
+  margin-top: 0.5vw;
+  color: #000000;
   justify-content: center;
-  width: 40vw;
+  border: 3px solid #8d8d8d;
+  border-radius: 3vw;
+  padding: 0.5vw;
+`;
+
+const Scroll = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 45vw;
+  max-height: 18vw;
 
   &::-webkit-scrollbar {
     width: 12px;
@@ -39,47 +76,6 @@ const Container = styled.div`
     background: #646464;
   }
 `;
-
-const Button = styled.button`
-  background-color: #fff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  padding: 1vw;
-  background-image: url(${ChatIcon});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 3vw;
-  height: 3vw;
-
-  position: relative;
-  top: -1vw;
-  left: -4vw;
-  transform: translateY(-50%);
-`;
-
-const DateText = styled.p`
-  font-size: 1rem;
-  margin-bottom: 0.5vw;
-  color: #838383;
-`;
-
-const TitleText = styled.div`
-display: flex;
-  font-size: 1.1vw;
-  font-weight: 800;
-  text-align: start;
-  margin-top: 0.5vw;
-  color: #000000;
-  justify-content: center;
-  border: 3px solid #8d8d8d;
-  border-radius: 3vw;
-  padding: 0.5vw;
-`;
-
-
 
 const MemoryPage = () => {
   const [videoId, setVideoId] = useState(null);
@@ -110,7 +106,8 @@ const MemoryPage = () => {
   }, []);
 
   const extractVideoId = (url) => {
-    const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp =
+      /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return match && match[1] ? match[1] : null;
   };
@@ -131,31 +128,34 @@ const MemoryPage = () => {
   };
 
   return (
-    <Layout>
-      <Container>
-        <DateText>{localStorage.getItem("documentDate")}</DateText>
-        {videoId && (
-          <YouTube
-            videoId={videoId}
-            opts={{
-              width: playerSize.width.toString(),
-              height: playerSize.height.toString(),
-              playerVars: {
-                autoplay: 1,
-                rel: 0,
-                modestbranding: 1,
-              },
-            }}
-          />
-        )}
-        <TitleText>{localStorage.getItem("videoTitle")}</TitleText>
-        <Summary />
-        <Button onClick={handleButtonClick}></Button>
-      </Container>
-      <TextEditorForm />
-
-      <Modal visible={isModalVisible} onClose={toggleModal} />
-    </Layout>
+    <>
+      <Layout>
+        <Container>
+          <DateText>{localStorage.getItem("documentDate")}</DateText>
+          {videoId && (
+            <YouTube
+              videoId={videoId}
+              opts={{
+                width: playerSize.width.toString(),
+                height: playerSize.height.toString(),
+                playerVars: {
+                  autoplay: 1,
+                  rel: 0,
+                  modestbranding: 1,
+                },
+              }}
+            />
+          )}
+          <Scroll>
+            <TitleText>{localStorage.getItem("videoTitle")}</TitleText>
+            <Summary />
+          </Scroll>
+          <GPTButton onClick={handleButtonClick}></GPTButton>
+        </Container>
+        <TextEditorForm />
+        <Modal visible={isModalVisible} onClose={toggleModal} />
+      </Layout>
+    </>
   );
 };
 

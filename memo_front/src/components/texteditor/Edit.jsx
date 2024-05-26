@@ -13,8 +13,8 @@ import Blockquote from '@tiptap/extension-blockquote';
 
 const Container = styled.div`
   width: 100%;
-  height: 40vw;
-  max-height: 70vw; /* 최대 높이 설정 */
+  height: 30vw;
+  max-height: 50vw; /* 최대 높이 설정 */
   margin: 0 auto;
   border: 1px solid #727272;
   border-radius: 12px;

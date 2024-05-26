@@ -13,6 +13,7 @@ const EditorContainer = styled.div`
   padding: 0.5vw;
   width: 40%;
 `;
+
 const Button = styled.button`
   background-color: #4b4c4c;
   color: #fff;
@@ -20,6 +21,7 @@ const Button = styled.button`
   padding: 0.7vw 1.3vw;
   border-radius: 0.2vw;
 `;
+
 const StatusBar = styled.div`
   display: flex;
   justify-content: space-between;
@@ -29,10 +31,12 @@ const StatusBar = styled.div`
   border-top: 0.1vw solid #ccc;
   padding-top: 0.5vw;
 `;
+
 const FolderContainer = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const FolderButton = styled.button`
   color: #000000;
   cursor: pointer;
@@ -40,13 +44,16 @@ const FolderButton = styled.button`
   border-radius: 0.5vw;
   border: 0.15vw solid #4b4c4c;
 `;
+
 const TextInfoContainer = styled.div`
   display: flex;
   align-items: flex-end;
 `;
+
 const TextInfo = styled.div`
   margin-right: 1vw;
 `;
+
 const TextEditorForm = () => {
   const [charCount, setCharCount] = useState(0); // 글자 수 상태 추가
   const { saveContentToLocal, saveMarkdownToServer } = useAuth();
