@@ -19,7 +19,6 @@ const Layout = styled.div`
   flex-direction: column;
   align-items: flex-start;
   background-color: #ffffff;
-  justify-content: center;
   gap: 2vw;
 `;
 
@@ -68,14 +67,16 @@ const DateText = styled.p`
 `;
 
 const TitleText = styled.div`
-  display: flex;
-  font-size: 0.8rem;
-  margin: 1vw 2vw 1vw 2vw;
+  font-size: 4vw;
+  font-weight: 800;
+  text-align: start;
+  margin-top: 0.5vw;
   color: #000000;
   justify-content: center;
   border: 3px solid #8d8d8d;
   border-radius: 3vw;
-  padding: 0.5vw; /* 원하는 패딩 값 */
+  padding: 1vw;
+  margin: 1vw;
 `;
 
 const Content = styled.div`

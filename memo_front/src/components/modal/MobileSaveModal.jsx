@@ -33,7 +33,7 @@ const ModalWrapper = styled.div`
 const SaveContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 1vw;
+  margin-bottom: 3vw;
 `;
 
 const StyledImg = styled.img`
@@ -43,9 +43,10 @@ const StyledImg = styled.img`
 
 const SaveText = styled.div`
   color: #000000;
-  font-size: 4vw;
+  font-size: 5vw;
   text-align: center;
   font-weight: bold;
+  font-family: KCC-Hanbit;
 `;
 
 const CloseButton = styled.span`
@@ -63,21 +64,18 @@ const ModalContent = styled.div`
   flex-direction: column;
   overflow-y: auto;
   background-color: #f0f0f0;
-  /* background-color: #cc6666; */
   border-radius: 1vw;
 `;
 
 const CategoryList = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   height: 80%;
-  justify-items: center;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  margin: 1vw 5vw 2vw 5vw;
+  margin: 2vw 5vw;
   overflow-y: auto;
-  max-height: vh;
   background-color: #f0f0f0;
-  /* background-color: #d3ca50; */
+
   &::-webkit-scrollbar {
     width: 12px;
   }
@@ -85,7 +83,6 @@ const CategoryList = styled.div`
   &::-webkit-scrollbar-thumb {
     background: #a7a7a7;
     border-radius: 1vw;
-    margin-right: 5%;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -99,21 +96,20 @@ const CategoryImage = styled.img`
 `;
 
 const Category = styled.button`
-  width: 85%;
-  height: 8vw; /* 카테고리 상자의 높이를 고정값으로 설정 */
+  width: 80%;
+  height: 10vw;
   display: flex;
-  padding: 0.3vw 1vw;
-  margin-top: 1vw;
+  padding: 2vw 2vw;
+  margin-top: 3vw;
   align-items: center;
   color: #000000;
-  font-size: 4vw;
+  font-size: 3.5vw;
   text-align: start;
-  border-radius: 0.5vw;
-  border: 0.1vw solid #838383;
+  border-radius: 2vw;
+  border: 0.5vw solid #838383;
   cursor: pointer;
-  overflow: hidden; /* 텍스트가 넘칠 경우 숨김 처리 */
-  white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 처리 */
-  text-overflow: ellipsis; /* 텍스트가 넘칠 경우 생략 부호(...) 처리 */
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
   ${({ isSelected }) =>
     isSelected &&
@@ -129,23 +125,15 @@ const Category = styled.button`
   transition: transform 0.3s ease-in-out;
 `;
 
-// const CategoryText = styled.button`
-//   /* width: 100%;
-//   color: #000000;
-//   font-size: 4vw; */
-//   border: none;
-//   text-align: start;
-// `
 const ButtonSet = styled.div`
-  height: 15%;
+  height: 12%;
   display: flex;
   justify-content: space-between;
-  /* background-color: #65afaf; */
 `;
 
 const TextInput = styled.input`
   width: 45%;
-  font-size: 2.4vw;
+  font-size: 2.5vw;
   background-color: #f0f0f0;
   font-weight: bold;
   padding: 1vw;
@@ -258,10 +246,7 @@ const SaveModal = ({ closeModal }) => {
       const updatedCategoryList = categoryList.map((category) =>
         category === selectedCategory ? content : category
       );
-      localStorage.setItem(
-        "categoryList",
-        JSON.stringify(updatedCategoryList)
-      );
+      localStorage.setItem("categoryList", JSON.stringify(updatedCategoryList));
       setCategoryList(updatedCategoryList);
       setSelectedCategory(null);
       setIsEditMode(false);
@@ -359,7 +344,6 @@ const SaveModal = ({ closeModal }) => {
                 isSelected={selectedCategory === category}
               >
                 <CategoryImage src={Floder} alt="Folder" />
-                {/* <CategoryText>{category}</CategoryText> */}
                 {category}
               </Category>
             ))}

@@ -8,8 +8,8 @@ import MobileEdit from "./MobileEdit";
 const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border: 0.1vw solid #ccc;
-  border-radius: 0.5vw;
+  /* border: 0.1vw solid #ccc; */
+  border-radius: 0.3vw;
   padding: 0.5vw;
   width: 95%;
 `;
@@ -30,8 +30,8 @@ const Button = styled.button`
   background-color: #4b4c4c;
   color: #fff;
   cursor: pointer;
-  padding: 0.7vw 1.3vw;
-  border-radius: 0.2vw;
+  padding: 1vw 1.5vw;
+  border-radius: 0.5vw;
 `;
 
 const StatusBar = styled.div`
@@ -52,7 +52,7 @@ const FolderContainer = styled.div`
 const FolderButton = styled.button`
   color: #000000;
   cursor: pointer;
-  padding: 0.7vw 1.3vw;
+  padding: 1vw 1.5vw;
   border-radius: 0.5vw;
   border: 0.15vw solid #4b4c4c;
 `;

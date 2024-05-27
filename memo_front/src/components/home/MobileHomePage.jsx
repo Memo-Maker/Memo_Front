@@ -34,7 +34,6 @@ const RedText = styled.span`
 
 const Container = styled.div`
   width: 100vw;
-  height: 83vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,7 +50,7 @@ const Title = styled.h1`
 const SubTitle = styled.h5`
   color: #333;
   margin-top: -1vw;
-  font-size: 0%.8;
+  font-size: 2.8vw;
 `;
 
 const Detail = styled.div`
@@ -114,7 +113,7 @@ const Head = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40vh;
+  margin-top: 20vw;
 `;
 
 const RankingContainer = styled.div`

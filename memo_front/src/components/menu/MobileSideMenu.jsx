@@ -85,6 +85,7 @@ const Text = styled.div`
   flex: 1; /* 텍스트가 남은 공간을 차지하도록 */
   text-align: start; /* 텍스트 중앙 정렬 */
   white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  font-size: 3.5vw;
 `;
 
 const EditButtonWrapper = styled.div`
@@ -111,6 +112,7 @@ const EditButton = styled.div`
   border: 2px dashed #d9d9d9;
   border-radius: 10px;
   cursor: pointer;
+  font-size: 3.5vw;
   transition: background-color 0.3s;
 
   &:hover {
