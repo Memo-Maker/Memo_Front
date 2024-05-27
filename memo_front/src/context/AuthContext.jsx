@@ -5,9 +5,10 @@ import axios from "axios"; // axios를 import합니다.
 
 // 공통 URL 정의
 // const BASE_URL = "http://localhost:8080";
-const BASE_URL = "http://taeksin.iptime.org:8081";
+// const BASE_URL = "http://taeksin.iptime.org:8081";
+const BASE_URL = "http://52.78.68.15:8080";
 // const FLASK_BASE_URL = "http://localhost:5000";
-const FLASK_BASE_URL = "http://taeksin.iptime.org:5002";
+const FLASK_BASE_URL = "http://taeksin.iptime.org:5003";
 // 카카오 REST API 키와 리다이렉트 URI 설정
 
 const getWindowSize = () => {
@@ -458,6 +459,7 @@ export const AuthProvider = ({ children }) => {
 
       // const responseData = response;
       console.log("카테고리가 성공적으로 생성되었습니다:", response);
+      
       // 필요한 작업 수행 (예: 성공 메시지 표시, 상태 업데이트 등)
     } catch (error) {
       console.error("카테고리 생성 중 오류가 발생했습니다:", error);
@@ -939,7 +941,7 @@ export const AuthProvider = ({ children }) => {
         );
       }
       console.log("🟢카테고리에 저장 성공🟢");
-
+      toast.success("저장 완료 !");
       // 응답 데이터를 반환합니다.
       return response;
     } catch (error) {
@@ -1043,7 +1045,8 @@ export const AuthProvider = ({ children }) => {
 
       if (response.status === 200) {
         console.log("영상을 스프링 서버에서 성공적으로 삭제했습니다.");
-        alert("영상이 성공적으로 삭제되었습니다.");
+        // alert("영상이 성공적으로 삭제되었습니다.");
+        toast.success("영상 삭제완료 !");
         // videoList에서 videoUrl에 해당하는 항목 삭제
         const updatedVideoList = videoList.filter(
           (video) => video.videoUrl !== videoUrl
