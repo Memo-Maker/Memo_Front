@@ -286,6 +286,7 @@ const SaveModal = ({ closeModal }) => {
         setCategoryList(updatedCategoryList);
         setSelectedCategory(null);
         setIsEditMode(false);
+        setContent(""); // TextInput에 써있는 글씨 지우기
       }
     }
   };
