@@ -7,7 +7,6 @@ import { useAuth } from "../../context/AuthContext"; // AuthContext import ì¶”ê°
 
 const Container = styled.div`
   display: flex;
-  width: 100%;
   flex-direction: column;
   align-content: center;
   align-items: center;

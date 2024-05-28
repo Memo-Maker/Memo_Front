@@ -8,9 +8,9 @@ import BannerSlider from "../../components/login/MobileBannerSlider";
 const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
 const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
 
+
 const Container = styled.div`
   display: flex;
-  width: 100%;
   flex-direction: column;
   align-content: center;
   align-items: center;

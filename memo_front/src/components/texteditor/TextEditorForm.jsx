@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../context/AuthContext";
@@ -76,7 +75,7 @@ const TextEditorForm = () => {
   const handleSaveContent = () => {
     saveContentToLocal(htmlContent);
     saveMarkdownToServer(htmlContent);
-    console.log(htmlContent);
+    alert("저장되었습니다!");
   };
   const handleFolderButtonClick = () => {
     setShowModal(true);
@@ -98,9 +97,9 @@ const TextEditorForm = () => {
             </FolderButton>
           </FolderContainer>
           <TextInfoContainer>
-          <TextInfo>
+            <TextInfo>
               글자 수: {charCount}
-              </TextInfo>
+            </TextInfo>
             <Button onClick={handleSaveContent}>저장하기</Button>
           </TextInfoContainer>
         </StatusBar>

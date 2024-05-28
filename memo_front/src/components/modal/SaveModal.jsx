@@ -4,6 +4,7 @@ import addImg from "../../assets/images/add.png";
 import { useAuth } from "../../context/AuthContext";
 import Floder from "../../assets/images/macos_folder.png";
 import saveFileImage from "../../assets/images/savefile.png";
+import deleteIcon from '../../assets/images/delete.png';
 
 const ModalBackdrop = styled.div`
   position: fixed;
@@ -187,17 +188,24 @@ const ConfirmButton = styled.button`
 `;
 
 const DeleteButton = styled.button`
+display:flex;
+justify-content: center;
+align-items: center;
   width: 6vw;
   margin: 0 6vw 1vw 0;
   border-radius: 2vw;
   border: 0.2vw solid #ff0000;
   font-weight: bold;
-  font-size: 0.8vw;
   transition: background-color 0.3s ease-in-out;
 
   &:hover {
     background-color: #ff0000;
     color: #fff;
+  }
+
+  img {
+    width: 2vw; /* 원하는 크기로 조정 */
+    height: 2vw; /* 이미지 비율을 유지하고 싶다면 height는 설정하지 않아도 됩니다 */
   }
 `;
 
@@ -357,7 +365,9 @@ const SaveModal = ({ closeModal }) => {
               </AddButton>
             )}
             <ConfirmButton onClick={handleSave}>확인</ConfirmButton>
-            <DeleteButton onClick={handleCategoryRightClick}>삭제</DeleteButton>
+            <DeleteButton onClick={handleCategoryRightClick}>
+              <img src={deleteIcon} alt="delete" />
+            </DeleteButton>
           </ButtonSet>
         </ModalContent>
       </ModalWrapper>

@@ -50,7 +50,7 @@ const ProfileImage = styled.img`
 `;
 
 const Email = styled.div`
-  font-size: 1rem;
+  font-size: 3vw;
   color: #838383;
   margin: 0 1vw 0.5vw 1vw;
 `;
