@@ -4,70 +4,10 @@ import { useAuth } from "../../context/AuthContext";
 
 const MypageText = styled.div`
   font-size: 1rem;
+  margin-top:3vw;
   font-weight: bold;
   text-align: center;
   color: #000000; /* 텍스트 색상 명시적으로 지정 */
-`;
-
-// 모달창 배경
-const ModalBackdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-`;
-
-// 모달창 내용
-const ModalContent = styled.div`
-  background-color: #c2c2c2;
-  /* padding: 2rem; */
-  border-radius: 0.5rem;
-  width: 20%;
-  text-align: center;
-  color: #000000; /* 텍스트 색상 명시적으로 지정 */
-`;
-
-const Button = styled.div`
-  background-color: #c2c2c2;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 0.5rem;
-`;
-
-const CancelButton = styled.button`
-  width: 98%;
-  padding: 0.5rem 1rem;
-  margin-right: 4px;
-  border: none;
-  cursor: pointer;
-  background-color: #adadad;
-  color: #000000;
-  font-size: 1vw;
-  border-bottom-left-radius: 0.3rem; /* 왼쪽 하단 모서리에만 border-radius 적용 */
-  &:hover {
-    background-color: #606060;
-  }
-`;
-
-const DeleteButton = styled.button`
-  width: 102%;
-  padding: 1vw 1vw;
-  border: none;
-  cursor: pointer;
-  background-color: #adadad;
-  color: #ff0000;
-  font-size: 1rem;
-  border-bottom-right-radius: 0.3rem; /* 오른쪽 하단 모서리에만 border-radius 적용 */
-
-  &:hover {
-    background-color: #606060;
-  }
 `;
 
 // 그리드 형식으로 카드들을 표시하는 컨테이너
@@ -127,16 +67,17 @@ const ButtonContent = styled.div`
 const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1vw;
-  margin-bottom: 2vw;
+  margin-top: 5vw;
+  margin-bottom: 3vw;
 `;
 
 const PageButton = styled.button`
+font-size:2vw;
   padding: 0.5vw 0.7vw;
   margin: 0 0.3vw 0 0.3vw;
-  border: 0.1vw solid #838383;
+  border: 0.5vw solid #838383;
   background-color: ${({ isActive }) => (isActive ? "#838383" : "transparent")};
-  border-radius: 0.5vw;
+  border-radius: 1vw;
   cursor: pointer;
   color: #000000; /* 텍스트 색상 명시적으로 지정 */
   &:hover {
@@ -179,8 +120,6 @@ const itemsPerPage = 12;
 
 const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null);
   const { selectVideo, deleteVideo } = useAuth();
   const videoList = JSON.parse(localStorage.getItem("videoList")) || [];
   const categoryName = localStorage.getItem("categoryName");
@@ -224,19 +163,12 @@ const MyPage = () => {
     return pages;
   };
 
-  const openModal = (video) => {
-    setSelectedVideo(video);
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    setSelectedVideo(null);
-  };
-
   const handleContextMenu = (event, video) => {
     event.preventDefault();
-    openModal(video);
+    const confirmed = window.confirm("이 영상을 삭제하시겠습니까?");
+    if (confirmed) {
+      deleteVideo(video.videoUrl);
+    }
   };
 
   return (
@@ -266,24 +198,6 @@ const MyPage = () => {
           {">"}
         </NextButton>
       </PaginationContainer>
-      {showModal && (
-        <ModalBackdrop onClick={closeModal}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <p>이 영상을 삭제하시겠습니까?</p>
-            <Button>
-              <CancelButton onClick={closeModal}>취소</CancelButton>
-              <DeleteButton
-                onClick={() => {
-                  deleteVideo(selectedVideo.videoUrl);
-                  closeModal();
-                }}
-              >
-                삭제
-              </DeleteButton>
-            </Button>
-          </ModalContent>
-        </ModalBackdrop>
-      )}
     </>
   );
 };

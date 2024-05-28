@@ -10,7 +10,7 @@ const Layout = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  background-color: #fffc5e;
+  // background-color: #fffc5e;
   justify-content: center;
   gap: 2vw;
 `;
@@ -62,7 +62,7 @@ const TitleText = styled.div`
 const Scroll = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 16vw;
+  max-height: 22vw;
 
   &::-webkit-scrollbar {
     width: 12px;
