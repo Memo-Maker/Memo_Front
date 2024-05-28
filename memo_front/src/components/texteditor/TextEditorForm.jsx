@@ -92,8 +92,8 @@ const TextEditorForm = () => {
         <StatusBar>
           <FolderContainer>
             <FolderButton onClick={handleFolderButtonClick}>
-              {selectedCategory || selectedCategory === "최근 본 영상"
-                ? selectedCategory
+              {selectedCategory !== null
+                ? selectedCategory === "최근 본 영상" ? "폴더 선택":selectedCategory
                 : "폴더 선택"}
             </FolderButton>
           </FolderContainer>
