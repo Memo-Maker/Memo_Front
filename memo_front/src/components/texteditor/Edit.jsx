@@ -21,6 +21,7 @@ const Container = styled.div`
   background-color: #ffffff;
   overflow-y: auto; /* 세로 스크롤 활성화 */
   overflow-x: hidden;
+  margin-top: 1%;
 `;
 
 const Toolbar = styled.div`

@@ -262,6 +262,8 @@ const SaveModal = ({ closeModal }) => {
 
   const handleSave = () => {
     saveVideoToCategory(selectedCategory);
+    localStorage.setItem("categoryName", selectedCategory)
+    window.location.reload();
     closeModal();
   };
 

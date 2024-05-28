@@ -5,12 +5,12 @@ import MobileTextEditorForm from "../texteditor/MobileTextEditorForm";
 import Summary from "./MobileSummary";
 import ChatIcon from "../../assets/images/GPTIcon.png";
 import Chatgpt from "./MobileChatgpt";
-import SummaryO from "../../assets/images/Summary_O.png";
-import SummaryX from "../../assets/images/Summary_X.png";
-import GPTO from "../../assets/images/GPT_O.png";
-import GPTX from "../../assets/images/GPT_X.png";
-import MemoO from "../../assets/images/Memo_O.png";
-import MemoX from "../../assets/images/Memo_X.png";
+import SummaryX from "../../assets/images/Summary_O.png";
+import SummaryO from "../../assets/images/Summary_X.png";
+import GPTX from "../../assets/images/GPT_O.png";
+import GPTO from "../../assets/images/GPT_X.png";
+import MemoX from "../../assets/images/Memo_O.png";
+import MemoO from "../../assets/images/Memo_X.png";
 
 const Layout = styled.div`
   display: flex;

@@ -78,6 +78,7 @@ const TextEditorForm = () => {
     
   };
   const handleFolderButtonClick = () => {
+    localStorage.setItem("document", htmlContent); // 현재 내용 로컬 스토리지에 저장
     setShowModal(true);
   };
   const closeModal = () => {

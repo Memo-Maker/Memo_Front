@@ -247,6 +247,7 @@ const SaveModal = ({ closeModal }) => {
       setCategoryList(updatedCategoryList);
       setSelectedCategory(null);
       setIsEditMode(false);
+      setContent(""); // TextInput의 글자를 지웁니다
     }
   };
 
@@ -259,6 +260,8 @@ const SaveModal = ({ closeModal }) => {
 
   const handleSave = () => {
     saveVideoToCategory(selectedCategory);
+    localStorage.setItem("categoryName", selectedCategory)
+    window.location.reload();
     closeModal();
   };
 

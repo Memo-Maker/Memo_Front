@@ -461,7 +461,7 @@ export const AuthProvider = ({ children }) => {
 
       // const responseData = response;
       console.log("카테고리가 성공적으로 생성되었습니다:", response);
-      alert("저장되었습니다!");
+      toast.success("생성 완료!");
       
       // 필요한 작업 수행 (예: 성공 메시지 표시, 상태 업데이트 등)
     } catch (error) {
