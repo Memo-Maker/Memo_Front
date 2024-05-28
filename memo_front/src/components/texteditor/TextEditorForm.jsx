@@ -75,7 +75,7 @@ const TextEditorForm = () => {
   const handleSaveContent = () => {
     saveContentToLocal(htmlContent);
     saveMarkdownToServer(htmlContent);
-    alert("저장되었습니다!");
+    
   };
   const handleFolderButtonClick = () => {
     setShowModal(true);

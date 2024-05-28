@@ -127,6 +127,7 @@ const UserProfileDropdown = ({ closeModal }) => {
   const [email, setEmail] = useState("");
   const [newNickname, setNewNickname] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showWarning, setShowWarning] = useState(false); // 경고 메시지 상태 추가
   const navigate = useNavigate();
   const { logout, getVideoList, changeNickname } = useAuth();
   const modalRef = useRef();
@@ -182,7 +183,12 @@ const UserProfileDropdown = ({ closeModal }) => {
   }, [windowSize]);
 
   const handleNicknameChange = (e) => {
-    setNewNickname(e.target.value);
+    if (e.target.value.length <= 3) {
+      setNewNickname(e.target.value);
+      setShowWarning(false);
+    } else {
+      setShowWarning(true); // 3글자를 초과하면 경고 메시지 표시
+    }
   };
 
   const handleNicknameSubmit = async () => {
@@ -260,8 +266,13 @@ const UserProfileDropdown = ({ closeModal }) => {
             value={newNickname}
             onChange={handleNicknameChange}
             placeholder="새 닉네임 입력"
-          />
-          <Button onClick={handleNicknameSubmit}>변경하기</Button>
+          /><Button onClick={handleNicknameSubmit}>변경하기</Button>
+          {showWarning && (
+            <div style={{ fontSize: "1vw", color: "red", fontWeight: "bold", marginLeft: "1.5vw" }}>
+              닉네임은 3글자까지 가능합니다.
+            </div>
+          )}
+          
         </Modal>
       )}
     </Overlay>

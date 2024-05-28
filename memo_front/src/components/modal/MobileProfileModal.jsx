@@ -9,8 +9,8 @@ import { useAuth } from "../../context/AuthContext"; // AuthContext import 추�
 
 const Overlay = styled.div`
   position: fixed;
-  top: ${({ top }) => top - top * 0.9}px; /* y 좌푯값 지정 */
-  left: ${({ left }) => left - left * 0.7}px; /* x 좌푯값 지정 */
+  top: ${({ top }) => top - top * 0.94}px; /* y 좌푯값 지정 */
+  left: ${({ left }) => left - left * 0.55}px; /* x 좌푯값 지정 */
   z-index: 99;
   width: ${({ width }) => width - width * 0.5}px; /* 동적으로 width 조정 */
   height: ${({ height }) => height - height * 0.8}px; /* 동적으로 height 조정 */
@@ -36,11 +36,9 @@ const InfoBox = styled.div`
   width: 100%;
 `;
 
-
-
 const ProfileBox = styled.div`
-/* background-color: beige; */
-width:50%;;
+  /* background-color: beige; */
+  width:50%;
 `;
 
 const ProfileImage = styled.img`
@@ -132,6 +130,7 @@ const UserProfileDropdown = ({ closeModal }) => {
   const [email, setEmail] = useState("");
   const [newNickname, setNewNickname] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showWarning, setShowWarning] = useState(false); // 경고 메시지 상태 추가
   const navigate = useNavigate();
   const { logout, getVideoList, changeNickname } = useAuth();
   const modalRef = useRef();
@@ -187,16 +186,23 @@ const UserProfileDropdown = ({ closeModal }) => {
   }, [windowSize]);
 
   const handleNicknameChange = (e) => {
-    setNewNickname(e.target.value);
+    if (e.target.value.length <= 3) {
+      setNewNickname(e.target.value);
+      setShowWarning(false);
+    } else {
+      setShowWarning(true); // 3글자를 초과하면 경고 메시지 표시
+    }
   };
 
   const handleNicknameSubmit = async () => {
     try {
-      await changeNickname(newNickname);
-      setNickname(newNickname);
-      localStorage.setItem("memberName", newNickname);
-      setNewNickname("");
-      setShowModal(false);
+      if (newNickname.length <= 3) {
+        await changeNickname(newNickname);
+        setNickname(newNickname);
+        localStorage.setItem("memberName", newNickname);
+        setNewNickname("");
+        setShowModal(false);
+      }
     } catch (error) {
       console.error("닉네임 변경 오류:", error);
     }
@@ -206,10 +212,7 @@ const UserProfileDropdown = ({ closeModal }) => {
     <Overlay ref={overlayRef} top={windowSize.height} left={windowSize.width} width={windowSize.width} height={windowSize.height}>
       <DropdownContainer>
         <InfoBox>
-
           <Nickname>{nickname}님 안녕하세요</Nickname>
-          {/* <Nickname>{nickname}님 안녕하세요ᵔᴗᵔ</Nickname> */}
-
           <Email>{email}</Email>
           <Options>
             <Option>
@@ -255,18 +258,23 @@ const UserProfileDropdown = ({ closeModal }) => {
           <div
             style={{
               fontWeight: "bold",
-              fontSize: "1.5rem",
+              fontSize: "3vw",
               textAlign: "center",
             }}
           >
             닉네임을 변경하시겠습니까?
           </div>
-          <TextInput
+          <TextInput  
             type="text"
             value={newNickname}
             onChange={handleNicknameChange}
             placeholder="새 닉네임 입력"
           />
+          {showWarning && (
+            <div style={{ color: "red", fontWeight: "bold", marginTop: "1vw" }}>
+              닉네임은 3글자까지 가능합니다.
+            </div>
+          )}
           <Button onClick={handleNicknameSubmit}>변경하기</Button>
         </Modal>
       )}
